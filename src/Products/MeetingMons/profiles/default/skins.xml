@@ -6,23 +6,23 @@
         cookie_persistence="False"
         request_varname="plone_skin">
 
- <object name="meetingcommunes_images"
+ <object name="meetingmons_images"
          meta_type="Filesystem Directory View"
-         directory="MeetingCommunes/skins/meetingcommunes_images"/>
- <object name="meetingcommunes_styles"
+         directory="MeetingMons/skins/meetingmons_images"/>
+ <object name="meetingmons_styles"
          meta_type="Filesystem Directory View"
-         directory="MeetingCommunes/skins/meetingcommunes_styles"/>
- <object name="meetingcommunes_templates"
+         directory="MeetingMons/skins/meetingmons_styles"/>
+ <object name="meetingmons_templates"
          meta_type="Filesystem Directory View"
-         directory="MeetingCommunes/skins/meetingcommunes_templates"/>
+         directory="MeetingMons/skins/meetingmons_templates"/>
  
  <skin-path name="*">
   <layer insert-after="custom" 
-         name="meetingcommunes_images"/>
+         name="meetingmons_images"/>
   <layer insert-after="custom" 
-         name="meetingcommunes_styles"/>
+         name="meetingmons_styles"/>
   <layer insert-after="custom" 
-         name="meetingcommunes_templates"/>
+         name="meetingmons_templates"/>
  </skin-path>
 
 </object>
