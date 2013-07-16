@@ -10,6 +10,11 @@ annexeDecision = MeetingFileTypeDescriptor('annexeDecision', 'Annexe à la déci
 
 # Pod templates ----------------------------------------------------------------
 # MeetingItem
+collegeDelibTemplate = PodTemplateDescriptor('college-deliberation', 'Délibération')
+collegeDelibTemplate.podTemplate = 'college_delibe.odt'
+collegeDelibTemplate.podCondition = 'python:(here.meta_type=="MeetingItem") and ' \
+                              'here.queryState() in ["accepted", "refused", "delayed", "accepted_but_modified",]'
+
 councilDelibTemplate = PodTemplateDescriptor('conseil-deliberation', 'Délibération')
 councilDelibTemplate.podTemplate = 'conseil_deliberation.odt'
 councilDelibTemplate.podCondition = 'python:(here.meta_type=="MeetingItem") and ' \
@@ -23,6 +28,14 @@ councilNoteExplTemplate.podTemplate = 'conseil_note_explicative.odt'
 councilNoteExplTemplate.podCondition = 'python:(here.meta_type=="MeetingItem")'
 
 # Meeting
+collegeOJTemplate = PodTemplateDescriptor('college-oj', 'Ordre du jour')
+collegeOJTemplate.podTemplate = 'college_oj.odt'
+collegeOJTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
+                              'here.portal_plonemeeting.isManager()'
+collegePVTemplate = PodTemplateDescriptor('college-pv', 'Procès verbal')
+collegePVTemplate.podTemplate = 'college_pv.odt'
+collegePVTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
+                              'here.portal_plonemeeting.isManager()'
 councilOJExplanatoryTemplate = PodTemplateDescriptor('conseil-oj-notes-explicatives', 'OJ (notes explicatives)')
 councilOJExplanatoryTemplate.podTemplate = 'conseil_oj_notes_explicatives.odt'
 councilOJExplanatoryTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
@@ -116,8 +129,9 @@ councilPVTemplate.podTemplate = 'conseil_pv.odt'
 councilPVTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
                               'here.portal_plonemeeting.isManager()'
 
-collegeTemplates = []
-councilTemplates = [councilOJExplanatoryTemplate, councilFardesTemplate, councilOJConvPresseTemplate,
+collegeTemplates = [collegeDelibTemplate,collegeOJTemplate,collegePVTemplate]
+councilTemplates = [councilOJExplanatoryTemplate, councilFardesTemplate,
+                    councilAvisTemplate, councilOJConvPresseTemplate,
                     councilOJConvConsTemplate, councilOJConvConsPremSupplTemplate,
                     councilOJConvConsDeuxSupplTemplate, councilOJConvCommTravTemplate,
                     councilOJConvCommEnsTemplate, councilOJConvCommLogTemplate,
@@ -129,72 +143,70 @@ councilTemplates = [councilOJExplanatoryTemplate, councilFardesTemplate, council
                     councilPVConvCommSpecTemplate, councilPVTemplate,
                     councilNoteExplTemplate, councilProjetDelibTemplate, councilDelibTemplate]
 
+
 # Users and groups -------------------------------------------------------------
-test1 = UserDescriptor('test1',  ['MeetingPowerObserver'], fullname='test 1', email="test1@Mons.be")
-test2 = UserDescriptor('test2', ['MeetingPowerObserver'], fullname='test 2', email="test2@Mons.be")
-test3 = UserDescriptor('test3', ['MeetingPowerObserver'], fullname='test 3', email="test3@Mons.be")
-
-test1_mu = MeetingUserDescriptor('test1', duty='Bourgmestre', usages=['asker', ], active=False)
-test2_mu = MeetingUserDescriptor('test2', gender='f', duty='1er Echevin', usages=['asker', ], active=False)
-test3_mu = MeetingUserDescriptor('test3', gender='m', duty='2ème Echevin', usages=['asker', ], active=False)
-
-pmManager = UserDescriptor('pmManager', ['MeetingManager'])
-pmCreator1 = UserDescriptor('pmCreator1', [])
-pmCreator1b = UserDescriptor('pmCreator1b', [])
-pmReviewer1 = UserDescriptor('pmReviewer1', [])
-pmCreator2 = UserDescriptor('pmCreator2', [])
-pmReviewer2 = UserDescriptor('pmReviewer2', [])
-pmAdviser1 = UserDescriptor('pmAdviser1', [])
-pmServiceHead1 = UserDescriptor('pmServiceHead1', [])
-pmOfficeManager1 = UserDescriptor('pmOfficeManager1', [])
-pmDivisionHead1 = UserDescriptor('pmDivisionHead1', [])
-pmDirector1 = UserDescriptor('pmDirector1', [])
-pmDirector2 = UserDescriptor('pmDirector2', [])
+secretaire = UserDescriptor('secretaire', ['MeetingManager'], email="test@test.be")
+agentInfo = UserDescriptor('agentInfo', [], email="test@test.be")
+agentCompta = UserDescriptor('agentCompta', [], email="test@test.be")
+agentPers = UserDescriptor('agentPers', [], email="test@test.be")
+agentTrav = UserDescriptor('agentTrav', [], email="test@test.be")
+chefPers = UserDescriptor('chefPers', [], email="test@test.be")
+chefCompta = UserDescriptor('chefCompta', [], email="test@test.be")
+chefBureauCompta = UserDescriptor('chefBureauCompta', [], email="test@test.be")
+echevinPers = UserDescriptor('echevinPers', [], email="test@test.be")
+emetteuravisPers = UserDescriptor('emetteuravisPers', [], email="test@test.be")
 
 groups = [
-           GroupDescriptor('developers', 'Developers', 'Devel'),
-           GroupDescriptor('vendors', 'Vendors', 'Devil'),
-           GroupDescriptor('secretary', 'Secretary', 'Secr'),           
+           GroupDescriptor('secretariat', 'Secretariat communal', 'Secr', asCopyGroupOn="python: item.getProposingGroup()=='informatique' and ['reviewers',] or []"),
+           GroupDescriptor('informatique', 'Service informatique', 'Info'),
+           GroupDescriptor('personnel', 'Service du personnel', 'Pers'),
+           GroupDescriptor('comptabilite', 'Service comptabilité', 'Compt', givesMandatoryAdviceOn='python:True'),
+           GroupDescriptor('travaux', 'Service travaux', 'Trav'),
+           GroupDescriptor('conseillers', 'Conseillers', 'Conseillers'),           
+           GroupDescriptor('secretaire-communal', 'Secrétaire communal', 'SecrComm'),
+           GroupDescriptor('secretaire-communal-adj', 'Secrétaire communal ADJ', 'SecrCommAdj'),
          ]
-#developers-------------------------------------------------------------
-groups[0].creators.append(pmCreator1)
-groups[0].creators.append(pmCreator1b)
-groups[0].reviewers.append(pmReviewer1)
-groups[0].reviewers.append(pmDirector1)
-groups[0].observers.append(pmReviewer1)
-groups[0].advisers.append(pmAdviser1)
-groups[0].serviceheads.append(pmServiceHead1)
-groups[0].officemanagers.append(pmOfficeManager1)
-groups[0].divisionheads.append(pmDivisionHead1)
-#pmReviewer1 can validate every levels
-groups[0].serviceheads.append(pmReviewer1)
-groups[0].officemanagers.append(pmReviewer1)
-groups[0].divisionheads.append(pmReviewer1)
-#all role for pmManager
-groups[0].creators.append(pmManager)
-groups[0].serviceheads.append(pmManager)
-groups[0].officemanagers.append(pmManager)
-groups[0].divisionheads.append(pmManager)
-groups[0].reviewers.append(pmManager)
-groups[0].observers.append(pmManager)
-groups[0].advisers.append(pmManager)
-#add default signatures and echevins
-setattr(groups[0], 'signatures', 'developers signatures')
-setattr(groups[0], 'echevinServices', 'developers')
-#vendors----------------------------------------------------------------
-groups[1].creators.append(pmCreator2)
-groups[1].reviewers.append(pmReviewer2)
-groups[1].observers.append(pmReviewer2)
-groups[1].advisers.append(pmReviewer2)
-#secretary--------------------------------------------------------------
-groups[2].creators.append(pmManager)
-groups[2].serviceheads.append(pmManager)
-groups[2].officemanagers.append(pmManager)
-groups[2].divisionheads.append(pmManager)
-groups[2].reviewers.append(pmManager)
-groups[2].observers.append(pmManager)
-groups[2].advisers.append(pmManager)
 
+# MeetingManager
+groups[0].creators.append(secretaire)
+groups[0].officemanagers.append(secretaire)
+groups[0].observers.append(secretaire)
+groups[0].advisers.append(secretaire)
+
+groups[1].creators.append(agentInfo)
+groups[1].creators.append(secretaire)
+groups[1].officemanagers.append(agentInfo)
+groups[1].officemanagers.append(secretaire)
+groups[1].observers.append(agentInfo)
+groups[1].advisers.append(agentInfo)
+
+groups[2].creators.append(agentPers)
+groups[2].observers.append(agentPers)
+groups[2].creators.append(secretaire)
+groups[2].officemanagers.append(secretaire)
+groups[2].creators.append(chefPers)
+groups[2].officemanagers.append(chefPers)
+groups[2].observers.append(chefPers)
+groups[2].observers.append(echevinPers)
+groups[2].advisers.append(emetteuravisPers)
+
+groups[3].creators.append(agentCompta)
+groups[3].creators.append(chefCompta)
+groups[3].creators.append(chefBureauCompta)
+groups[3].creators.append(secretaire)
+groups[3].serviceheads.append(chefCompta)
+groups[3].officemanagers.append(chefBureauCompta)
+groups[3].officemanagers.append(secretaire)
+groups[3].observers.append(agentCompta)
+groups[3].advisers.append(chefCompta)
+groups[3].advisers.append(chefBureauCompta)
+
+groups[4].creators.append(agentTrav)
+groups[4].creators.append(secretaire)
+groups[4].reviewers.append(agentTrav)
+groups[4].reviewers.append(secretaire)
+groups[4].observers.append(agentTrav)
+groups[4].advisers.append(agentTrav)
 
 # Meeting configurations -------------------------------------------------------
 # college
@@ -221,6 +233,7 @@ collegeMeeting.itemTopicStates = ('itemcreated', 'proposed_to_serviceHead', 'pro
 collegeMeeting.meetingTopicStates = ('created', 'frozen')
 collegeMeeting.decisionTopicStates = ('decided', 'closed')
 collegeMeeting.itemAdviceStates = ('validated',)
+collegeMeeting.itemAdviceEditStates = ('validated',)
 collegeMeeting.recordItemHistoryStates = ['',]
 collegeMeeting.maxShownMeetings = 5
 collegeMeeting.maxDaysDecisions = 60
@@ -231,7 +244,7 @@ collegeMeeting.useAdvices = True
 collegeMeeting.enforceAdviceMandatoriness = False
 collegeMeeting.enableAdviceInvalidation = False
 collegeMeeting.useCopies = True
-collegeMeeting.selectableCopyGroups = [groups[0].getIdSuffixed('reviewers'), groups[1].getIdSuffixed('reviewers'), groups[2].getIdSuffixed('reviewers'),]
+collegeMeeting.selectableCopyGroups = [groups[0].getIdSuffixed('reviewers'), groups[1].getIdSuffixed('reviewers'), groups[2].getIdSuffixed('reviewers'), groups[4].getIdSuffixed('reviewers')]
 collegeMeeting.podTemplates = collegeTemplates
 collegeMeeting.sortingMethodOnAddItem = 'on_proposing_groups'
 collegeMeeting.useGroupsAsCategories = True
@@ -241,36 +254,45 @@ collegeMeeting.meetingUsers = []
 # Conseil communal
 # Categories -------------------------------------------------------------------
 categories = [
-              CategoryDescriptor('recurrent', 'Point récurrent', usingGroups=('secretary', )),
+              CategoryDescriptor('recurrent', 'Point récurrent', usingGroups=('secretaire-communal', 'secretaire-communal-adj', 'secretariat', )),
               CategoryDescriptor('commission-travaux', 'Commission Travaux'),
               CategoryDescriptor('commission-enseignement', 'Commission Enseignement'),
               CategoryDescriptor('commission-cadre-de-vie-et-logement', 'Commission Cadre de Vie et Logement'),
               CategoryDescriptor('commission-ag', 'Commission AG'),
               CategoryDescriptor('commission-finances-et-patrimoine', 'Commission Finances et Patrimoine'),
               CategoryDescriptor('commission-police', 'Commission Police'),
-              CategoryDescriptor('commission-speciale', 'Commission Spéciale', usingGroups=('secretary', )),
-              CategoryDescriptor('commission-travaux-1er-supplement', 'Commission Travaux (1er supplément)', usingGroups=('secretary', )),
-              CategoryDescriptor('commission-enseignement-1er-supplement', 'Commission Enseignement (1er supplément)', usingGroups=('secretary', )),
-              CategoryDescriptor('commission-cadre-de-vie-et-logement-1er-supplement', 'Commission Cadre de Vie et Logement (1er supplément)', usingGroups=('secretary', )),
-              CategoryDescriptor('commission-ag-1er-supplement', 'Commission AG (1er supplément)', usingGroups=('secretary', )),
-              CategoryDescriptor('commission-finances-et-patrimoine-1er-supplement', 'Commission Finances et Patrimoine (1er supplément)', usingGroups=('secretary', )),
-              CategoryDescriptor('commission-police-1er-supplement', 'Commission Police (1er supplément)', usingGroups=('secretary', )),
-              CategoryDescriptor('commission-speciale-1er-supplement', 'Commission Spéciale (1er supplément)', usingGroups=('secretary', )),
-              CategoryDescriptor('points-conseillers-2eme-supplement', 'Points conseillers (2ème supplément)', usingGroups=('secretary', )),
+              CategoryDescriptor('commission-speciale', 'Commission Spéciale', usingGroups=('secretaire-communal', 'secretaire-communal-adj', 'secretariat', )),
+              CategoryDescriptor('commission-travaux-1er-supplement', 'Commission Travaux (1er supplément)', usingGroups=('secretaire-communal', 'secretaire-communal-adj', 'secretariat', )),
+              CategoryDescriptor('commission-enseignement-1er-supplement', 'Commission Enseignement (1er supplément)', usingGroups=('secretaire-communal', 'secretaire-communal-adj', 'secretariat', )),
+              CategoryDescriptor('commission-cadre-de-vie-et-logement-1er-supplement', 'Commission Cadre de Vie et Logement (1er supplément)', usingGroups=('secretaire-communal', 'secretaire-communal-adj', 'secretariat', )),
+              CategoryDescriptor('commission-ag-1er-supplement', 'Commission AG (1er supplément)', usingGroups=('secretaire-communal', 'secretaire-communal-adj', 'secretariat', )),
+              CategoryDescriptor('commission-finances-et-patrimoine-1er-supplement', 'Commission Finances et Patrimoine (1er supplément)', usingGroups=('secretaire-communal', 'secretaire-communal-adj', 'secretariat', )),
+              CategoryDescriptor('commission-police-1er-supplement', 'Commission Police (1er supplément)', usingGroups=('secretaire-communal', 'secretaire-communal-adj', 'secretariat', )),
+              CategoryDescriptor('commission-speciale-1er-supplement', 'Commission Spéciale (1er supplément)', usingGroups=('secretaire-communal', 'secretaire-communal-adj', 'secretariat', )),
+              CategoryDescriptor('points-conseillers-2eme-supplement', 'Points conseillers (2ème supplément)', usingGroups=('secretaire-communal', 'secretaire-communal-adj', 'secretariat', )),
              ]
 
 councilMeeting = MeetingConfigDescriptor(
     'meeting-config-council', 'Conseil Communal',
     'Conseil Communal')
-councilMeeting.assembly = """M.TEST 1, Bourgmestre-Président
-MM Echevin 1, Mme Echevin 2, MM.Echevin 3, MM Echevin 4, MM Echevin 5, Echevins
-Mme Test 2, Présidente du CPAS
-M.Test 3, Secrétaire
-En présence de M.Test 4, Chef de Corps, en ce qui concerne les points « Police »"""
+councilMeeting.assembly = """M.J.GOBERT, Bourgmestre-Président
+Mme A.SABBATINI, MM.J.GODIN, O.DESTREBECQ, G.HAINE,
+Mmes A.DUPONT, F.GHIOT, M.J.C.WARGNIE, Echevins
+Mme D.STAQUET, Présidente du CPAS
+M.B.LIEBIN, Mme C.BURGEON, MM.M.DUBOIS, Y.DRUGMAND,
+G.MAGGIORDOMO, O.ZRIHEN, M.DI MATTIA, Mme T.ROTOLO, M.F.ROMEO,
+Mmes M.HANOT, I.VAN STEEN, MM.J.KEIJZER, A.FAGBEMI,
+A.GAVA, A.POURBAIX, L.DUVAL, J.CHRISTIAENS, M.VAN HOOLAND,
+Mme F.RMILI, MM.P.WATERLOT, A.BUSCEMI, L.WIMLOT,
+Mme C.BOULANGIER, M.V.LIBOIS, Mme A.M.MARIN, MM.A.GOREZ,
+J.P.MICHIELS, C.DELPLANCQ, Mmes F.VERMEER, L.BACCARELLA D'URSO,
+M.C.LICATA et Mme M.ROLAND, Conseillers communaux
+M.R.ANKAERT, Secrétaire
+En présence de M.L.DEMOL, Chef de Corps, en ce qui concerne les points « Police »"""
 councilMeeting.signatures = """Le Secrétaire,
-Test 1
+R.ANKAERT
 Le Président,
-Test 2"""
+J.GOBERT"""
 councilMeeting.categories = categories
 councilMeeting.shortName = 'Council'
 councilMeeting.meetingFileTypes = [annexe, annexeBudget, annexeCahier, annexeRemarks, annexeDecision]
@@ -294,18 +316,19 @@ councilMeeting.meetingActionsInterface = 'Products.MeetingMons.interfaces.IMeeti
 councilMeeting.itemTopicStates = ('itemcreated', 'proposed_to_officemanager', 'validated', 'presented', 'itemfrozen', 'item_in_committee', 'item_in_council', 'returned_to_service', 'accepted', 'accepted_but_modified', 'refused', 'delayed')
 councilMeeting.meetingTopicStates = ('created', 'frozen', 'in_committee')
 councilMeeting.decisionTopicStates = ('in_council', 'closed')
-councilMeeting.itemAdviceStates = ('validated',)
+councilMeeting.itemAdviceStates = ('itemcreated',)
+councilMeeting.itemAdviceEditStates = ('itemcreated',)
 councilMeeting.recordItemHistoryStates = ['',]
 councilMeeting.maxShownMeetings = 5
 councilMeeting.maxDaysDecisions = 60
 councilMeeting.meetingAppDefaultView = 'topic_searchmyitems'
 councilMeeting.itemDocFormats = ('odt', 'pdf')
 councilMeeting.meetingDocFormats = ('odt', 'pdf')
-councilMeeting.useAdvices = False
+councilMeeting.useAdvices = True
 councilMeeting.enforceAdviceMandatoriness = False
 councilMeeting.enableAdviceInvalidation = False
 councilMeeting.useCopies = True
-councilMeeting.selectableCopyGroups = [groups[0].getIdSuffixed('reviewers'), groups[1].getIdSuffixed('reviewers'), groups[2].getIdSuffixed('reviewers'),]
+councilMeeting.selectableCopyGroups = [groups[0].getIdSuffixed('reviewers'), groups[1].getIdSuffixed('reviewers'), groups[2].getIdSuffixed('reviewers'), groups[4].getIdSuffixed('reviewers')]
 councilMeeting.podTemplates = councilTemplates
 councilMeeting.transitionsToConfirm = ['MeetingItem.return_to_service',]
 councilMeeting.sortingMethodOnAddItem = 'on_privacy_then_categories'
@@ -316,7 +339,7 @@ councilMeeting.recurringItems = [
         title='Approbation du procès-verbal du Conseil communal du ...',
         description='',
         category='recurrent',
-        proposingGroup='developers',
+        proposingGroup='secretariat',
         decision='',
         meetingTransitionInsertingMe='setInCouncil'),
     RecurringItemDescriptor(
@@ -324,11 +347,10 @@ councilMeeting.recurringItems = [
         title='Questions d\'actualités',
         description='',
         category='recurrent',
-        proposingGroup='developers',
+        proposingGroup='secretariat',
         decision='',
         meetingTransitionInsertingMe='setInCouncil'),
 ]
-councilMeeting.meetingUsers = [test1_mu, test2_mu, test3_mu, ]
 
 data = PloneMeetingConfiguration(
            meetingFolderTitle='Mes séances',

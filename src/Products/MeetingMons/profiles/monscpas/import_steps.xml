@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<import-steps>
+ <import-step id="installMeetingMons" version="20080501-01"
+              handler="Products.MeetingMons.setuphandlers.installMeetingMons"
+              title="Install MeetingMons.">
+  Install MeetingMons.
+ </import-step>
+ <import-step id="initializetool-MeetingMons" version="20060707-01"
+              handler="Products.MeetingMons.setuphandlers.initializeTool"
+              title="Initialize MeetingMons with examples.">
+  <dependency step="installMeetingMons"/>
+  Initialize portal_plonemeeting folders.
+ </import-step>
+ <import-step id="finalizeExampleInstanceMeetingMons" version="20120315-01"
+              handler="Products.MeetingMons.setuphandlers.finalizeExampleInstance"
+              title="Finalize example instance.">
+  <dependency step="initializetool-MeetingMons"/>
+  Finalize example instance.
+ </import-step>
+
+</import-steps>
