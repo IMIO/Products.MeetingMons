@@ -2,11 +2,11 @@
 from plone.testing import z2, zca
 from plone.app.testing import PloneWithPackageLayer
 from plone.app.testing import FunctionalTesting
-import Products.MeetingCommunes
+import Products.MeetingMons
 
 
 MC_ZCML = zca.ZCMLSandbox(filename="testing.zcml",
-                          package=Products.MeetingCommunes,
+                          package=Products.MeetingMons,
                           name='MC_ZCML')
 
 MC_Z2 = z2.IntegrationTesting(bases=(z2.STARTUP, MC_ZCML),
@@ -14,11 +14,11 @@ MC_Z2 = z2.IntegrationTesting(bases=(z2.STARTUP, MC_ZCML),
 
 MC_TEST_PROFILE = PloneWithPackageLayer(
     zcml_filename="testing.zcml",
-    zcml_package=Products.MeetingCommunes,
-    additional_z2_products=('Products.MeetingCommunes',
+    zcml_package=Products.MeetingMons,
+    additional_z2_products=('Products.MeetingMons',
                             'Products.PloneMeeting',
                             'Products.CMFPlacefulWorkflow'),
-    gs_profile_id='Products.MeetingCommunes:testing',
+    gs_profile_id='Products.MeetingMons:testing',
     name="MC_TEST_PROFILE")
 
 MC_TEST_PROFILE_FUNCTIONAL = FunctionalTesting(

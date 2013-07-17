@@ -1,7 +1,7 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    i18n_domain="MeetingCommunes">
+    i18n_domain="MeetingMons">
 
   <include package="Products.GenericSetup" file="meta.zcml" />
 
@@ -10,48 +10,28 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="MeetingCommunes"
+      title="MeetingMons"
       directory="profiles/default"
-      description="Extension profile for MeetingCommunes."
+      description="Extension profile for MeetingMons."
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
-
+  
   <!-- ##code-section profiles.zcml-bottom #fill in your manual code here -->
-  <genericsetup:registerProfile
-   name="demo"
-   title="PloneMeeting / Demo profile for Communes with french examples"
-   description="Demo profile for Communes with french examples"
-   provides="Products.GenericSetup.interfaces.EXTENSION"
-   for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
-
-  <genericsetup:registerProfile
-   name="examples"
-   title="PloneMeeting / Communes with english examples"
-   description="PloneMeeting for City College and Council (Belgium)"
-   provides="Products.GenericSetup.interfaces.EXTENSION"
-   for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
   <genericsetup:registerProfile
    name="examples_fr"
-   title="PloneMeeting / Communes with french examples"
-   description="PloneMeeting for City College and Council (Belgium)"
-   provides="Products.GenericSetup.interfaces.EXTENSION"
-   for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
-
-  <genericsetup:registerProfile
-   name="zcpas"
-   title="PloneMeeting / CPAS"
-   description="PloneMeeting for CPAS (Belgium)"
+   title="PloneMeeting / Mons with french examples"
+   description="PloneMeeting for Mons College and Council (Belgium)"
    provides="Products.GenericSetup.interfaces.EXTENSION"
    for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
   <genericsetup:upgradeStep
-      title="Go to MeetingCommunes 3.0"
+      title="Go to MeetingMons 3.0"
       description=""
       source="*"
       destination="3.0"
-      handler="Products.MeetingCommunes.migrations.migrate_to_3_0.migrate"
-      profile="Products.MeetingCommunes:default" />
+      handler="Products.MeetingMons.migrations.migrate_to_3_0.migrate"
+      profile="Products.MeetingMons:default" />
 
   <!-- ##/code-section profiles.zcml-bottom -->
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# File: MeetingCommunes.py
+# File: MeetingMons.py
 #
 # Copyright (c) 2013 by CommunesPlone
 # Generator: ArchGenXML Version 2.7
@@ -9,7 +9,7 @@
 # GNU General Public License (GPL)
 #
 
-__author__ = """Gauthier Bastien <g.bastien@imio.be>, Stephan Geulette <s.geulette@imio.be>"""
+__author__ = """Andre NUYENS <andre@imio.be>"""
 __docformat__ = 'plaintext'
 
 
@@ -24,10 +24,11 @@ __docformat__ = 'plaintext'
 
 from Products.CMFCore.permissions import setDefaultRoles
 ##code-section config-head #fill in your manual code here
+import os
 ##/code-section config-head
 
 
-PROJECTNAME = "MeetingCommunes"
+PROJECTNAME = "MeetingMons"
 
 # Permissions
 DEFAULT_ADD_CONTENT_PERMISSION = "Add portal content"
@@ -44,6 +45,15 @@ DEPENDENCIES = []
 PRODUCT_DEPENDENCIES = []
 
 ##code-section config-bottom #fill in your manual code here
+from Products.PloneMeeting import config as PMconfig
+MONSROLES = {}
+MONSROLES['budgetimpactreviewers'] = 'MeetingBudgetImpactReviewer'
+MONSROLES['serviceheads'] = 'MeetingServiceHead'
+MONSROLES['officemanagers'] = 'MeetingOfficeManager'
+MONSROLES['extraordinarybudget'] = 'MeetingExtraordinaryBudget'
+PMconfig.MEETINGROLES.update(MONSROLES)
+PMconfig.MEETING_GROUP_SUFFIXES = PMconfig.MEETINGROLES.keys()
+#the divisionhead will use the default 'MeetingReviewer' role
 # Define PloneMeeting-specific permissions
 AddAnnex = 'PloneMeeting: Add annex'
 setDefaultRoles(AddAnnex, ('Manager','Owner'))
@@ -58,7 +68,7 @@ setDefaultRoles(ReadDecision, ('Manager',))
 setDefaultRoles(WriteDecision, ('Manager',))
 
 STYLESHEETS = [{'id': 'meetingcommunes.css',
-                'title': 'MeetingCommunes CSS styles'}]
+                'title': 'MeetingMons CSS styles'}]
 
 # define some more value in MeetingConfig.topicsInfo so extra topics are created for each MeetingConfig
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
@@ -100,12 +110,17 @@ existingTopicsInfo = MeetingConfig.topicsInfo
 existingTopicsInfo = list(existingTopicsInfo)
 existingTopicsInfo.extend(topicsInfo)
 MeetingConfig.topicsInfo = tuple(existingTopicsInfo)
-
+#ids of commissions used as categories for MeetingItemCouncil
+COUNCIL_COMMISSION_IDS = ['commission-travaux','commission-enseignement',
+                'commission-cadre-de-vie-et-logement','commission-ag',
+                'commission-finances-et-patrimoine','commission-police','commission-speciale',]
+#suffix of specific groups containing commission transcript editors
+COMMISSION_EDITORS_SUFFIX = '_commissioneditors'
 ##/code-section config-bottom
 
 
 # Load custom configuration not managed by archgenxml
 try:
-    from Products.MeetingCommunes.AppConfig import *
+    from Products.MeetingMons.AppConfig import *
 except ImportError:
     pass

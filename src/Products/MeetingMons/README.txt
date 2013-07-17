@@ -1,8 +1,8 @@
 1. Overview
 ===========
-MeetingCommunes is a specific profile for the package Products.PloneMeeting
+MeetingMons is a specific profile for the package Products.PloneMeeting
 
-It configures PloneMeeting to be useable for college and council of belgian cities
+It configures PloneMeeting to be useable for college and council of Mons
 
 2. Project resources
 ====================
