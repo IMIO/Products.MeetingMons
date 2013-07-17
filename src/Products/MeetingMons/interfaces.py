@@ -20,7 +20,7 @@
 # 02110-1301, USA.
 #
 
-__author__ = """Gauthier Bastien <gbastien@commune.sambreville.be>"""
+__author__ = """Andre Nuyens <a.nuyens@imio.be>"""
 __docformat__ = 'plaintext'
 
 # ------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ from Products.PloneMeeting.interfaces import \
 # ------------------------------------------------------------------------------
 class IMeetingItemCollegeMonsWorkflowActions(IMeetingItemWorkflowActions):
     '''This interface represents a meeting item as viewed by the specific
-       item workflow that is defined in this MeetingCommunes product.'''
+       item workflow that is defined in this MeetingMons product.'''
     def doPresent():
         """
           Triggered while doing the 'present' transition
@@ -46,7 +46,7 @@ class IMeetingItemCollegeMonsWorkflowActions(IMeetingItemWorkflowActions):
         """
 class IMeetingItemCollegeMonsWorkflowConditions(IMeetingItemWorkflowConditions):
     '''This interface represents a meeting item as viewed by the specific
-       item workflow that is defined in this MeetingCommunes product.'''
+       item workflow that is defined in this MeetingMons product.'''
     def mayDecide():
         """
           Guard for the 'decide' transition
@@ -65,7 +65,7 @@ class IMeetingItemCollegeMonsWorkflowConditions(IMeetingItemWorkflowConditions):
         """
 class IMeetingCollegeMonsWorkflowActions(IMeetingWorkflowActions):
     '''This interface represents a meeting as viewed by the specific meeting
-       workflow that is defined in this MeetingCommunes product.'''
+       workflow that is defined in this MeetingMons product.'''
     def doClose():
         """
           Triggered while doing the 'close' transition
@@ -84,7 +84,7 @@ class IMeetingCollegeMonsWorkflowActions(IMeetingWorkflowActions):
         """
 class IMeetingCollegeMonsWorkflowConditions(IMeetingWorkflowConditions):
     '''This interface represents a meeting as viewed by the specific meeting
-       workflow that is defined in this MeetingCommunes product.'''
+       workflow that is defined in this MeetingMons product.'''
     def mayFreeze():
         """
           Guard for the 'freeze' transition
@@ -108,7 +108,7 @@ class IMeetingCollegeMonsWorkflowConditions(IMeetingWorkflowConditions):
 
 class IMeetingCouncilMonsWorkflowActions(IMeetingWorkflowActions):
     '''This interface represents a meeting as viewed by the specific meeting
-       workflow that is defined in this MeetingCommunes product.'''
+       workflow that is defined in this MeetingMons product.'''
     def doClose():
         """
           Triggered while doing the 'close' transition
@@ -128,7 +128,7 @@ class IMeetingCouncilMonsWorkflowActions(IMeetingWorkflowActions):
 
 class IMeetingCouncilMonsWorkflowConditions(IMeetingWorkflowConditions):
     '''This interface represents a meeting as viewed by the specific meeting
-       workflow that is defined in this MeetingCommunes product.'''
+       workflow that is defined in this MeetingMons product.'''
     def mayFreeze():
         """
           Guard for the 'freeze' transition
@@ -152,7 +152,7 @@ class IMeetingCouncilMonsWorkflowConditions(IMeetingWorkflowConditions):
 
 class IMeetingItemCouncilMonsWorkflowActions(IMeetingItemWorkflowActions):
     '''This interface represents a meeting item as viewed by the specific
-       item workflow that is defined in this MeetingCommunes product.'''
+       item workflow that is defined in this MeetingMons product.'''
     def doPresent():
         """
           Triggered while doing the 'present' transition
@@ -160,7 +160,7 @@ class IMeetingItemCouncilMonsWorkflowActions(IMeetingItemWorkflowActions):
 
 class IMeetingItemCouncilMonsWorkflowConditions(IMeetingItemWorkflowConditions):
     '''This interface represents a meeting item as viewed by the specific
-       item workflow that is defined in this MeetingCommunes product.'''
+       item workflow that is defined in this MeetingMons product.'''
     def mayDecide():
         """
           Guard for the 'decide' transition
