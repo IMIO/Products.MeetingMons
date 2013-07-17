@@ -1,4 +1,4 @@
-Directory 'skins/MeetingCommunes':
+Directory 'skins/MeetingMons':
 
 Put your templates, css and javascript files in here. When first
 installed, this skin layer is added to the plone skin. It is added
