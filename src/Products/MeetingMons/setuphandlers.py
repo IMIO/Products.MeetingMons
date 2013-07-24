@@ -31,7 +31,11 @@ from Products.MeetingMons.config import COUNCIL_COMMISSION_IDS, COMMISSION_EDITO
 def isNotMeetingMonsProfile(context):
     return context.readDataFile("MeetingMons_marker.txt") is None
 
-
+def isMeetingMonsConfigureProfile(context):
+    return context.readDataFile("MeetingMons_marker.txt") or \
+            context.readDataFile("MeetingMons_Mons_marker") or \
+            context.readDataFile("MeetingMons_cpas_marker.txt") or \
+            context.readDataFile("MeetingMons_testing_marker.txt")
 
 def updateRoleMappings(context):
     """after workflow changed update the roles mapping. this is like pressing
@@ -43,7 +47,7 @@ def updateRoleMappings(context):
 def postInstall(context):
     """Called as at the end of the setup process. """
     # the right place for your custom code
-    if isNotMeetingNamurProfile(context):
+    if isNotMeetingMonsProfile(context):
         return
     logStep("postInstall", context)
     site = context.getSite()
