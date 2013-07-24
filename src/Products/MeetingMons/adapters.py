@@ -37,9 +37,11 @@ from Products.PloneMeeting.config import ITEM_NO_PREFERRED_MEETING_VALUE
 from Products.PloneMeeting.Meeting import MeetingWorkflowActions, \
     MeetingWorkflowConditions, Meeting
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
+from Products.PloneMeeting.ToolPloneMeeting import ToolPloneMeeting
 from Products.PloneMeeting.MeetingGroup import MeetingGroup
 from Products.PloneMeeting.interfaces import IMeetingCustom, IMeetingItemCustom, \
-                                             IMeetingConfigCustom, IMeetingGroupCustom
+                                             IMeetingConfigCustom, IMeetingGroupCustom, \
+                                             IToolPloneMeetingCustom
 from Products.MeetingMons.interfaces import \
      IMeetingItemCollegeMonsWorkflowConditions, IMeetingItemCollegeMonsWorkflowActions,\
      IMeetingCollegeMonsWorkflowConditions, IMeetingCollegeMonsWorkflowActions, \
@@ -288,7 +290,7 @@ class CustomMeeting(Meeting):
         '''Returns the label to use for field MeetingItem.description
           The label is different between college and council'''
         if self.portal_type == 'MeetingItemCouncil':
-            return self.utranslate("MeetingLalouviere_label_councildescription", domain="PloneMeeting")
+            return self.utranslate("MeetingMons_label_councildescription", domain="PloneMeeting")
         else:
             return self.utranslate("PloneMeeting_label_description", domain="PloneMeeting")
     MeetingItem.getLabelDescription = getLabelDescription
@@ -309,7 +311,7 @@ class CustomMeeting(Meeting):
         '''Returns the label to use for field MeetingItem.category
           The label is different between college and council'''
         if self.portal_type == 'MeetingItemCouncil':
-            return self.utranslate("MeetingLalouviere_label_councilcategory", domain="PloneMeeting")
+            return self.utranslate("MeetingMons_label_councilcategory", domain="PloneMeeting")
         else:
             return self.utranslate("PloneMeeting_label_category", domain="PloneMeeting")
     MeetingItem.getLabelCategory = getLabelCategory
@@ -319,7 +321,7 @@ class CustomMeeting(Meeting):
         '''Returns the label to use for field Meeting.observations
            The label is different between college and council'''
         if self.portal_type == 'MeetingCouncil':
-            return self.utranslate("MeetingLalouviere_label_meetingcouncilobservations", domain="PloneMeeting")
+            return self.utranslate("MeetingMons_label_meetingcouncilobservations", domain="PloneMeeting")
         else:
             return self.utranslate("PloneMeeting_label_meetingObservations", domain="PloneMeeting")
     Meeting.getLabelObservations = getLabelObservations
@@ -1054,12 +1056,12 @@ class CustomMeetingGroup(MeetingGroup):
         return DisplayList(tuple(res))
     MeetingGroup.listEchevinServices = listEchevinServices
 
-
-class MeetingCollegeLalouviereWorkflowActions(MeetingWorkflowActions):
+# ------------------------------------------------------------------------------
+class MeetingCollegeMonsWorkflowActions(MeetingWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
        interface IMeetingCollegeWorkflowActions'''
 
-    implements(IMeetingCollegeLalouviereWorkflowActions)
+    implements(IMeetingCollegeMonsWorkflowActions)
     security = ClassSecurityInfo()
 
     security.declarePrivate('doClose')
@@ -1121,11 +1123,11 @@ class MeetingCollegeLalouviereWorkflowActions(MeetingWorkflowActions):
                 self.context.portal_workflow.doActionFor(item, 'accept')
 
 
-class MeetingCollegeLalouviereWorkflowConditions(MeetingWorkflowConditions):
+class MeetingCollegeMonsWorkflowConditions(MeetingWorkflowConditions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
        interface IMeetingCollegeWorkflowConditions'''
 
-    implements(IMeetingCollegeLalouviereWorkflowConditions)
+    implements(IMeetingCollegeMonsWorkflowConditions)
     security = ClassSecurityInfo()
 
     security.declarePublic('mayFreeze')
@@ -1177,11 +1179,11 @@ class MeetingCollegeLalouviereWorkflowConditions(MeetingWorkflowConditions):
         return res
 
 
-class MeetingItemCollegeLalouviereWorkflowActions(MeetingItemWorkflowActions):
+class MeetingItemCollegeMonsWorkflowActions(MeetingItemWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
        interface IMeetingItemCollegeWorkflowActions'''
 
-    implements(IMeetingItemCollegeLalouviereWorkflowActions)
+    implements(IMeetingItemCollegeMonsWorkflowActions)
     security = ClassSecurityInfo()
 
     security.declarePrivate('doAccept_but_modify')
@@ -1278,11 +1280,11 @@ class MeetingItemCollegeLalouviereWorkflowActions(MeetingItemWorkflowActions):
 
 
 # ------------------------------------------------------------------------------
-class MeetingItemCollegeLalouviereWorkflowConditions(MeetingItemWorkflowConditions):
+class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
        interface IMeetingItemCollegeWorkflowConditions'''
 
-    implements(IMeetingItemCollegeLalouviereWorkflowConditions)
+    implements(IMeetingItemCollegeMonsWorkflowConditions)
     security = ClassSecurityInfo()
 
     def __init__(self, item):
@@ -1476,11 +1478,11 @@ class MeetingItemCollegeLalouviereWorkflowConditions(MeetingItemWorkflowConditio
         return res
 
 
-class MeetingCouncilLalouviereWorkflowActions(MeetingWorkflowActions):
+class MeetingCouncilMonsWorkflowActions(MeetingWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
        interface IMeetingCouncilWorkflowActions'''
 
-    implements(IMeetingCouncilLalouviereWorkflowActions)
+    implements(IMeetingCouncilMonsWorkflowActions)
     security = ClassSecurityInfo()
 
     security.declarePrivate('doSetInCommittee')
@@ -1544,12 +1546,11 @@ class MeetingCouncilLalouviereWorkflowActions(MeetingWorkflowActions):
         '''When a meeting go back to the "in_council" we do not do anything.'''
         pass
 
-# ------------------------------------------------------------------------------
-class MeetingCouncilLalouviereWorkflowConditions(MeetingWorkflowConditions):
+class MeetingCouncilMonsWorkflowConditions(MeetingWorkflowConditions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
        interface IMeetingCouncilWorkflowConditions'''
 
-    implements(IMeetingCouncilLalouviereWorkflowConditions)
+    implements(IMeetingCouncilMonsWorkflowConditions)
     security = ClassSecurityInfo()
 
     def __init__(self, meeting):
@@ -1608,11 +1609,11 @@ class MeetingCouncilLalouviereWorkflowConditions(MeetingWorkflowConditions):
         return res
 
 
-class MeetingItemCouncilLalouviereWorkflowActions(MeetingItemWorkflowActions):
+class MeetingItemCouncilMonsWorkflowActions(MeetingItemWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
        interface IMeetingItemCouncilWorkflowActions'''
 
-    implements(IMeetingItemCouncilLalouviereWorkflowActions)
+    implements(IMeetingItemCouncilMonsWorkflowActions)
     security = ClassSecurityInfo()
 
     security.declarePrivate('doProposeToDirector')
@@ -1674,11 +1675,11 @@ class MeetingItemCouncilLalouviereWorkflowActions(MeetingItemWorkflowActions):
         pass
 
 # ------------------------------------------------------------------------------
-class MeetingItemCouncilLalouviereWorkflowConditions(MeetingItemWorkflowConditions):
+class MeetingItemCouncilMonsWorkflowConditions(MeetingItemWorkflowConditions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
        interface IMeetingItemCouncilWorkflowConditions'''
 
-    implements(IMeetingItemCouncilLalouviereWorkflowConditions)
+    implements(IMeetingItemCouncilMonsWorkflowConditions)
     security = ClassSecurityInfo()
 
     def __init__(self, item):
@@ -1818,18 +1819,71 @@ class MeetingItemCouncilLalouviereWorkflowConditions(MeetingItemWorkflowConditio
                     res = True
         return res
 
+class CustomToolPloneMeeting(ToolPloneMeeting):
+    '''Adapter that adapts a tool implementing ToolPloneMeeting to the
+       interface IToolPloneMeetingCustom'''
 
+    implements(IToolPloneMeetingCustom)
+    security = ClassSecurityInfo()
+
+    security.declarePublic('getSpecificAssemblyFor')
+    def getSpecificAssemblyFor(self, assembly, startTxt=''):
+        ''' Return the Assembly between two tag.
+            This method is use in template
+        '''
+        #Pierre Dupont - Bourgmestre,
+        #Charles Exemple - 1er Echevin,
+        #Echevin Un, Echevin Deux excusé, Echevin Trois - Echevins,
+        #Jacqueline Exemple, Responsable du CPAS
+        #Absentes:
+        #Mademoiselle x
+        #Excusés:
+        #Monsieur Y, Madame Z
+        res = []
+        tmp = ['<p class="mltAssembly">']
+        splitted_assembly = assembly.replace('<p>','').replace('</p>','').split('<br />')
+        start_text = startTxt == ''
+        for assembly_line in splitted_assembly:
+            assembly_line = assembly_line.strip()
+            #check if this line correspond to startTxt (in this cas, we can begin treatment)
+            if not start_text:
+                start_text = assembly_line.startswith(startTxt)
+                if start_text:
+                    #when starting treatment, add tag (not use if startTxt=='')
+                    res.append(assembly_line)
+                continue
+            #check if we must stop treatment...
+            if assembly_line.endswith(':'):
+                break
+            lines = assembly_line.split(',')
+            cpt = 1
+            my_line = ''
+            for line in lines:
+               if cpt == len(lines):
+                   my_line = "%s%s<br />"%(my_line,line)
+                   tmp.append(my_line)
+               else:
+                   my_line = "%s%s,"%(my_line,line)
+               cpt = cpt + 1
+        if len(tmp) > 1:
+            tmp[-1] = tmp[-1].replace('<br />','')
+            tmp.append('</p>')
+        else:
+            return ''
+        res.append(''.join(tmp))
+        return res
 # ------------------------------------------------------------------------------
 InitializeClass(CustomMeetingItem)
 InitializeClass(CustomMeeting)
 InitializeClass(CustomMeetingConfig)
 InitializeClass(CustomMeetingGroup)
-InitializeClass(MeetingCollegeLalouviereWorkflowActions)
-InitializeClass(MeetingCollegeLalouviereWorkflowConditions)
-InitializeClass(MeetingItemCollegeLalouviereWorkflowActions)
-InitializeClass(MeetingItemCollegeLalouviereWorkflowConditions)
-InitializeClass(MeetingCouncilLalouviereWorkflowActions)
-InitializeClass(MeetingCouncilLalouviereWorkflowConditions)
-InitializeClass(MeetingItemCouncilLalouviereWorkflowActions)
-InitializeClass(MeetingItemCouncilLalouviereWorkflowConditions)
+InitializeClass(MeetingCollegeMonsWorkflowActions)
+InitializeClass(MeetingCollegeMonsWorkflowConditions)
+InitializeClass(MeetingItemCollegeMonsWorkflowActions)
+InitializeClass(MeetingItemCollegeMonsWorkflowConditions)
+InitializeClass(MeetingCouncilMonsWorkflowActions)
+InitializeClass(MeetingCouncilMonsWorkflowConditions)
+InitializeClass(MeetingItemCouncilMonsWorkflowActions)
+InitializeClass(MeetingItemCouncilMonsWorkflowConditions)
+InitializeClass(CustomToolPloneMeeting)
 # ------------------------------------------------------------------------------
