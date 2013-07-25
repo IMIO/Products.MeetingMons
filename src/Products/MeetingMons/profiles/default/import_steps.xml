@@ -8,7 +8,7 @@
     id="MeetingMons-Update-RoleMappings" 
     handler="Products.MeetingMons.setuphandlers.updateRoleMappings"
     title="Update Workflow role mappings for MeetingMons"
-    version="2013-07-17T11:23:39.865579">
+    version="2013-07-25T16:08:09.616230">
    <dependency step="MeetingMons-QI-dependencies"/>
    updates the workflow role mappings for MeetingMons
  </import-step>
@@ -17,7 +17,7 @@
     id="MeetingMons-postInstall" 
     handler="Products.MeetingMons.setuphandlers.postInstall"
     title="manual coded post-install for MeetingMons"
-    version="2013-07-17T11:23:39.865579">
+    version="2013-07-25T16:08:09.616230">
    <dependency step="MeetingMons-QI-dependencies"/>
    manual coded post-install for MeetingMons
  </import-step>
