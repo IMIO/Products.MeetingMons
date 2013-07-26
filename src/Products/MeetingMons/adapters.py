@@ -1202,10 +1202,6 @@ class MeetingItemCollegeMonsWorkflowActions(MeetingItemWorkflowActions):
     def doProposeToServiceHead(self, stateChange):
         pass
 
-    security.declarePrivate('doWaitAdvices')
-    def doWaitAdvices(self, stateChange):
-        pass
-
     security.declarePrivate('doProposeToDirector')
     def doProposeToDirector(self, stateChange):
         pass

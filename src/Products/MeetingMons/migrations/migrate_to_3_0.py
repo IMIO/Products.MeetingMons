@@ -14,7 +14,6 @@ def migrate(context):
     _adaptCouncilWorkflows(portal)
     portal.portal_setup.runAllImportStepsFromProfile(u'profile-Products.MeetingMons:default')
 
-
 def _adaptItemsToValidateTopic(portal):
     """
       Old versions of the searchitemstovalidate topic did not use a search script, correct this!
@@ -27,7 +26,6 @@ def _adaptItemsToValidateTopic(portal):
                 topic.manage_addProperty(TOPIC_SEARCH_SCRIPT, 'searchItemsToValidate', 'string')
             else:
                 topic.manage_changeProperties(topic_search_script='searchItemsToValidate')
-
 
 def _removeGlobalPowerObservers(portal):
     """
@@ -70,7 +68,6 @@ def _removeGlobalPowerObservers(portal):
             portal.acl_users.portal_role_manager.removeRole('MeetingPowerObserver')
         except KeyError:
             pass
-
 
 def _adaptCouncilWorkflows(portal):
     """

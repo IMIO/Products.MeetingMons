@@ -31,8 +31,6 @@ from Products.MeetingMons.config import COUNCIL_COMMISSION_IDS, COMMISSION_EDITO
 def isNotMeetingMonsProfile(context):
     return context.readDataFile("MeetingMons_marker.txt") is None
 
-
-
 def updateRoleMappings(context):
     """after workflow changed update the roles mapping. this is like pressing
     the button 'Update Security Setting' and portal_workflow"""
@@ -60,9 +58,17 @@ def postInstall(context):
     showHomeTab(context, site)
     reinstallPloneMeetingSkin(context, site)
 
-
-
 ##code-section FOOT
+
+def isMeetingMonsConfigureProfile(context):
+    return context.readDataFile("MeetingMons_examples_fr_marker.txt") or \
+            context.readDataFile("MeetingMons_testing_marker.txt") or \
+            context.readDataFile("MeetingMons_Mons_marker.txt") or \
+            context.readDataFile("MeetingMons_cpas_marker.txt")
+
+def isMeetingMonsTestingProfile(context):
+    return context.readDataFile("MeetingMons_tests_marker.txt")
+  
 def addSearches(context, portal):
     '''
        Add additional searches to the all MeetingConfig except meeting-config-council
