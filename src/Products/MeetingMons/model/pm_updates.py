@@ -4,6 +4,7 @@ from Products.PloneMeeting.MeetingItem import MeetingItem
 from Products.PloneMeeting.MeetingGroup import MeetingGroup
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
 
+
 def update_config_schema(baseSchema):
     specificSchema = Schema((
         TextField(
@@ -98,7 +99,7 @@ def update_config_schema(baseSchema):
             allowable_content_types=('text/html',),
             default_output_type="text/html",
         ),
-        
+
         TextField(
             name='defaultMeetingItemDetailledDescription',
             widget=RichWidget(
@@ -112,7 +113,7 @@ def update_config_schema(baseSchema):
             allowable_content_types=('text/html',),
             default_output_type="text/html",
         ),
-        
+
         TextField(
             name='itemDecisionReportText',
             widget=TextAreaWidget(
@@ -123,7 +124,7 @@ def update_config_schema(baseSchema):
                 i18n_domain='PloneMeeting',
             ),
         ),
-        
+
         TextField(
             name='itemDecisionRefuseText',
             widget=TextAreaWidget(
@@ -138,13 +139,15 @@ def update_config_schema(baseSchema):
 
     completeConfigSchema = baseSchema + specificSchema.copy()
     completeConfigSchema.moveField('defaultMeetingItemDecision', after='budgetDefault')
-    completeConfigSchema.moveField('itemDecisionReportText', after='defaultMeetingItemDecision')
+    completeConfigSchema.moveField('defaultMeetingItemDetailledDescription', after='defaultMeetingItemDecision')
+    completeConfigSchema.moveField('itemDecisionReportText', after='defaultMeetingItemDetailledDescription')
     completeConfigSchema.moveField('itemDecisionRefuseText', after='itemDecisionReportText')
     return completeConfigSchema
 MeetingConfig.schema = update_config_schema(MeetingConfig.schema)
 
+
 def update_group_schema(baseSchema):
-    
+
     specificSchema = Schema((
 
         # field used to define list of services for echevin for a MeetingGroup
@@ -153,16 +156,16 @@ def update_group_schema(baseSchema):
             widget=MultiSelectionWidget(
                 size=10,
                 label='EchevinServices',
-                label_msgid='MeetingCommune_label_echevinServices',
+                label_msgid='MeetingMons_label_echevinServices',
                 description='Leave empty if he is not an echevin',
-                description_msgid='MeetingCommune_descr_echevinServices',
+                description_msgid='MeetingMons_descr_echevinServices',
                 i18n_domain='PloneMeeting',
             ),
             enforceVocabulary=True,
             multiValued=1,
             vocabulary='listEchevinServices',
         ),
-        
+
         # field used to define specific signatures for a MeetingGroup
         TextField(
             name='signatures',
@@ -180,6 +183,7 @@ def update_group_schema(baseSchema):
 
     return completeGroupSchema
 MeetingGroup.schema = update_group_schema(MeetingGroup.schema)
+
 
 def update_meeting_schema(baseSchema):
     specificSchema = Schema((
@@ -426,6 +430,7 @@ def update_meeting_schema(baseSchema):
     return completeMeetingSchema
 Meeting.schema = update_meeting_schema(Meeting.schema)
 
+
 def update_item_schema(baseSchema):
 
     specificSchema = Schema((
@@ -462,8 +467,21 @@ def update_item_schema(baseSchema):
             searchable=True,
             allowable_content_types=('text/html',),
             default_output_type="text/html",
-            write_permission = "MeetingMons: Write commission transcript",
-            read_permission = "MeetingMons: Read commission transcript",
+            write_permission="MeetingMons: Write commission transcript",
+            read_permission="MeetingMons: Read commission transcript",
+        ),
+        #specific field for Mons added possibility to BudgetImpactReviewer to "validate item"
+        BooleanField(
+            name='validateByBudget',
+            widget=BooleanField._properties['widget'](
+                condition="python: here.attributeIsUsed('budgetInfos')",
+                label='ValidateByBudget',
+                label_msgid='MeetingMons_label_validateByBudget',
+                description='Validate By Budget Impact Reviwer',
+                description_msgid='MeetingMons_descr_validateByBudget',
+                i18n_domain='PloneMeeting',
+            ),
+            write_permission="MeetingMons: Write budget infos"
         ),
 
     ),)
@@ -471,11 +489,13 @@ def update_item_schema(baseSchema):
     baseSchema['budgetInfos'].write_permission = "MeetingMons: Write budget infos"
     baseSchema['budgetInfos'].read_permission = "MeetingMons: Read budget infos"
     baseSchema['category'].widget.label_method = "getLabelCategory"
-    baseSchema['privacy'].widget.condition = "python: here.attributeIsUsed('privacy') and portal.portal_plonemeeting.isManager()"
+    baseSchema['privacy'].widget.condition = "python: here.attributeIsUsed('privacy') and \
+    portal.portal_plonemeeting.isManager()"
     baseSchema['decision'].default_method = 'getDefaultDecision'
     baseSchema['decision'].widget.label_method = 'getLabelDecision'
     baseSchema['description'].widget.label = "projectOfDecision"
     baseSchema['description'].widget.label_msgid = "projectOfDecision_label"
+    baseSchema['detailedDescription'].default_method = 'getDefaultDetailledDescription'
     baseSchema['detailedDescription'].widget.description = "item_motivation"
     baseSchema['detailedDescription'].widget.description_msgid = "item_motivation_descr"
     baseSchema['detailedDescription'].write_permission = "PloneMeeting: Write decision"

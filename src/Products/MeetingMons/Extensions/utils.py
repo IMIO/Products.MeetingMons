@@ -1,5 +1,6 @@
 from AccessControl import Unauthorized
 
+
 def export_meetinggroups(self):
     """
       Export the existing MeetingGroups informations as a dictionnary
@@ -7,12 +8,12 @@ def export_meetinggroups(self):
     member = self.portal_membership.getAuthenticatedMember()
     if not member.has_role('Manager'):
         raise Unauthorized, 'You must be a Manager to access this script !'
-    
+
     if not hasattr(self, 'portal_plonemeeting'):
-        return "PloneMeeting must be installed to run this script !"        
-    
+        return "PloneMeeting must be installed to run this script !"
+
     pm = self.portal_plonemeeting
-    
+
     dict = {}
     for mgr in pm.objectValues('MeetingGroup'):
         dict[mgr.getId()] = (mgr.Title(), mgr.Description(), mgr.getAcronym(), mgr.getGivesMandatoryAdviceOn())

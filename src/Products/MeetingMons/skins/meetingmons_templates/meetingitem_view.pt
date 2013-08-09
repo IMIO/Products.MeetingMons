@@ -137,6 +137,11 @@
            <metal:itemIsSigned use-macro="here/hs_macros/macros/itemIsSigned" />
           </tal:defines>
         </div>
+        
+        <div class="discreet" tal:condition="python: 'budgetInfos' in usedAttrs and context.getBudgetRelated() and context.getValidateByBudget()">
+          <i><span i18n:translate="MeetingMons_label_validateByBudget"></span></i>&nbsp;&nbsp;
+        </div>
+        
         </td>
         <td width="50%" align="right">
         <tal:comment replace="nothing">Preferred meeting</tal:comment>
@@ -230,6 +235,12 @@
     <tal:field define="fieldName python: 'detailedDescription'; ajaxEdit python:True">
        <metal:f use-macro="context/hs_macros/macros/viewContentField"/>
     </tal:field>
+    
+    <tal:comment replace="nothing">Budgetary informations</tal:comment>
+    <fieldset tal:condition="python: 'budgetInfos' in usedAttrs and context.getBudgetRelated()">
+      <legend i18n:translate="PloneMeeting_label_budgetInfos">Budgetary informations</legend>
+      <div tal:replace="structure context/getBudgetInfos"></div>
+    </fieldset>
     
     <tal:comment replace="nothing">Decision</tal:comment>
     <tal:field define="fieldName python: 'decision'; ajaxEdit python:True">

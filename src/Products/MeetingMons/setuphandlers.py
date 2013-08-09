@@ -16,27 +16,28 @@ __docformat__ = 'plaintext'
 import logging
 logger = logging.getLogger('MeetingMons: setuphandlers')
 from Products.MeetingMons.config import PROJECTNAME
-from Products.MeetingMons.config import DEPENDENCIES
 import os
 from Products.CMFCore.utils import getToolByName
-import transaction
 ##code-section HEAD
-from DateTime import DateTime
 from Products.PloneMeeting.exportimport.content import ToolInitializer
 from Products.PloneMeeting.model.adaptations import performWorkflowAdaptations
 from Products.PloneMeeting.config import TOPIC_TYPE, TOPIC_SEARCH_SCRIPT, TOPIC_TAL_EXPRESSION
 from Products.MeetingMons.config import COUNCIL_COMMISSION_IDS, COMMISSION_EDITORS_SUFFIX
 ##/code-section HEAD
 
+
 def isNotMeetingMonsProfile(context):
     return context.readDataFile("MeetingMons_marker.txt") is None
+
 
 def updateRoleMappings(context):
     """after workflow changed update the roles mapping. this is like pressing
     the button 'Update Security Setting' and portal_workflow"""
-    if isNotMeetingMonsProfile(context): return
+    if isNotMeetingMonsProfile(context):
+        return
     wft = getToolByName(context.getSite(), 'portal_workflow')
     wft.updateRoleMappings()
+
 
 def postInstall(context):
     """Called as at the end of the setup process. """
@@ -56,68 +57,65 @@ def postInstall(context):
     #need to reinstall PloneMeeting after reinstalling MC workflows to re-apply wfAdaptations
     reinstallPloneMeeting(context, site)
     showHomeTab(context, site)
+    reorderCss(context)
     reinstallPloneMeetingSkin(context, site)
+
 
 ##code-section FOOT
 
+
 def isMeetingMonsConfigureProfile(context):
     return context.readDataFile("MeetingMons_examples_fr_marker.txt") or \
-            context.readDataFile("MeetingMons_testing_marker.txt") or \
-            context.readDataFile("MeetingMons_Mons_marker.txt") or \
-            context.readDataFile("MeetingMons_cpas_marker.txt")
+        context.readDataFile("MeetingMons_testing_marker.txt") or \
+        context.readDataFile("MeetingMons_Mons_marker.txt") or \
+        context.readDataFile("MeetingMons_cpas_marker.txt")
+
 
 def isMeetingMonsTestingProfile(context):
     return context.readDataFile("MeetingMons_tests_marker.txt")
-  
+
+
 def addSearches(context, portal):
     '''
        Add additional searches to the all MeetingConfig except meeting-config-council
     '''
-    if isNotMeetingMonsProfile(context): return
+    if isNotMeetingMonsProfile(context):
+        return
 
     logStep("add_college_Searches", context)
     topicsInfo = (
-    # Items in state 'proposed_to_budgetimpact_reviewer'
-    ( 'searchbudgetimpactreviewersitems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('proposed_to_budgetimpact_reviewer', ), '', 'python: here.portal_plonemeeting.userIsAmong("budgetimpactreviewers")',
-    ),
-    # Items in state 'proposed_to_extraordinarybudget'
-    ( 'searchextraordinarybudgetsitems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('proposed_to_extraordinarybudget', ), '', 'python: here.portal_plonemeeting.userIsAmong("extraordinarybudget")',
-    ),
-    # Items in state 'proposed_to_servicehead'
-    ( 'searchserviceheaditems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('proposed_to_servicehead', ), '', 'python: here.portal_plonemeeting.userIsAmong("serviceheads")',
-    ),  
-    # Items in state 'proposed_to_officemanager'
-    ( 'searchofficemanageritems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('proposed_to_officemanager', ), '', 'python: here.portal_plonemeeting.userIsAmong("officemanagers")',
-    ),
-    # Items in state 'proposed_to_divisionhead
-    ( 'searchdivisionheaditems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('proposed_to_divisionhead', ), '', 'python: here.portal_plonemeeting.userIsAmong("divisionheads")',
-    ),
-    # Items in state 'proposed_to_director'
-    ( 'searchdirectoritems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('proposed_to_director', ), '', 'python: here.isAReviewer()',
-    ),
-    # Items in state 'validated'
-    ( 'searchvalidateditems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('validated', ), '', '',
-    ),    
-    # All 'decided' items
-    ( 'searchdecideditems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('accepted', 'refused', 'delayed', 'accepted_but_modified'), '', '',
-    ),
-    )
+        # Items in state 'proposed_to_budgetimpact_reviewer'
+        ('searchbudgetimpactreviewersitems',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),),
+        ('proposed_to_budgetimpact_reviewer', ), '',
+        'python: here.portal_plonemeeting.userIsAmong("budgetimpactreviewers")',),
+        # Items in state 'proposed_to_extraordinarybudget'
+        ('searchextraordinarybudgetsitems',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), ('proposed_to_extraordinarybudget', ), '',
+        'python: here.portal_plonemeeting.userIsAmong("extraordinarybudget")',),
+        # Items in state 'proposed_to_servicehead'
+        ('searchserviceheaditems',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), ('proposed_to_servicehead', ), '',
+        'python: here.portal_plonemeeting.userIsAmong("serviceheads")',),
+        # Items in state 'proposed_to_officemanager'
+        ('searchofficemanageritems',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), ('proposed_to_officemanager', ), '',
+        'python: here.portal_plonemeeting.userIsAmong("officemanagers")',),
+        # Items in state 'proposed_to_divisionhead
+        ('searchdivisionheaditems',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), ('proposed_to_divisionhead', ), '',
+        'python: here.portal_plonemeeting.userIsAmong("divisionheads")',),
+        # Items in state 'proposed_to_director'
+        ('searchdirectoritems',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), ('proposed_to_director', ), '',
+        'python: here.isAReviewer()',),
+        # Items in state 'validated'
+        ('searchvalidateditems',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), ('validated', ), '', '',),
+        # All 'decided' items
+        ('searchdecideditems',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),),
+        ('accepted', 'refused', 'delayed', 'accepted_but_modified'), '', '',),)
 
     mcs = portal.portal_plonemeeting.objectValues("MeetingConfig")
     if not mcs:
@@ -136,8 +134,7 @@ def addSearches(context, portal):
             topic.setExcludeFromNav(True)
             topic.setTitle(topicId)
             for criterionName, criterionType, criterionValue in topicCriteria:
-                criterion = topic.addCriterion(field=criterionName,
-                                                criterion_type=criterionType)
+                criterion = topic.addCriterion(field=criterionName, criterion_type=criterionType)
                 topic.manage_addProperty(TOPIC_TYPE, criterionValue, 'string')
                 criterionValue = '%s%s' % (criterionValue, meetingConfig.getShortName())
                 criterion.setValue([criterionValue])
@@ -153,6 +150,7 @@ def addSearches(context, portal):
             topic.setCustomViewFields(['Title', 'CreationDate', 'Creator', 'review_state'])
             topic.reindexObject()
 
+
 def logStep(method, context):
     logger.info("Applying '%s' in profile '%s'" %
                 (method, '/'.join(context._profile_path.split(os.sep)[-3:])))
@@ -160,6 +158,7 @@ def logStep(method, context):
 
 def isNotMeetingMonsMonsProfile(context):
     return context.readDataFile("MeetingMons_Mons_marker.txt") is None
+
 
 def installMeetingMons(context):
     """ Run the default profile before bing able to run the mons profile"""
@@ -170,19 +169,23 @@ def installMeetingMons(context):
     portal = context.getSite()
     portal.portal_setup.runAllImportStepsFromProfile('profile-Products.MeetingMons:default')
 
+
 def initializeTool(context):
     '''Initialises the PloneMeeting tool based on information from the current
        profile.'''
-    if isNotMeetingMonsMonsProfile(context): return
+    if isNotMeetingMonsMonsProfile(context):
+        return
 
     logStep("initializeTool", context)
     return ToolInitializer(context, PROJECTNAME).run()
+
 
 def addCommissionEditorGroups(context, portal):
     '''
        Add groups for council commissions that will contain MeetingCommissionEditors
     '''
-    if isNotMeetingMonsProfile(context): return
+    if isNotMeetingMonsProfile(context):
+        return
 
     logStep("addCommissionEditorGroups", context)
     existingPloneGroupIds = portal.portal_groups.getGroupIds()
@@ -193,56 +196,44 @@ def addCommissionEditorGroups(context, portal):
             groupTitle = groupId.replace('-', ' ').capitalize() + u' (Rédacteurs PV)'.encode('utf-8')
             portal.portal_groups.addGroup(groupId, title=groupTitle)
 
+
 def addCouncilSearches(context, portal):
     '''
        Add additional searches to the 'meeting-config-council' MeetingConfig
     '''
-    if isNotMeetingMonsProfile(context): return
+    if isNotMeetingMonsProfile(context):
+        return
 
     logStep("addCouncilSearches", context)
     topicsInfo = (
-    # Items in state 'proposed_to_officemanager'
-    ( 'searchproposeditems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('proposed_to_officemanager', ), '', 'python: not here.portal_plonemeeting.userIsAmong("officemanagers")',
-    ),
-    # Items in state 'proposed_to_director'
-    # Used in the "todo" portlet
-    ( 'searchitemstovalidate',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('proposed_to_director', ), '', 'python: here.portal_plonemeeting.userIsAmong("directors")',
-    ),
-    # Items in state 'validated'
-    ( 'searchvalidateditems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('validated', ), '', '',
-    ),
-    # Items in state 'returned_to_service
-    ( 'searchreturnedtoserviceitems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('returned_to_service', ), '', 'python: here.portal_plonemeeting.userIsAmong("officemanagers") or here.portal_plonemeeting.userIsAmong("creators")',
-    ),
-    # Items returned to secretary after corrections
-    ( 'searchcorrecteditems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), (), 'searchCorrectedItems', 'python: here.portal_plonemeeting.isManager()',
-    ),
-    # Items of my commissions
-    ( 'searchitemsofmycommissions',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), (), 'searchItemsOfMyCommissions', 'python: here.portal_plonemeeting.userIsAmong("commissioneditors")',
-    ),
-    # Items of my commissions I can edit
-    ( 'searchitemsofmycommissionstoedit',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), (), 'searchItemsOfMyCommissionsToEdit', 'python: here.portal_plonemeeting.userIsAmong("commissioneditors")',
-    ),
-    # All 'decided' items
-    ( 'searchdecideditems',
-    (  ('Type', 'ATPortalTypeCriterion', 'MeetingItem'),
-    ), ('accepted', 'refused', 'delayed', 'accepted_but_modified'), '', '',
-    ),
-    )
+        # Items in state 'proposed_to_officemanager'
+        ('searchproposeditems',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), ('proposed_to_officemanager', ), '',
+        'python: not here.portal_plonemeeting.userIsAmong("officemanagers")',),
+        # Items in state 'proposed_to_director'
+        # Used in the "todo" portlet
+        ('searchitemstovalidate',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), ('proposed_to_director', ), '',
+        'python: here.portal_plonemeeting.userIsAmong("directors")',),
+        # Items in state 'validated'
+        ('searchvalidateditems', (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), ('validated', ), '', '',),
+        # Items in state 'returned_to_service
+        ('searchreturnedtoserviceitems', (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),),
+         ('returned_to_service', ), '', 'python: here.portal_plonemeeting.userIsAmong("officemanagers") or \
+         here.portal_plonemeeting.userIsAmong("creators")',),
+        # Items returned to secretary after corrections
+        ('searchcorrecteditems', (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), (),
+         'searchCorrectedItems', 'python: here.portal_plonemeeting.isManager()',),
+        # Items of my commissions
+        ('searchitemsofmycommissions', (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), (),
+         'searchItemsOfMyCommissions', 'python: here.portal_plonemeeting.userIsAmong("commissioneditors")',),
+        # Items of my commissions I can edit
+        ('searchitemsofmycommissionstoedit',
+        (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),), (), 'searchItemsOfMyCommissionsToEdit',
+        'python: here.portal_plonemeeting.userIsAmong("commissioneditors")',),
+        # All 'decided' items
+        ('searchdecideditems', (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),),
+         ('accepted', 'refused', 'delayed', 'accepted_but_modified'), '', '',),)
 
     mcs = portal.portal_plonemeeting.objectValues("MeetingConfig")
     if not mcs:
@@ -261,8 +252,7 @@ def addCouncilSearches(context, portal):
             topic.setExcludeFromNav(True)
             topic.setTitle(topicId)
             for criterionName, criterionType, criterionValue in topicCriteria:
-                criterion = topic.addCriterion(field=criterionName,
-                                                criterion_type=criterionType)
+                criterion = topic.addCriterion(field=criterionName, criterion_type=criterionType)
                 topic.manage_addProperty(TOPIC_TYPE, criterionValue, 'string')
                 criterionValue = '%s%s' % (criterionValue, meetingConfig.getShortName())
                 criterion.setValue([criterionValue])
@@ -278,51 +268,55 @@ def addCouncilSearches(context, portal):
             topic.setCustomViewFields(['Title', 'CreationDate', 'Creator', 'review_state'])
             topic.reindexObject()
 
-    
         # define some parameters for 'meeting-config-council'
         mc_council = getattr(portal.portal_plonemeeting, 'meeting-config-council')
         # add some topcis to the portlet_todo
         mc_council.setToDoListTopics([getattr(mc_council.topics, 'searchdecideditems'),
-                              getattr(mc_council.topics, 'searchitemstovalidate'),
-                              getattr(mc_council.topics, 'searchreturnedtoserviceitems'),
-                              getattr(mc_council.topics, 'searchcorrecteditems'),
-                              getattr(mc_council.topics, 'searchitemsofmycommissionstoedit'),
-                              getattr(mc_council.topics, 'searchallitemstoadvice'),
-                              getattr(mc_council.topics, 'searchallitemsincopy'),
-                             ])
+                                      getattr(mc_council.topics, 'searchitemstovalidate'),
+                                      getattr(mc_council.topics, 'searchreturnedtoserviceitems'),
+                                      getattr(mc_council.topics, 'searchcorrecteditems'),
+                                      getattr(mc_council.topics, 'searchitemsofmycommissionstoedit'),
+                                      getattr(mc_council.topics, 'searchallitemstoadvice'),
+                                      getattr(mc_council.topics, 'searchallitemsincopy'), ])
+
 
 def setDefaultMeetingItemDecisions(context, portal):
     '''
        Define the MeetingConfig.defaultItemDecision for 'meeting-config-college'
        and 'meeting-config-council
     '''
-    if isNotMeetingMonsProfile(context): return
+    if isNotMeetingMonsProfile(context):
+        return
 
     logStep("setDefaultMeetingItemDecisions", context)
 
-    data = {'meeting-config-college':"""<p>Vu l'arrêté du Gouvernement Wallon du 22 avril 2004 portant codification de la législation relative aux pouvoirs locaux; dit le code de la démocratie locale et de la décentralisation;</p>
+    data = {'meeting-config-college': """<p>Vu l'arrêté du Gouvernement Wallon du 22 avril 2004 portant codification \
+de la législation relative aux pouvoirs locaux; dit le code de la démocratie locale et de la décentralisation;</p>
 <p>Vu le décret du 27 mai 2004 portant confirmation dudit arrêté du gouvernement Wallon du 22 avril 2004;</p>
 <p>Vu la nouvelle Loi communale;</p>
 <p>Vu l'article 123 de la nouvelle Loi communale;</p>
 <p>Vu l'article L1123-23 du code de la Démocratie locale et de la Décentralisation;</p>""",
-    'meeting-config-council':"""<p>Vu, d'une part, l'arrêté du Gouvernement Wallon du 22 avril 2004 portant codification de la législation relative aux pouvoirs locaux et d'autre part, le décret du 27 mai 2004 portant confirmation dudit arrêté;</p>
+            'meeting-config-council': """<p>Vu, d'une part, l'arrêté du Gouvernement Wallon du 22 avril \
+2004 portant codification de la législation relative aux pouvoirs locaux et d'autre part, \
+le décret du 27 mai 2004 portant confirmation dudit arrêté;</p>
 <p>Vu l'article 117 de la nouvelle Loi Communale;</p>
-<p>Vu l'article L 1122-30 du Code de Démocratie Locale et de la Décentralisation;</p>""",
-}
+<p>Vu l'article L 1122-30 du Code de Démocratie Locale et de la Décentralisation;</p>""", }
 
     for mc in portal.portal_plonemeeting.objectValues("MeetingConfig"):
         defaultMeetingItemDecision = mc.getDefaultMeetingItemDecision()
         #only update values for 'college' and 'council' if the field is empty
-        if not mc.getId() in ['meeting-config-council', 'meeting-config-college',] \
+        if not mc.getId() in ['meeting-config-council', 'meeting-config-college', ] \
            or defaultMeetingItemDecision:
             continue
         mc.setDefaultMeetingItemDecision(data[mc.getId()])
+
 
 def setDefaultPreMeetingsAssembly(context, portal):
     '''
        Define a default value for each MeetingConfig.preMeetingAssembly_default
     '''
-    if isNotMeetingMonsProfile(context): return
+    if isNotMeetingMonsProfile(context):
+        return
 
     logStep("setDefaultPreMeetingsAssembly", context)
 
@@ -337,7 +331,7 @@ M.J.KEIJZER, Mmes C.BOULANGIER, F.VERMEER, L.BACCARELLA, M.C.LICATA,
 Mme M.ROLAND, Conseillers communaux"""
     mc.setPreMeetingAssembly_default(data)
     # Commission Enseignement
-    data="""M.A.GAVA, Président,
+    data = """M.A.GAVA, Président,
 MM.L.WIMLOT, V.LIBOIS, Vice-présidents,
 MM.M.DUBOIS, M.DI MATTIA, J.KEIJZER, A.FAGBEMI, Mme F.RMILI,
 M.A.BUSCEMI, Mme A-M.MARIN, MM.A.GOREZ, J-P.MICHIELS, C.DELPLANCQ,
@@ -374,6 +368,7 @@ A.GAVA, L.DUVAL, P.WATERLOT, L.WIMLOT, A.GOREZ, J-P.MICHIELS
 Mme L.BACCARELLA, M.C.LICATA, Conseillers communaux
     """
     mc.setPreMeetingAssembly_6_default(data)
+
 
 def reinstallPloneMeeting(context, site):
     '''Reinstall PloneMeeting so after install methods are called and applied,
@@ -516,24 +511,21 @@ def reorderCss(context):
     for resource in css:
         portal_css.moveResourceToBottom(resource)
 
-def onMeetingItemTransition(obj, event):
-    '''Called whenever a transition has been fired on a meetingItem.
-       Reindex the previous_review_state index.'''
-    if not event.transition or (obj != event.object): return
-    obj.reindexObject(idxs=['previous_review_state', ])
-    
+
 def addAldermanGroup(context):
     """
       Add a Plone group configured to receive MeetingAlderman
       These users can modify Motivation and Decision field's items
       This group recieved the MeetingAldermanRôle
     """
-    if isNotMeetingMonsProfile(context): return
+    if isNotMeetingMonsProfile(context):
+        return
     logStep("addAldermanGroup", context)
     portal = context.getSite()
     groupId = "meetingalderman"
     if not groupId in portal.portal_groups.listGroupIds():
         portal.portal_groups.addGroup(groupId, title=portal.utranslate("aldermanGroupTitle", domain='PloneMeeting'))
-        portal.portal_groups.setRolesForGroup(groupId, ('MeetingObserverGlobal','MeetingPowerObserver','MeetingAlderman'))
+        portal.portal_groups.setRolesForGroup(groupId, ('MeetingObserverGlobal', 'MeetingPowerObserver',
+                                                        'MeetingAlderman'))
 
 ##/code-section FOOT

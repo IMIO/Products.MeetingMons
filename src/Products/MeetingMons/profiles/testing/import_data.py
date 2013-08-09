@@ -6,14 +6,15 @@ annexe = MeetingFileTypeDescriptor('annexe', 'Annexe', 'attach.png', '')
 annexeBudget = MeetingFileTypeDescriptor('annexeBudget', 'Article Budgétaire', 'budget.png', '')
 annexeCahier = MeetingFileTypeDescriptor('annexeCahier', 'Cahier des Charges', 'cahier.gif', '')
 annexeRemarks = MeetingFileTypeDescriptor('annexeRemarks', 'Remarques secrétaires', 'secretary_remarks.png', '')
-annexeDecision = MeetingFileTypeDescriptor('annexeDecision', 'Annexe à la décision', 'attach.png', '', True, active=False)
+annexeDecision = MeetingFileTypeDescriptor('annexeDecision', 'Annexe à la décision', 'attach.png', '', True, \
+                                           active=False)
 
 # Pod templates ----------------------------------------------------------------
 # MeetingItem
 councilDelibTemplate = PodTemplateDescriptor('conseil-deliberation', 'Délibération')
 councilDelibTemplate.podTemplate = 'conseil_deliberation.odt'
 councilDelibTemplate.podCondition = 'python:(here.meta_type=="MeetingItem") and ' \
-                              'here.queryState() in ["accepted", "refused", "delayed", "accepted_but_modified",]'
+                                    'here.queryState() in ["accepted", "refused", "delayed", "accepted_but_modified",]'
 councilProjetDelibTemplate = PodTemplateDescriptor('conseil-projet-deliberation', 'Projet délibération')
 councilProjetDelibTemplate.podTemplate = 'conseil_projet_deliberation.odt'
 councilProjetDelibTemplate.podCondition = 'python:(here.meta_type=="MeetingItem")'
@@ -26,27 +27,27 @@ councilNoteExplTemplate.podCondition = 'python:(here.meta_type=="MeetingItem")'
 councilOJExplanatoryTemplate = PodTemplateDescriptor('conseil-oj-notes-explicatives', 'OJ (notes explicatives)')
 councilOJExplanatoryTemplate.podTemplate = 'conseil_oj_notes_explicatives.odt'
 councilOJExplanatoryTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
-                              'here.portal_plonemeeting.isManager()'
+                                            'here.portal_plonemeeting.isManager()'
 councilFardesTemplate = PodTemplateDescriptor('conseil-fardes', 'Fardes')
 councilFardesTemplate.podTemplate = 'conseil_fardes.odt'
 councilFardesTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
-                              'here.portal_plonemeeting.isManager()'
+                                     'here.portal_plonemeeting.isManager()'
 councilAvisTemplate = PodTemplateDescriptor('conseil-avis', 'Avis')
 councilAvisTemplate.podTemplate = 'conseil_avis_affiche_aux_valves.odt'
 councilAvisTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
-                              'here.portal_plonemeeting.isManager()'
+                                   'here.portal_plonemeeting.isManager()'
 councilOJConvPresseTemplate = PodTemplateDescriptor('conseil-convocation-presse', 'Convocation presse')
 councilOJConvPresseTemplate.podTemplate = 'conseil_convocation_presse.odt'
 councilOJConvPresseTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
-                              'here.portal_plonemeeting.isManager()'
+                                           'here.portal_plonemeeting.isManager()'
 councilOJConvConsTemplate = PodTemplateDescriptor('conseil-convocation-conseillers', 'Convocation conseillers')
 councilOJConvConsTemplate.podTemplate = 'conseil_convocation_conseillers.odt'
 councilOJConvConsTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
-                              'here.portal_plonemeeting.isManager()'
+                                         'here.portal_plonemeeting.isManager()'
 councilOJConvConsPremSupplTemplate = PodTemplateDescriptor('conseil-convocation-conseillers-1er-supplement', 'Convocation conseillers (1er supplément)')
 councilOJConvConsPremSupplTemplate.podTemplate = 'conseil_convocation_conseillers_1er_supplement.odt'
 councilOJConvConsPremSupplTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
-                              'here.portal_plonemeeting.isManager()'
+                                                  'here.portal_plonemeeting.isManager()'
 councilOJConvConsDeuxSupplTemplate = PodTemplateDescriptor('conseil-convocation-conseillers-2eme-supplement', 'Convocation conseillers (2ème supplément)')
 councilOJConvConsDeuxSupplTemplate.podTemplate = 'conseil_convocation_conseillers_2eme_supplement.odt'
 councilOJConvConsDeuxSupplTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
@@ -130,9 +131,9 @@ councilTemplates = [councilOJExplanatoryTemplate, councilFardesTemplate, council
                     councilNoteExplTemplate, councilProjetDelibTemplate, councilDelibTemplate]
 
 # Users and groups -------------------------------------------------------------
-test1 = UserDescriptor('test1',  ['MeetingPowerObserver'], fullname='test 1', email="test1@Mons.be")
-test2 = UserDescriptor('test2', ['MeetingPowerObserver'], fullname='test 2', email="test2@Mons.be")
-test3 = UserDescriptor('test3', ['MeetingPowerObserver'], fullname='test 3', email="test3@Mons.be")
+test1 = UserDescriptor('test1',  [''], fullname='test 1', email="test1@Mons.be")
+test2 = UserDescriptor('test2', [''], fullname='test 2', email="test2@Mons.be")
+test3 = UserDescriptor('test3', [''], fullname='test 3', email="test3@Mons.be")
 
 test1_mu = MeetingUserDescriptor('test1', duty='Bourgmestre', usages=['asker', ], active=False)
 test2_mu = MeetingUserDescriptor('test2', gender='f', duty='1er Echevin', usages=['asker', ], active=False)

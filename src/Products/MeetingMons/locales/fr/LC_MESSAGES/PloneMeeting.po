@@ -61,6 +61,14 @@ msgstr "Note explicative"
 msgid "MeetingMons_label_defaultMeetingItemDecision"
 msgstr "Valeur par défaut du champ 'Délibération/Extrait du Procès-verbal'"
 
+#. Default: "Default value for the item decision field"
+msgid "default_meetingitem_detailledDescription"
+msgstr "Définissez ici le texte prédéfini qui sera présent dans le champ 'Motivation' chaque fois qu'un utilisateur crée un nouveau point."
+
+#. Default: "Default value for the item motivation field"
+msgid "MeetingMons_label_defaultMeetingItemDetailledDescription"
+msgstr "Valeur par défaut du champ 'Motivation'"
+
 #. Default: "Interventions"
 msgid "MeetingMons_label_interventions"
 msgstr "Interventions"
@@ -495,8 +503,48 @@ msgstr "Lorsque le point est refusé, la décision sera remplacée par le texte 
 
 #. Default: "Item Motivation Description"
 msgid "item_motivation_descr"
-msgstr "Le Collège Communal,..."
+msgstr "Motivation présente dans la délibé mais pas dans le pv..."
 
 #. Default: "Alderman"
 msgid "aldermanGroupTitle"
 msgstr "Echevins"
+
+#. Default: "Echevin' Services"
+msgid "EchevinServices"
+msgstr "Échevin des services suivants :"
+
+#. Default: "Echevin' Services"
+msgid "MeetingMons_label_echevinServices"
+msgstr "Échevin des services suivants :"
+
+#. Default: "Leave empty if he is not an echevin"
+msgid "MeetingMons_descr_echevinServices"
+msgstr "Laisser vide si ce n'est pas un échevin"
+
+#. Default: "Item is signed ?"
+msgid "PloneMeeting_label_itemIsSigned"
+msgstr "Point traité?"
+
+#. Default: "The item is not treated."
+msgid "item_is_signed_no"
+msgstr "Le point n'est pas traité."
+
+#. Default: "The item is not treated. Click on the image to apply treatment."
+msgid "item_is_signed_no_edit"
+msgstr "Le point n'est pas traité, cliquez sur l'image pour signaler que le point est traité."
+
+#. Default: "The item is treated."
+msgid "item_is_signed_yes"
+msgstr "Le point est traité."
+
+#. Default: "The item is treated. Click on the image to remove treatment."
+msgid "item_is_signed_yes_edit"
+msgstr "Le point est traité, cliquez sur l'image pour signaler que le traitement n'est pas fait."
+
+#. Default: "ValidateByBudget"
+msgid "MeetingMons_label_validateByBudget"
+msgstr "Validé par le référent budgétaire"
+
+#. Default: "Validate By Budget Impact Reviwer"
+msgid "MeetingMons_descr_validateByBudget"
+msgstr "Ce dossier pourra être présenté par l'agent au N+1."

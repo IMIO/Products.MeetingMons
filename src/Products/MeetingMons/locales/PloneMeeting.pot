@@ -239,7 +239,13 @@ msgstr ""
 msgid "MeetingMons_label_defaultMeetingItemDecision"
 msgstr ""
 
-MeetingMons_label_defaultMeetingItemDecision
+#. Default: "Default value for the item decision field"
+msgid "default_meetingitem_detailledDescription"
+msgstr ""
+
+#. Default: "Default value for the item motivation field"
+msgid "MeetingMons_label_defaultMeetingItemDetailledDescription"
+msgstr ""
 
 #. Default: "The preparatory meeting must occur before the meeting."
 msgid "pre_date_after_meeting_date"
@@ -495,4 +501,32 @@ msgstr ""
 
 #. Default: "Alderman"
 msgid "aldermanGroupTitle"
+msgstr ""
+
+#. Default: "Echevin' Services"
+msgid "EchevinServices"
+msgstr ""
+
+#. Default: "Echevin' Services"
+msgid "MeetingMons_label_echevinServices"
+msgstr ""
+
+#. Default: "Leave empty if he is not an echevin"
+msgid "MeetingMons_descr_echevinServices"
+msgstr ""
+
+#. Default: "Item is treated ?"
+msgid "PloneMeeting_label_itemIsSigned"
+msgstr ""
+
+#. Default: "The item is not treated."
+msgid "item_is_signed_no"
+msgstr ""
+
+#. Default: "ValidateByBudget"
+msgid "MeetingMons_label_validateByBudget"
+msgstr ""
+
+#. Default: "Validate By Budget Impact Reviwer"
+msgid "MeetingMons_descr_validateByBudget"
 msgstr ""

@@ -97,8 +97,15 @@
         <script language="javascript">
           function toggleBudgetInfo(checkbox) {
             var budgetField = document.getElementById('budgetField');
-            if (checkbox.checked) budgetField.style.display = "block";
-            else budgetField.style.display = "none";
+            var validateByBudget = document.getElementById('validateByBudget');
+            if (checkbox.checked) {
+                  budgetField.style.display = "block";
+                  validateByBudget.style.display = "block";
+                  }
+            else {
+                  budgetField.style.display = "none";
+                  validateByBudget.style.display = "none";
+                  }
           }
         </script>
         <div id="archetypes-fieldname-budgetRelated" class="field ArchetypesBooleanWidget"
@@ -109,14 +116,20 @@
           <label for="budgetRelated" class="formQuestion" i18n:domain="PloneMeeting"
                  tal:content="brField/widget/label_msgid" i18n:translate=""></label>
           <br/>
-        </div>
+        </div>        
+        
         <div id="budgetField" name="budgetField"
              tal:attributes="style python:test(cbChecked, 'display: block', 'display: none')">
           <metal:field use-macro="python:here.widget('budgetInfos', mode='edit')"/>
+        </div>
+        
+        <div id="validateByBudget" name="validateByBudget"
+             tal:attributes="style python:test(cbChecked, 'display: block', 'display: none')">
+          <metal:field use-macro="python:here.widget('validateByBudget', mode='edit')"/>
           <br/>
         </div>
         </tal:budget>
-
+        
         <metal:field use-macro="python:here.widget('interventions', mode='edit')"/>
         <metal:field use-macro="python:here.widget('commissionTranscript', mode='edit')"/>
         <table cellpadding="0" cellspacing="0" width="100%">
