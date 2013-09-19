@@ -6,7 +6,12 @@ Version 1.x are for Plone2.5, 2.x are for Plone3.x and 3+ are for Plone4.x
 
 3.0.3 (unreleased)
 ------------------
-- Nothing yet
+- An item can be deleted by member only if item's state is created, else it's Manager (only) who be able to remove its.
+- Remove state in_waiting_advice (items is change on itemcreated)
+- Remove topics in_waiting_advice
+- Add check for Budget Impact reviewer : Validate by budget info
+- Add Field Default-Motivation
+- 3P ling activate with WebServices
 
 3.0.2 (2013-06-21)
 ------------------

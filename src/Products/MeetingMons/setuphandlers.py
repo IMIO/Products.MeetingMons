@@ -58,7 +58,7 @@ def postInstall(context):
     reinstallPloneMeeting(context, site)
     showHomeTab(context, site)
     reorderCss(context)
-    reinstallPloneMeetingSkin(context, site)
+    reorderSkinsLayers(context, site)
 
 
 ##code-section FOOT
@@ -403,21 +403,22 @@ def showHomeTab(context, site):
         logger.info("The 'Home' tab does not exist !!!")
 
 
-def reinstallPloneMeetingSkin(context, site):
+def reorderSkinsLayers(context, site):
     """
-       Reinstall Products.plonemeetingskin as the reinstallation of MeetingMons
-       change the portal_skins layers order
+       Re-apply MeetingMons skins.xml step
+       as the reinstallation of MeetingMons and PloneMeeting changes the portal_skins layers order
     """
-    if isNotMeetingMonsProfile(context) and not isMeetingMonsConfigureProfile:
+    if isNotMeetingNamurProfile(context) and not isMeetingNamurConfigureProfile:
         return
 
-    logStep("reinstallPloneMeetingSkin", context)
+    logStep("reorderSkinsLayers", context)
     try:
+        site.portal_setup.runImportStepFromProfile(u'profile-Products.MeetingMons:default', 'skins')
         site.portal_setup.runAllImportStepsFromProfile(u'profile-plonetheme.imioapps:default')
         site.portal_setup.runAllImportStepsFromProfile(u'profile-plonetheme.imioapps:plonemeetingskin')
     except KeyError:
-        # if the Products.plonemeetingskin profile is not available
-        # (not using plonemeetingskin or in testing?) we pass...
+        # if the Products.MeetingMons profile is not available
+        # (not using MeetingMons or in testing?) we pass...
         pass
 
 
