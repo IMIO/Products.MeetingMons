@@ -408,7 +408,7 @@ def reorderSkinsLayers(context, site):
        Re-apply MeetingMons skins.xml step
        as the reinstallation of MeetingMons and PloneMeeting changes the portal_skins layers order
     """
-    if isNotMeetingNamurProfile(context) and not isMeetingNamurConfigureProfile:
+    if isNotMeetingMonsProfile(context) and not isMeetingMonsConfigureProfile:
         return
 
     logStep("reorderSkinsLayers", context)
