@@ -474,7 +474,10 @@ def update_item_schema(baseSchema):
         BooleanField(
             name='validateByBudget',
             widget=BooleanField._properties['widget'](
-                condition="python: here.attributeIsUsed('budgetInfos')",
+                condition="python: here.attributeIsUsed('budgetInfos') and (\
+                            here.portal_membership.getAuthenticatedMember().has_role('MeetingBudgetImpactReviewer', \
+                            here) or here.portal_membership.getAuthenticatedMember().has_role(' \
+                            MeetingExtraordinaryBudget', here) or here.portal_plonemeeting.isManager())",
                 label='ValidateByBudget',
                 label_msgid='MeetingMons_label_validateByBudget',
                 description='Validate By Budget Impact Reviwer',
