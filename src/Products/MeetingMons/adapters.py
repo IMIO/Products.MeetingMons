@@ -1200,7 +1200,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         res = False
         meeting = self.context.getMeeting()
         if checkPermission(ReviewPortalContent, self.context) and \
-           meeting and (meeting.queryState() in ['decided', 'closed']):
+           meeting and (meeting.queryState() in ['decided', 'published', 'closed']):
             res = True
         return res
 
