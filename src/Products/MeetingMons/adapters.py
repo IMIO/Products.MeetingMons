@@ -1068,7 +1068,7 @@ class MeetingCollegeMonsWorkflowConditions(MeetingWorkflowConditions):
         from Products.PloneMeeting.Meeting import MeetingWorkflowConditions
         res = MeetingWorkflowConditions.mayCorrect(self)
         currentState = self.context.queryState()
-        if res is not True and currentState == "frozen":
+        if res is not True and currentState in ('published', 'frozen'):
             # Change the behaviour for being able to correct a frozen meeting
             # back to created.
             if checkPermission(ReviewPortalContent, self.context):
