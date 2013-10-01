@@ -51,9 +51,10 @@ MONSROLES['budgetimpactreviewers'] = 'MeetingBudgetImpactReviewer'
 MONSROLES['serviceheads'] = 'MeetingServiceHead'
 MONSROLES['officemanagers'] = 'MeetingOfficeManager'
 MONSROLES['extraordinarybudget'] = 'MeetingExtraordinaryBudget'
+MONSROLES['divisionheads'] = 'MeetingDivisionHead'
 PMconfig.MEETINGROLES.update(MONSROLES)
 PMconfig.MEETING_GROUP_SUFFIXES = PMconfig.MEETINGROLES.keys()
-#the divisionhead will use the default 'MeetingReviewer' role
+#IN THE FUTURE : the divisionhead will use the default 'MeetingReviewer' role in replace to director
 # Define PloneMeeting-specific permissions
 AddAnnex = 'PloneMeeting: Add annex'
 setDefaultRoles(AddAnnex, ('Manager','Owner'))

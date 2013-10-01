@@ -1227,7 +1227,8 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         user = self.context.portal_membership.getAuthenticatedMember()
         #first of all, the use must have the 'Review portal content permission'
         if checkPermission(ReviewPortalContent, self.context) and \
-                (user.has_role('MeetingReviewer', self.context) or user.has_role('Manager')):
+                (user.has_role('MeetingReviewer', self.context) or
+                 user.has_role('MeetingDivisionHead', self.context) or user.has_role('Manager')):
             res = True
             #if the current item state is 'itemcreated', only the MeetingManager can validate
             if self.context.queryState() in ('itemcreated',) and not self.context.portal_plonemeeting.isManager():
