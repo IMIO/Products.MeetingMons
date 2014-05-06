@@ -80,7 +80,6 @@ topicsInfo = (
      'created',
      '',
      "python: not here.portal_plonemeeting.userIsAmong('reviewers')",
-     ('proposed', ),
      ),
     # Items that need to be validated
     ('searchitemstovalidate',
@@ -88,7 +87,6 @@ topicsInfo = (
      'created',
      'searchItemsToValidate',
      "python: here.portal_plonemeeting.userIsAmong('reviewers')",
-     ('proposed', ),
      ),
     # Items in state 'validated'
     ('searchvalidateditems',
@@ -96,7 +94,6 @@ topicsInfo = (
      'created',
      '',
      '',
-     ('validated', ),
      ),
     # All 'decided' items
     ('searchdecideditems',
@@ -104,7 +101,6 @@ topicsInfo = (
      'created',
      '',
      '',
-     ('accepted', 'refused', 'delayed', 'accepted_but_modified',),
      ),
 )
 existingTopicsInfo = MeetingConfig.topicsInfo
