@@ -24,7 +24,6 @@ __docformat__ = 'plaintext'
 
 from Products.CMFCore.permissions import setDefaultRoles
 ##code-section config-head #fill in your manual code here
-import os
 ##/code-section config-head
 
 
@@ -57,7 +56,7 @@ PMconfig.MEETING_GROUP_SUFFIXES = PMconfig.MEETINGROLES.keys()
 #IN THE FUTURE : the divisionhead will use the default 'MeetingReviewer' role in replace to director
 # Define PloneMeeting-specific permissions
 AddAnnex = 'PloneMeeting: Add annex'
-setDefaultRoles(AddAnnex, ('Manager','Owner'))
+setDefaultRoles(AddAnnex, ('Manager', 'Owner'))
 # We need 'AddAnnex', which is a more specific permission than
 # 'PloneMeeting: Add MeetingFile', because decision-related annexes, which are
 # also MeetingFile instances, must be secured differently.
@@ -68,6 +67,9 @@ WriteDecision = 'PloneMeeting: Write decision'
 setDefaultRoles(ReadDecision, ('Manager',))
 setDefaultRoles(WriteDecision, ('Manager',))
 
+PMconfig.ReadBudgetInfos = 'MeetingMons: Read budget infos'
+PMconfig.WriteBudgetInfos = 'MeetingMons: Write budget infos'
+
 STYLESHEETS = [{'id': 'meetingmons.css',
                 'title': 'MeetingMons CSS styles'}]
 
@@ -76,7 +78,9 @@ from Products.PloneMeeting.MeetingConfig import MeetingConfig
 topicsInfo = (
     # Items in state 'proposed'
     ('searchproposeditems',
-    (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),),
+     (('Type', 'ATPortalTypeCriterion', ('MeetingItem',)),
+      ('review_state', 'ATListCriterion', ('proposed',),)
+      ),
      'created',
      '',
      "python: not here.portal_plonemeeting.userIsAmong('reviewers')",
@@ -90,14 +94,18 @@ topicsInfo = (
      ),
     # Items in state 'validated'
     ('searchvalidateditems',
-    (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),),
+     (('Type', 'ATPortalTypeCriterion', ('MeetingItem',)),
+     ('review_state', 'ATListCriterion', ('validated',),)
+      ),
      'created',
      '',
      '',
      ),
     # All 'decided' items
     ('searchdecideditems',
-    (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),),
+     (('Type', 'ATPortalTypeCriterion', ('MeetingItem',)),
+     ('review_state', 'ATListCriterion', ('accepted', 'refused', 'delayed', 'accepted_but_modified',),)
+      ),
      'created',
      '',
      '',
@@ -107,12 +115,6 @@ existingTopicsInfo = MeetingConfig.topicsInfo
 existingTopicsInfo = list(existingTopicsInfo)
 existingTopicsInfo.extend(topicsInfo)
 MeetingConfig.topicsInfo = tuple(existingTopicsInfo)
-#ids of commissions used as categories for MeetingItemCouncil
-COUNCIL_COMMISSION_IDS = ['commission-travaux','commission-enseignement',
-                'commission-cadre-de-vie-et-logement','commission-ag',
-                'commission-finances-et-patrimoine','commission-police','commission-speciale',]
-#suffix of specific groups containing commission transcript editors
-COMMISSION_EDITORS_SUFFIX = '_commissioneditors'
 ##/code-section config-bottom
 
 

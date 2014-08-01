@@ -1,16 +1,13 @@
 from setuptools import setup, find_packages
 import os
 
-version = '3.0.3dev'
+version = '3.1.0-dev'
 
 setup(name='Products.MeetingMons',
       version=version,
       description="Official meetings management for college and council of Mons (PloneMeeting extension profile)",
-      long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
-      classifiers=[
-        "Programming Language :: Python",
-        ],
+      long_description=open("README.txt").read() + "\n" + open(os.path.join("docs", "HISTORY.txt")).read(),
+      classifiers=["Programming Language :: Python", ],
       keywords='',
       author='',
       author_email='',
@@ -22,12 +19,17 @@ setup(name='Products.MeetingMons',
       include_package_data=True,
       zip_safe=False,
       extras_require=dict(
-            test=['unittest2', 'zope.testing', 'plone.testing',
-                  'plone.app.testing','communesplone.iconified_document_actions',
-                  'Products.CMFPlacefulWorkflow', 'zope.testing',
-                  'Products.PloneTestCase', 'collective.ckeditor', 'plonetheme.imioapps'],
-            templates=['Genshi',
-                  ]),
+             test=['unittest2',
+                  'zope.testing',
+                  'plone.testing',
+                  'plone.app.testing',
+                  'communesplone.iconified_document_actions',
+                  'Products.CMFPlacefulWorkflow',
+                  'zope.testing',
+                  'Products.PloneTestCase',
+                  'collective.ckeditor',
+                  'plonetheme.imioapps'],
+             templates=['Genshi', ]),
       install_requires=[
           'setuptools',
           'appy',

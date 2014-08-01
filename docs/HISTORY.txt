@@ -4,6 +4,12 @@ Products.MeetingMons Changelog
 Older versions than 3.0 can be found at http://svn.communesplone.org/svn/communesplone/PloneMeeting/tags/
 Version 1.x are for Plone2.5, 2.x are for Plone3.x and 3+ are for Plone4.x
 
+3.1.0 (2013-11-04)
+------------------
+- Simplified overrides now that PloneMeeting manage this correctly
+- Moved 'add_published_state' to PloneMeeting and renamed to 'hide_decisions_when_under_writing'
+- Moved 'searchitemstovalidate' topic to PloneMeeting now that PloneMeeting also manage a 'searchitemstoprevalidate' search
+
 3.0.3 (unreleased)
 ------------------
 - An item can be deleted by member only if item's state is created, else it's Manager (only) who be able to remove its.
