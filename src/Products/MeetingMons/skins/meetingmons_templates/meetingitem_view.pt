@@ -81,24 +81,42 @@
         </div>
 
         <tal:comment replace="nothing">Associated groups</tal:comment>
-        <div class="discreet" tal:condition="python: 'associatedGroups' in usedAttrs">
+        <div class="discreet" tal:condition="python: 'associatedGroups' in usedAttrs"
+                              tal:define="associatedGroups context/getAssociatedGroups;">
           <i><span i18n:translate="PloneMeeting_label_associatedGroups"></span></i>:&nbsp;&nbsp;
-             <span tal:repeat="associatedGroup here/getAssociatedGroups"
-                   tal:content="structure python: getattr(tool, associatedGroup).Title() + '&nbsp;&nbsp;'"></span>
+             <tal:displayAssociatedGroups condition="associatedGroups">
+                <span metal:use-macro="python: here.widget('associatedGroups', mode='view')" />
+             </tal:displayAssociatedGroups>
+             <span tal:condition="not: associatedGroups">-</span>
         </div>
 
         <tal:comment replace="nothing">Copy groups for this item</tal:comment>
-        <div class="discreet" tal:condition="python: context.isCopiesEnabled()">
+        <div class="discreet" tal:condition="python: context.isCopiesEnabled()"
+                              tal:define="copyGroups context/getCopyGroups;">
           <i><span i18n:translate="PloneMeeting_label_copyGroups"></span></i>:&nbsp;&nbsp;
-             <span metal:use-macro="python: here.widget('copyGroups', mode='view')" />
+             <tal:displayCopyGroups condition="copyGroups">
+                <span metal:use-macro="python: here.widget('copyGroups', mode='view')" />
+             </tal:displayCopyGroups>
+             <span tal:condition="not: copyGroups">-</span>
         </div>
 
         <tal:comment replace="nothing">Item assembly</tal:comment>
         <div class="discreet"
              tal:condition="python: ('itemAssembly' in usedAttrs) and ('assembly' in usedMeetingAttributes) and meeting">
-          <tal:defines define="redefinedItemAssembly python: context.getItemAssembly(real=True).strip().replace('\n', '<br/>')">
-          <i tal:attributes="class python: redefinedItemAssembly and 'highlightRedefinedValue' or ''"><span i18n:translate="item_attendees"></span></i>:&nbsp;&nbsp;
-             <span tal:replace="structure context/getStrikedItemAssembly"/>
+          <tal:defines define="redefinedItemAssembly python: context.getItemAssembly(real=True);
+                               mayQuickEdit python: context.mayQuickEdit('itemAssembly');
+                               class_if_highlighted python: redefinedItemAssembly and 'highlightRedefinedValue' or '';
+                               class_to_use python: mayQuickEdit and (class_if_highlighted and class_if_highlighted + ' itemAssemblyEditable' or 'itemAssemblyEditable') or class_if_highlighted">
+          <div tal:attributes="class class_to_use"><i>
+              <a tal:condition="mayQuickEdit" href="manage_item_assembly_form" class="link-overlay-pm manage-item-assembly-overlay">
+              <span i18n:translate="item_assembly"></span>
+              </a>
+              <span tal:condition="not: mayQuickEdit"
+                    tal:attributes="class class_to_use"
+                    i18n:translate="item_assembly"></span>
+          </i>:&nbsp;&nbsp;
+          </div>
+          <div tal:content="structure context/getStrikedItemAssembly"/>
           </tal:defines>
         </div>
 
@@ -137,11 +155,7 @@
            <metal:itemIsSigned use-macro="here/hs_macros/macros/itemIsSigned" />
           </tal:defines>
         </div>
-        
-        <div class="discreet" tal:condition="python: 'budgetInfos' in usedAttrs and context.getBudgetRelated() and context.getValidateByBudget()">
-          <i><span i18n:translate="MeetingMons_label_validateByBudget"></span></i>&nbsp;&nbsp;
-        </div>
-        
+     
         </td>
         <td width="50%" align="right">
         <tal:comment replace="nothing">Preferred meeting</tal:comment>
@@ -178,12 +192,15 @@
 
         <tal:comment replace="nothing">Other MeetingConfigs Clonable To</tal:comment>
         <div class="discreet"
-             tal:condition="context/isClonableToOtherMeetingConfigs"
+             tal:condition="python: otherMCs or context.isClonableToOtherMeetingConfigs()"
              tal:define="otherMCs context/getOtherMeetingConfigsClonableTo">
           <i><span i18n:translate="PloneMeeting_label_otherMeetingConfigsClonableTo"></span></i>:&nbsp;&nbsp;
-             <span metal:use-macro="python: here.widget('otherMeetingConfigsClonableTo', mode='view')" />
+             <tal:displayOtherMeetingConfigsClonableTo tal:condition="otherMCs">
+                <span metal:use-macro="python: here.widget('otherMeetingConfigsClonableTo', mode='view')" />
+             </tal:displayOtherMeetingConfigsClonableTo>
              <span tal:condition="not: otherMCs">-</span>
         </div>
+
         <tal:comment replace="nothing">Privacy</tal:comment>
         <div class="discreet"
              tal:define="privacy context/getPrivacy"
@@ -214,9 +231,20 @@
         <tal:comment replace="nothing">Item signatures</tal:comment>
         <div class="discreet"
              tal:condition="python: meeting and ('signatures' in usedMeetingAttributes)">
-          <tal:defines define="redefinedItemSignatures python: context.getItemSignatures(real=True).strip().replace('\n', '<br/>')">
-          <i tal:attributes="class python: redefinedItemSignatures and 'highlightRedefinedValue' or ''"><span i18n:translate="meeting_signatures"></span></i>:&nbsp;&nbsp;
-             <span tal:replace="structure context/getItemSignatures"/>
+          <tal:defines define="redefinedItemSignatures python: context.getItemSignatures(real=True);
+                               mayQuickEdit python: context.mayQuickEdit('itemSignatures');
+                               class_if_highlighted python: redefinedItemSignatures and 'highlightRedefinedValue' or '';
+                               class_to_use python: mayQuickEdit and (class_if_highlighted and class_if_highlighted + ' itemSignaturesEditable' or 'itemSignaturesEditable') or class_if_highlighted">
+          <div tal:attributes="class class_to_use"><i>
+              <a tal:condition="mayQuickEdit" href="manage_item_signatures_form" class="link-overlay-pm">
+              <span i18n:translate="meeting_signatures"></span>
+              </a>
+              <span tal:condition="not: mayQuickEdit"
+                    tal:attributes="class class_to_use"
+                    i18n:translate="meeting_signatures"></span>
+          </i>:&nbsp;&nbsp;
+          </div>
+          <div tal:replace="structure python: context.getItemSignatures().replace('\n', '<br />')"/>
           </tal:defines>
         </div>
         </td>
@@ -230,34 +258,31 @@
     <tal:field define="fieldName python: 'description'; ajaxEdit python:True">
        <metal:f use-macro="context/hs_macros/macros/viewContentField"/>
     </tal:field>
-    
+
     <tal:comment replace="nothing">Detailed description</tal:comment>
     <tal:field define="fieldName python: 'detailedDescription'; ajaxEdit python:True">
        <metal:f use-macro="context/hs_macros/macros/viewContentField"/>
     </tal:field>
-    
+
+    <div class="discreet" tal:condition="python: 'budgetInfos' in usedAttrs and context.getBudgetRelated() and context.getValidateByBudget()">
+       <i><span i18n:translate="MeetingMons_label_validateByBudget"></span></i>&nbsp;&nbsp;
+    </div>
+
     <tal:comment replace="nothing">Budgetary informations</tal:comment>
-    <fieldset tal:condition="python: 'budgetInfos' in usedAttrs and context.getBudgetRelated()">
-      <legend i18n:translate="PloneMeeting_label_budgetInfos">Budgetary informations</legend>
-      <div tal:replace="structure context/getBudgetInfos"></div>
-    </fieldset>
-    
+    <tal:field define="fieldName python: 'budgetInfos'; ajaxEdit python:True">
+       <metal:f use-macro="context/hs_macros/macros/viewContentField"/>
+    </tal:field>
+
+    <tal:comment replace="nothing">Motivation</tal:comment>
+    <tal:field define="fieldName python: 'motivation'; ajaxEdit python:True">
+       <metal:f use-macro="context/hs_macros/macros/viewContentField"/>
+    </tal:field>
+
     <tal:comment replace="nothing">Decision</tal:comment>
     <tal:field define="fieldName python: 'decision'; ajaxEdit python:True">
        <metal:f use-macro="context/hs_macros/macros/viewContentField"/>
     </tal:field>
-    
-    <tal:comment replace="nothing">XXX Interventions</tal:comment>
-    <tal:field define="fieldName python: 'interventions'; ajaxEdit python:True"
-               condition="python: here.portal_type == 'MeetingItemCouncil' and isManager">
-       <metal:f use-macro="context/hs_macros/macros/viewContentField"/>
-    </tal:field>
 
-    <tal:comment replace="nothing">XXX Commission transcript</tal:comment>
-    <tal:field define="fieldName python: 'commissionTranscript'; ajaxEdit python:True"
-               condition="python: here.portal_type == 'MeetingItemCouncil'">
-       <metal:f use-macro="context/hs_macros/macros/viewContentField"/>
-    </tal:field>
     <tal:comment replace="nothing">Annexes and advices</tal:comment>
     <table width="100%" cellpadding="1" cellspacing="1"
            tal:define="meetingItem python: here;

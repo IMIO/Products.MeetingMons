@@ -83,13 +83,19 @@
             <td><metal:field use-macro="python:here.widget('itemInitiator', mode='edit')"/></td>
           </tr>
         </table>
-        <metal:field use-macro="python:here.widget('description', mode='edit')"/>
-        <tal:field define="fieldName python: 'detailedDescription';"
-             condition="python: 'detailedDescription' in usedAttrs">
-          <metal:field use-macro="python:here.widget('detailedDescription', mode='edit')"/>
+        <tal:field define="fieldName python: 'description'">
+          <metal:f use-macro="context/hs_macros/macros/editContentField"/>
         </tal:field>
-
-        <metal:field use-macro="python:here.widget('decision', mode='edit')"/>
+        <tal:field define="fieldName python: 'detailedDescription';"
+                   condition="python: 'detailedDescription' in usedAttrs">
+          <metal:f use-macro="context/hs_macros/macros/editContentField"/>
+        </tal:field>
+        <tal:field define="fieldName python: 'motivation'">
+          <metal:f use-macro="context/hs_macros/macros/editContentField"/>
+        </tal:field>
+        <tal:field define="fieldName python: 'decision'">
+          <metal:f use-macro="context/hs_macros/macros/editContentField"/>
+        </tal:field>
 
         <tal:comment replace="nothing">Budget-related information</tal:comment>
         <tal:budget define="cbChecked  python: (request.get('budgetRelated',None)==True) or context.getBudgetRelated()"
@@ -130,8 +136,6 @@
         </div>
         </tal:budget>
         
-        <metal:field use-macro="python:here.widget('interventions', mode='edit')"/>
-        <metal:field use-macro="python:here.widget('commissionTranscript', mode='edit')"/>
         <table cellpadding="0" cellspacing="0" width="100%">
           <tal:comment replace="nothing">Associated groups, optional advisers and copyGroups</tal:comment>
           <tr valign="top">
@@ -151,8 +155,9 @@
           <tr valign="top">
           </tr>
           <tr valign="top">
-            <td width="50%"><metal:field use-macro="python:here.widget('usages', mode='edit')"/></td>
-            <td width="50%"><metal:field use-macro="python:here.widget('meetingTransitionInsertingMe', mode='edit')"/></td>
+            <td width="33%"><metal:field use-macro="python:here.widget('usages', mode='edit')"/></td>
+            <td width="34%"><metal:field use-macro="python:here.widget('templateUsingGroups', mode='edit')"/></td>
+            <td width="33%"><metal:field use-macro="python:here.widget('meetingTransitionInsertingMe', mode='edit')"/></td>
           </tr>
         </table>
         <metal:field use-macro="python:here.widget('itemAssembly', mode='edit')"/>
