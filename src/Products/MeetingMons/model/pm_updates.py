@@ -1,7 +1,48 @@
 from Products.Archetypes.atapi import *
-from Products.PloneMeeting.MeetingItem import MeetingItem
 from Products.PloneMeeting.MeetingGroup import MeetingGroup
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
+from Products.PloneMeeting.MeetingItem import MeetingItem
+
+
+def update_group_schema(baseSchema):
+
+    specificSchema = Schema((
+
+        # field used to define list of services for echevin for a MeetingGroup
+        LinesField(
+            name='echevinServices',
+            widget=MultiSelectionWidget(
+                size=10,
+                label='EchevinServices',
+                label_msgid='MeetingMons_label_echevinServices',
+                description='Leave empty if he is not an echevin',
+                description_msgid='MeetingMons_descr_echevinServices',
+                i18n_domain='PloneMeeting',
+            ),
+            enforceVocabulary=True,
+            multiValued=1,
+            vocabulary='listEchevinServices',
+        ),
+
+        # field used to define specific signatures for a MeetingGroup
+        TextField(
+            name='signatures',
+            allowable_content_types=('text/plain',),
+            widget=TextAreaWidget(
+                label='Signatures',
+                label_msgid='MeetingMons_label_signatures',
+                description='Leave empty to use the signatures defined on the meeting',
+                description_msgid='MeetingMons_descr_signatures',
+                i18n_domain='PloneMeeting',
+            ),
+            default_content_type='text/plain',
+        ),
+    ),)
+
+    completeGroupSchema = baseSchema + specificSchema.copy()
+
+    return completeGroupSchema
+MeetingGroup.schema = update_group_schema(MeetingGroup.schema)
 
 
 def update_config_schema(baseSchema):
@@ -43,6 +84,8 @@ def update_config_schema(baseSchema):
                 label_msgid='PloneMeeting_label_itemDecisionReportText',
                 i18n_domain='PloneMeeting',
             ),
+            allowable_content_types=('text/plain', 'text/html', ),
+            default_output_type="text/plain",
         ),
 
         TextField(
@@ -54,6 +97,8 @@ def update_config_schema(baseSchema):
                 label_msgid='PloneMeeting_label_itemDecisionRefuseText',
                 i18n_domain='PloneMeeting',
             ),
+            allowable_content_types=('text/plain', 'text/html', ),
+            default_output_type="text/plain",
         )
     ),)
 
@@ -64,45 +109,6 @@ def update_config_schema(baseSchema):
     completeConfigSchema.moveField('itemDecisionRefuseText', after='itemDecisionReportText')
     return completeConfigSchema
 MeetingConfig.schema = update_config_schema(MeetingConfig.schema)
-
-
-def update_group_schema(baseSchema):
-
-    specificSchema = Schema((
-
-        # field used to define list of services for echevin for a MeetingGroup
-        LinesField(
-            name='echevinServices',
-            widget=MultiSelectionWidget(
-                size=10,
-                label='EchevinServices',
-                label_msgid='MeetingMons_label_echevinServices',
-                description='Leave empty if he is not an echevin',
-                description_msgid='MeetingMons_descr_echevinServices',
-                i18n_domain='PloneMeeting',
-            ),
-            enforceVocabulary=True,
-            multiValued=1,
-            vocabulary='listEchevinServices',
-        ),
-
-        # field used to define specific signatures for a MeetingGroup
-        TextField(
-            name='signatures',
-            widget=TextAreaWidget(
-                label='Signatures',
-                label_msgid='MeetingMons_label_signatures',
-                description='Leave empty to use the signatures defined on the meeting',
-                description_msgid='MeetingMons_descr_signatures',
-                i18n_domain='PloneMeeting',
-            ),
-        ),
-    ),)
-
-    completeGroupSchema = baseSchema + specificSchema.copy()
-
-    return completeGroupSchema
-MeetingGroup.schema = update_group_schema(MeetingGroup.schema)
 
 
 def update_item_schema(baseSchema):
@@ -135,11 +141,7 @@ def update_item_schema(baseSchema):
     baseSchema['decision'].widget.label_method = 'getLabelDecision'
     baseSchema['description'].widget.label = "projectOfDecision"
     baseSchema['description'].widget.label_msgid = "projectOfDecision_label"
-    baseSchema['detailedDescription'].default_method = 'getDefaultDetailledDescription'
-    baseSchema['detailedDescription'].widget.description = "item_motivation"
-    baseSchema['detailedDescription'].widget.description_msgid = "item_motivation_descr"
-    baseSchema['detailedDescription'].write_permission = "PloneMeeting: Write decision"
-    baseSchema['detailedDescription'].read_permission = "PloneMeeting: Read decision"
+    baseSchema['motivation'].widget.description_msgid = "item_motivation_descr"
 
     completeItemSchema = baseSchema + specificSchema.copy()
     return completeItemSchema

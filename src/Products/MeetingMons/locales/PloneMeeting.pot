@@ -471,10 +471,6 @@ msgstr ""
 msgid "gives_mandatory_advice_on_descr"
 msgstr ""
 
-#. Default: "Detailed description"
-msgid "PloneMeeting_label_detailedDescription"
-msgstr ""
-
 #. Default: "Optional advisers"
 msgid "PloneMeeting_label_optionalAdvisers"
 msgstr ""

@@ -307,6 +307,35 @@ class CustomMeeting(Meeting):
         return False
     Meeting.showAllItemsAtOnce = showAllItemsAtOnce
 
+    security.declarePublic('getPreviousMeeting')
+    def getPreviousMeeting(self, searchMeetingsInterval=60):
+        '''Gets the previous meeting based on meeting date. We only search among
+           meetings in the previous p_searchMeetingsInterval, which is a number
+           of days. If no meeting is found, the method returns None.'''
+        meetingDate = self.context.getDate()
+        tool = getToolByName(self.context, 'portal_plonemeeting')
+        meetingConfig = tool.getMeetingConfig(
+            self.context)
+        meetingTypeName = meetingConfig.getMeetingTypeName()
+        catalog = getToolByName(self.context, 'portal_catalog')
+        allMeetings = catalog(
+            portal_type=meetingTypeName,
+            getDate={'query': self.context.getDate()-searchMeetingsInterval,
+                     'range': 'min'},
+            sort_on='getDate', sort_order='reverse')
+        res = None
+        for meeting in allMeetings:
+            if (meeting.getObject().getDate() < meetingDate):
+                res = meeting
+                break
+        if res:
+            res = res.getObject()
+        return res
+
+    security.declarePublic('showItemAdvices')
+    def showItemAdvices(self):
+        '''See doc in interfaces.py.'''
+        return True
 
 # ------------------------------------------------------------------------------
 class CustomMeetingItem(MeetingItem):
@@ -340,13 +369,6 @@ class CustomMeetingItem(MeetingItem):
     def __init__(self, item):
         self.context = item
 
-    security.declarePublic('getDefaultMotivation')
-    def getDefaultDetailledDescription(self):
-        '''Returns the default item motivation content from the MeetingConfig.'''
-        mc = self.portal_plonemeeting.getMeetingConfig(self)
-        return mc.getDefaultMeetingItemDetailledDescription()
-    MeetingItem.getDefaultDetailledDescription = getDefaultDetailledDescription
-
     security.declarePublic('getDefaultDecision')
     def getDefaultDecision(self):
         '''Returns the default item decision content from the MeetingConfig.'''
@@ -358,19 +380,28 @@ class CustomMeetingItem(MeetingItem):
     def getMeetingsAcceptingItems(self):
         '''Overrides the default method so we only display meetings that are
            in the 'created' or 'frozen' state.'''
-        pmtool = getToolByName(self.context, "portal_plonemeeting")
-        catalogtool = getToolByName(self.context, "portal_catalog")
-        meetingPortalType = pmtool.getMeetingConfig(self.context).getMeetingTypeName()
+        tool = getToolByName(self.context, 'portal_plonemeeting')
+        catalog = getToolByName(self.context, 'portal_catalog')
+        meetingPortalType = tool.getMeetingConfig(self.context).getMeetingTypeName()
         # If the current user is a meetingManager (or a Manager),
         # he is able to add a meetingitem to a 'decided' meeting.
         review_state = ['created', 'frozen', ]
-        if self.context.portal_plonemeeting.isManager():
+        if tool.isManager():
             review_state += ['decided', 'published', ]
-        res = catalogtool.unrestrictedSearchResults(
+        res = catalog.unrestrictedSearchResults(
             portal_type=meetingPortalType,
             review_state=review_state,
             sort_on='getDate')
         # Frozen meetings may still accept "late" items.
+        return res
+
+    security.declarePublic('mayBeLinkedToTasks')
+    def mayBeLinkedToTasks(self):
+        '''See doc in interfaces.py.'''
+        item = self.getSelf()
+        res = False
+        if (item.queryState() in ('accepted', 'refused', 'delayed')):
+            res = True
         return res
 
     security.declarePublic('getIcons')
@@ -407,35 +438,10 @@ class CustomMeetingItem(MeetingItem):
             res.append(('return_to_service.png', 'returned_to_service'))
         return res
 
-    security.declarePublic('getDeliberation')
-    def getDeliberation(self):
-        '''Returns the entire deliberation depending on fields used.'''
-        return self.getMotivation() + self.getDecision()
-    MeetingItem.getDeliberation = getDeliberation
-
     security.declarePublic('getExtraFieldsToCopyWhenCloning')
     def getExtraFieldsToCopyWhenCloning(self):
         '''See doc in PloneMeeting.interfaces.py.'''
         return ['motivation', ]
-
-    security.declarePublic('getDecision')
-    def getDecision(self, keepWithNext=False):
-        '''Overridden version of 'decision' field accessor. It allows to specify
-           p_keepWithNext=True. In that case, the last paragraph of bullet in
-           field "decision" will get a specific CSS class that will keep it with
-           next paragraph. Useful when including the decision in a document
-           template and avoid having the signatures, just below it, being alone
-           on the next page. And d'on't show decision for no-meeting manager if meeting state is 'decided'''
-        item = self.getSelf()
-        res = self.getField('decision').get(self)
-        if keepWithNext:
-            res = self.signatureNotAlone(res)
-        if item.getMeeting() and item.getMeeting().queryState() == 'decided' and \
-                not item.portal_plonemeeting.isManager():
-            return '<p> La décision est actuellement en cours de rédaction </p>'
-        return res
-    MeetingItem.getDecision = getDecision
-    MeetingItem.getRawDecision = getDecision
 
     def getEchevinsForProposingGroup(self):
         '''Returns all echevins defined for the proposing group'''
@@ -445,6 +451,36 @@ class CustomMeetingItem(MeetingItem):
             if self.context.getProposingGroup() in group.getEchevinServices():
                 res.append(group.id)
         return res
+
+
+class CustomMeetingGroup(MeetingGroup):
+    '''Adapter that adapts a meetingGroup implementing IMeetingGroup to the
+       interface IMeetingGroupCustom.'''
+
+    implements(IMeetingGroupCustom)
+    security = ClassSecurityInfo()
+
+    def __init__(self, item):
+        self.context = item
+
+    security.declarePrivate('validate_signatures')
+    def validate_signatures(self, value):
+        '''Validate the MeetingGroup.signatures field.'''
+        if value.strip() and not len(value.split('\n')) == 12:
+            return self.utranslate('signatures_length_error', domain='PloneMeeting')
+    MeetingGroup.validate_signatures = validate_signatures
+
+    security.declarePublic('listEchevinServices')
+    def listEchevinServices(self):
+        '''Returns a list of groups that can be selected on an group (without isEchevin).'''
+        res = []
+        tool = getToolByName(self, 'portal_plonemeeting')
+        # Get every Plone group related to a MeetingGroup
+        for group in tool.getMeetingGroups():
+            res.append((group.id, group.getProperty('title')))
+
+        return DisplayList(tuple(res))
+    MeetingGroup.listEchevinServices = listEchevinServices
 
 
 class CustomMeetingConfig(MeetingConfig):
@@ -518,36 +554,6 @@ class CustomMeetingConfig(MeetingConfig):
     MeetingConfig.searchReviewableItems = searchReviewableItems
 
 
-class CustomMeetingGroup(MeetingGroup):
-    '''Adapter that adapts a meetingGroup implementing IMeetingGroup to the
-       interface IMeetingGroupCustom.'''
-
-    implements(IMeetingGroupCustom)
-    security = ClassSecurityInfo()
-
-    def __init__(self, item):
-        self.context = item
-
-    security.declarePrivate('validate_signatures')
-    def validate_signatures(self, value):
-        '''Validate the MeetingGroup.signatures field.'''
-        if value.strip() and not len(value.split('\n')) == 12:
-            return self.utranslate('signatures_length_error', domain='PloneMeeting')
-    MeetingGroup.validate_signatures = validate_signatures
-
-    security.declarePublic('listEchevinServices')
-    def listEchevinServices(self):
-        '''Returns a list of groups that can be selected on an group (without isEchevin).'''
-        res = []
-        tool = getToolByName(self, 'portal_plonemeeting')
-        # Get every Plone group related to a MeetingGroup
-        for group in tool.getMeetingGroups():
-            res.append((group.id, group.getProperty('title')))
-
-        return DisplayList(tuple(res))
-    MeetingGroup.listEchevinServices = listEchevinServices
-
-
 # ------------------------------------------------------------------------------
 class MeetingCollegeMonsWorkflowActions(MeetingWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
@@ -559,11 +565,12 @@ class MeetingCollegeMonsWorkflowActions(MeetingWorkflowActions):
     def _adaptEveryItemsOnMeetingClosure(self):
         """Helper method for accepting every items."""
         # Every item that is not decided will be automatically set to "accepted"
+        wfTool = getToolByName(self.context, 'portal_workflow')
         for item in self.context.getAllItems():
             if item.queryState() == 'presented':
-                self.context.portal_workflow.doActionFor(item, 'itemfreeze')
+                wfTool.doActionFor(item, 'itemfreeze')
             if item.queryState() in ['itemfrozen', 'pre_accepted', ]:
-                self.context.portal_workflow.doActionFor(item, 'accept')
+                wfTool.doActionFor(item, 'accept')
 
     security.declarePrivate('doDecide')
     def doDecide(self, stateChange):
@@ -781,32 +788,16 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
 
     security.declarePublic('mayCorrect')
     def mayCorrect(self):
-        # Check with the default PloneMeeting method and our test if res is
-        # False. The diffence here is when we correct an item from itemfrozen to
-        # presented, we have to check if the Meeting is in the "created" state
-        # and not "published".
-        res = MeetingItemWorkflowConditions.mayCorrect(self)
-        # Item state
-        currentState = self.context.queryState()
-        # Manage our own behaviour now when the item is linked to a meeting,
-        # a MeetingManager can correct anything except if the meeting is closed
-        if not res and currentState in ['presented', 'itemfrozen', 'delayed',
-                                        'refused', 'accepted', 'accepted_but_modified',
-                                        'pre_accepted']:
+        '''If the item is not linked to a meeting, the user just need the
+           'Review portal content' permission, if it is linked to a meeting, an item
+           may still be corrected until the meeting is 'closed'.'''
+        res = False
+        meeting = self.context.getMeeting()
+        if not meeting or (meeting and meeting.queryState() != 'closed'):
+            # item is not linked to a meeting, or in a meeting that is not 'closed',
+            # just check for 'Review portal content' permission
             if checkPermission(ReviewPortalContent, self.context):
-                # Get the meeting
-                meeting = self.context.getMeeting()
-                if meeting:
-                    # Meeting can be None if there was a wf problem leading
-                    # an item to be in a "presented" state with no linked
-                    # meeting.
-                    meetingState = meeting.queryState()
-                    # A user having ReviewPortalContent permission can correct
-                    # an item in any case except if the meeting is closed.
-                    if meetingState != 'closed':
-                        res = True
-                else:
-                    res = True
+                res = True
         return res
 
     security.declarePublic('mayWaitAdvices')
@@ -1300,10 +1291,10 @@ class CustomToolPloneMeeting(ToolPloneMeeting):
         res.append(''.join(tmp))
         return res
 # ------------------------------------------------------------------------------
-InitializeClass(CustomMeetingItem)
 InitializeClass(CustomMeeting)
-InitializeClass(CustomMeetingConfig)
+InitializeClass(CustomMeetingItem)
 InitializeClass(CustomMeetingGroup)
+InitializeClass(CustomMeetingConfig)
 InitializeClass(MeetingCollegeMonsWorkflowActions)
 InitializeClass(MeetingCollegeMonsWorkflowConditions)
 InitializeClass(MeetingItemCollegeMonsWorkflowActions)

@@ -477,10 +477,6 @@ msgstr "Quand le caractère obligatoire des avis est d'application, un point ne 
 msgid "gives_mandatory_advice_on_descr"
 msgstr "Spécifiez une expression TAL qui retourne 'True' si le groupe doit automatiquement donner son avis sur le point donné. L'élément 'item' (point) est utilisable dans l'expression. ATTENTION si le groupe de donneurs d'avis lié à ce groupe PloneMeeting est vide, ce groupe ne sera pas pris en compte, quel que soit le résultat de l'expression TAL. De plus, si dans votre configuration de séance, l'option 'Appliquer le caractère obligatoire des avis' est activé, cet avis automatique deviendra obligatoire (et devra nécessairement être positif pour que le point puisse être présenté)."
 
-#. Default: "Detailed description"
-msgid "PloneMeeting_label_detailedDescription"
-msgstr "Motivations"
-
 #. Default: "Optional advisers"
 msgid "PloneMeeting_label_optionalAdvisers"
 msgstr "Emetteurs d'avis"

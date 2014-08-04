@@ -2,7 +2,7 @@
 #
 # File: setuphandlers.py
 #
-# Copyright (c) 2013 by CommunesPlone
+# Copyright (c) 2014 by CommunesPlone
 # Generator: ArchGenXML Version 2.7
 #            http://plone.org/products/archgenxml
 #
@@ -16,27 +16,27 @@ __docformat__ = 'plaintext'
 import logging
 logger = logging.getLogger('MeetingMons: setuphandlers')
 from Products.MeetingMons.config import PROJECTNAME
+from Products.MeetingMons.config import DEPENDENCIES
 import os
 from Products.CMFCore.utils import getToolByName
+import transaction
 ##code-section HEAD
 from Products.PloneMeeting.exportimport.content import ToolInitializer
 from Products.PloneMeeting.model.adaptations import performWorkflowAdaptations
 from Products.PloneMeeting.config import TOPIC_TYPE, TOPIC_SEARCH_SCRIPT, TOPIC_TAL_EXPRESSION
 ##/code-section HEAD
 
-
 def isNotMeetingMonsProfile(context):
     return context.readDataFile("MeetingMons_marker.txt") is None
+
 
 
 def updateRoleMappings(context):
     """after workflow changed update the roles mapping. this is like pressing
     the button 'Update Security Setting' and portal_workflow"""
-    if isNotMeetingMonsProfile(context):
-        return
+    if isNotMeetingMonsProfile(context): return
     wft = getToolByName(context.getSite(), 'portal_workflow')
     wft.updateRoleMappings()
-
 
 def postInstall(context):
     """Called as at the end of the setup process. """
@@ -52,6 +52,7 @@ def postInstall(context):
     showHomeTab(context, site)
     reorderCss(context)
     reorderSkinsLayers(context, site)
+
 
 
 ##code-section FOOT

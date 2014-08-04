@@ -26,7 +26,7 @@
 
         <tal:comment replace="nothing">Title and description(s), mono- or bilingual</tal:comment>
         <tal:field define="fieldName python: 'title'">
-          <metal:f use-macro="context/hs_macros/macros/editContentField"/>
+          <metal:f use-macro="context/@@pm-macros/editContentField"/>
         </tal:field>
         <tal:comment replace="nothing">Proposing group, category, classifier, toDiscuss</tal:comment>
         <table cellpadding="0" cellspacing="0">
@@ -84,17 +84,17 @@
           </tr>
         </table>
         <tal:field define="fieldName python: 'description'">
-          <metal:f use-macro="context/hs_macros/macros/editContentField"/>
+          <metal:f use-macro="context/@@pm-macros/editContentField"/>
         </tal:field>
         <tal:field define="fieldName python: 'detailedDescription';"
                    condition="python: 'detailedDescription' in usedAttrs">
-          <metal:f use-macro="context/hs_macros/macros/editContentField"/>
+          <metal:f use-macro="context/@@pm-macros/editContentField"/>
         </tal:field>
         <tal:field define="fieldName python: 'motivation'">
-          <metal:f use-macro="context/hs_macros/macros/editContentField"/>
+          <metal:f use-macro="context/@@pm-macros/editContentField"/>
         </tal:field>
         <tal:field define="fieldName python: 'decision'">
-          <metal:f use-macro="context/hs_macros/macros/editContentField"/>
+          <metal:f use-macro="context/@@pm-macros/editContentField"/>
         </tal:field>
 
         <tal:comment replace="nothing">Budget-related information</tal:comment>
@@ -122,8 +122,7 @@
           <label for="budgetRelated" class="formQuestion" i18n:domain="PloneMeeting"
                  tal:content="brField/widget/label_msgid" i18n:translate=""></label>
           <br/>
-        </div>        
-        
+        </div>
         <div id="budgetField" name="budgetField"
              tal:attributes="style python:test(cbChecked, 'display: block', 'display: none')">
           <metal:field use-macro="python:here.widget('budgetInfos', mode='edit')"/>
@@ -148,7 +147,7 @@
         </table>
         <tal:field define="fieldName python: 'observations'"
                    condition="python: 'observations' in usedAttrs" >
-          <metal:f use-macro="context/hs_macros/macros/editContentField"/>
+          <metal:f use-macro="context/@@pm-macros/editContentField"/>
         </tal:field>
         <metal:field use-macro="python:here.widget('itemTags', mode='edit')"/>
         <table cellpadding="0" cellspacing="0" width="100%">
@@ -162,6 +161,7 @@
         </table>
         <metal:field use-macro="python:here.widget('itemAssembly', mode='edit')"/>
         <metal:field use-macro="python:here.widget('itemSignatures', mode='edit')"/>
+
 </metal:widgets>
 </metal:base_body>
 </div>
