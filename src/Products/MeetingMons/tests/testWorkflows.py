@@ -2,7 +2,7 @@
 #
 # File: testWorkflows.py
 #
-# Copyright (c) 2007-2012 by CommunesPlone.org
+# Copyright (c) 2007-2010 by PloneGov
 #
 # GNU General Public License (GPL)
 #
@@ -22,39 +22,24 @@
 # 02110-1301, USA.
 #
 
-from DateTime import DateTime
 from AccessControl import Unauthorized
+from DateTime import DateTime
 from plone.app.testing import login
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
-from Products.PloneMeeting.tests.testWorkflows import testWorkflows as pmtw
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from Products.MeetingCommunes.tests.testWorkflows import testWorkflows as mctw
 
 
-class testWorkflows(MeetingCommunesTestCase, pmtw):
-    """Tests the default workflows implemented in MeetingCommunes."""
+class testWorkflows(MeetingMonsTestCase, mctw):
+    """Tests the default workflows implemented in MeetingMons.
 
-    def test_subproduct_call_CreateItem(self):
-        """
-            Creates an item (in "created" state) and checks that only
-            allowed persons may see this item.
-        """
-        #we do the test for the college config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-college')
-        pmtw.test_pm_CreateItem(self)
-        #we do the test for the council config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-council')
-        pmtw.test_pm_CreateItem(self)
-
-    def test_subproduct_call_RemoveObjects(self):
-        """
-            Tests objects removal (items, meetings, annexes...).
-        """
-        #we do the test for the college config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-college')
-        pmtw.test_pm_RemoveObjects(self)
-        #we do the test for the council config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-council')
-        pmtw.test_pm_RemoveObjects(self)
+       WARNING:
+       The Plone test system seems to be bugged: it does not seem to take into
+       account the write_permission and read_permission tags that are defined
+       on some attributes of the Archetypes model. So when we need to check
+       that a user is not authorized to set the value of a field protected
+       in this way, we do not try to use the accessor to trigger an exception
+       (self.assertRaise). Instead, we check that the user has the permission
+       to do so (getSecurityManager().checkPermission)."""
 
     def test_subproduct_call_WholeDecisionProcess(self):
         """
@@ -63,7 +48,7 @@ class testWorkflows(MeetingCommunesTestCase, pmtw):
             This call 2 sub tests for each process : college and council
         """
         self._testWholeDecisionProcessCollege()
-        self._testWholeDecisionProcessCouncil()
+        self.setMeetingConfig(self.meetingConfig2.getId())
 
     def _testWholeDecisionProcessCollege(self):
         '''This test covers the whole decision workflow. It begins with the
@@ -71,9 +56,38 @@ class testWorkflows(MeetingCommunesTestCase, pmtw):
         # pmCreator1 creates an item with 1 annex and proposes it
         login(self.portal, 'pmCreator1')
         item1 = self.create('MeetingItem', title='The first item')
-        self.addAnnex(item1)
+        annex1 = self.addAnnex(item1)
         self.addAnnex(item1, decisionRelated=True)
-        self.do(item1, 'propose')
+        self.do(item1, 'proposeToServiceHead')
+        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
+        self.failIf(self.transitions(item1))  # He may trigger no more action
+        self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
+        # the ServiceHead validation level
+        self.changeUser('pmServiceHead1')
+        self.failUnless(self.hasPermission('Modify portal content', (item1, annex1)))
+        self.do(item1, 'proposeToOfficeManager')
+        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
+        self.failIf(self.transitions(item1))  # He may trigger no more action
+        self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
+        # the OfficeManager validation level
+        self.changeUser('pmOfficeManager1')
+        self.failUnless(self.hasPermission('Modify portal content', (item1, annex1)))
+        self.do(item1, 'proposeToDivisionHead')
+        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
+        self.failIf(self.transitions(item1))  # He may trigger no more action
+        self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
+        # the DivisionHead validation level
+        self.changeUser('pmDivisionHead1')
+        self.failUnless(self.hasPermission('Modify portal content', (item1, annex1)))
+        self.do(item1, 'proposeToDirector')
+        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
+        # The division Head can modify items
+        self.failUnless(self.hasPermission('Modify portal content', (item1, annex1)))
+        self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
+        # the Director validation level
+        self.changeUser('pmDirector1')
+        self.failUnless(self.hasPermission('Modify portal content', (item1, annex1)))
+        self.do(item1, 'validate')
         self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
         self.failIf(self.transitions(item1))  # He may trigger no more action
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
@@ -85,255 +99,46 @@ class testWorkflows(MeetingCommunesTestCase, pmtw):
         self.changeUser('pmCreator2')
         item2 = self.create('MeetingItem', title='The second item',
                             preferredMeeting=meeting.UID())
-        self.do(item2, 'propose')
-        # pmReviewer1 validates item1 and adds an annex to it
+        self.do(item2, 'proposeToServiceHead')
+        # pmReviewer1 can not validate the item has not in the same proposing group
         self.changeUser('pmReviewer1')
-        self.addAnnex(item1, decisionRelated=True)
-        self.do(item1, 'validate')
-        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
-        self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
-        # pmManager inserts item1 into the meeting and publishes it
+        self.failIf(self.hasPermission('Modify portal content', item2))
+        # even pmManagercan not see/validate an item in the validation queue
         self.changeUser('pmManager')
+        self.failIf(self.hasPermission('Modify portal content', item2))
+        # do the complete validation
+        login(self.portal, 'admin')
+        self.do(item2, 'proposeToOfficeManager')
+        self.do(item2, 'proposeToDivisionHead')
+        self.do(item2, 'proposeToDirector')
+        # pmManager inserts item1 into the meeting but can't delete this (only manager can)
         managerAnnex = self.addAnnex(item1)
-        self.portal.restrictedTraverse('@@delete_givenuid')(managerAnnex.UID())
+        self.changeUser('pmManager')
+        self.assertRaises(Unauthorized, self.portal.restrictedTraverse('@@delete_givenuid'), managerAnnex.UID())
         self.do(item1, 'present')
         # Now reviewers can't add annexes anymore
-        self.changeUser('pmReviewer1')
+        self.changeUser('pmDirector1')
         self.assertRaises(Unauthorized, self.addAnnex, item2)
-        # meeting is frozen
-        self.changeUser('pmManager')
-        self.do(meeting, 'freeze')  # publish in pm forkflow
-        # pmReviewer2 validates item2
-        self.changeUser('pmReviewer2')
-        self.do(item2, 'validate')
-        # pmManager inserts item2 into the meeting, as late item, and adds an
-        # annex to it
-        self.changeUser('pmManager')
-        self.do(item2, 'present')
-        self.addAnnex(item2)
-        # So now we should have 3 normal item (2 recurring + 1) and one late item in the meeting
-        self.failUnless(len(meeting.getItems()) == 3)
-        self.failUnless(len(meeting.getLateItems()) == 1)
-        # pmReviewer1 now adds an annex to item1
-#        self.changeUser('pmReviewer1')
-#        self.addAnnex(item1)
-        # pmManager adds a decision to item1 and freezes the meeting
-        self.changeUser('pmManager')
-        item1.setDecision(self.decisionText)
-#        self.do(meeting, 'freeze')
-        # Now reviewers can't add annexes anymore
-#        self.changeUser('pmReviewer2')
-#        self.failIf(self.hasPermission('PloneMeeting: Add annex', item2))
-#        self.changeUser('pmReviewer1')
-#        self.assertRaises(Unauthorized, self.addAnnex, item2)
-        # pmManager adds a decision for item2, decides and closes the meeting
-        self.changeUser('pmManager')
-        item2.setDecision(self.decisionText)
-        self.addAnnex(item2, decisionRelated=True)
-        # Meeting.showItemAdvices returns True in any case (the meeting is not decided here)
-        self.assertEquals(meeting.adapted().showItemAdvices(), True)
-        self.do(meeting, 'decide')
-        # Meeting.showItemAdvices returns True in any case (the meeting is decided here)
-        self.assertEquals(meeting.adapted().showItemAdvices(), True)
-        self.failIf(len(self.transitions(meeting)) != 2)
-        self.do(meeting, 'close')
-
-    def _testWholeDecisionProcessCouncil(self):
-        """
-            This test covers the whole decision workflow. It begins with the
-            creation of some items, and ends by closing a meeting.
-        """
-        #meeting-config-college is tested in test_subproduct_WholeDecisionProcessCollege
-        #we do the test for the council config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-council')
-        # pmCreator1 creates an item with 1 annex and proposes it
-        login(self.portal, 'pmCreator1')
-        item1 = self.create('MeetingItem', title='The first item')
-        self.addAnnex(item1)
-        # The creator can add a decision annex on created item
-        self.addAnnex(item1, decisionRelated=True)
-        self.do(item1, 'propose')
-        # The creator cannot add a decision annex on proposed item
-        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
-        self.failIf(self.transitions(item1))  # He may trigger no more action
-        # pmManager creates a meeting
-        self.changeUser('pmManager')
-        meeting = self.create('Meeting', date='2007/12/11 09:00:00')
-        # The meetingManager can add a decision annex
-        self.addAnnex(item1, decisionRelated=True)
-        # pmCreator2 creates and proposes an item
-        self.changeUser('pmCreator2')
-        item2 = self.create('MeetingItem', title='The second item',
-                            preferredMeeting=meeting.UID())
-        self.do(item2, 'propose')
-        # pmReviewer1 validates item1 and adds an annex to it
-        self.changeUser('pmReviewer1')
-        # The reviewer can add a decision annex on proposed item
-        self.addAnnex(item1, decisionRelated=True)
-        self.do(item1, 'validate')
-        # The reviewer cannot add a decision annex on validated item
-        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
-        # pmManager inserts item1 into the meeting and freezes it
-        self.changeUser('pmManager')
-        managerAnnex = self.addAnnex(item1)
-        self.portal.restrictedTraverse('@@delete_givenuid')(managerAnnex.UID())
-        self.do(item1, 'present')
-        self.changeUser('pmCreator1')
-        # The creator cannot add any kind of annex on presented item
-        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
-        self.assertRaises(Unauthorized, self.addAnnex, item1)
+        # freeze the meeting
         self.changeUser('pmManager')
         self.do(meeting, 'freeze')
-        # pmReviewer2 validates item2
+        # validate item2 after meeting freeze
         self.changeUser('pmReviewer2')
         self.do(item2, 'validate')
-        # pmManager inserts item2 into the meeting, as late item, and adds an
-        # annex to it
         self.changeUser('pmManager')
         self.do(item2, 'present')
         self.addAnnex(item2)
-        # So now I should have 1 normal item left and one late item in the meeting
-        self.failIf(len(meeting.getItems()) != 1)
-        self.failIf(len(meeting.getLateItems()) != 1)
-        # pmReviewer1 can not add an annex on item1 as it is frozen
-        self.changeUser('pmReviewer1')
-        self.assertRaises(Unauthorized, self.addAnnex, item1)
-        # pmManager adds a decision to item1 and publishes the meeting
-        self.changeUser('pmManager')
-        item1.setDecision(self.decisionText)
-        self.do(meeting, 'publish')
-        # Now reviewers can't add annexes anymore
-        self.changeUser('pmReviewer2')
-        self.failIf(self.hasPermission('PloneMeeting: Add annex', item2))
-        self.assertRaises(Unauthorized, self.addAnnex, item2, decisionRelated=True)
-        self.changeUser('pmReviewer1')
-        self.assertRaises(Unauthorized, self.addAnnex, item2)
-        self.assertRaises(Unauthorized, self.addAnnex, item2, decisionRelated=True)
-        # pmManager adds a decision for item2, decides and closes the meeting
-        self.changeUser('pmManager')
-        item2.setDecision(self.decisionText)
-        # Meeting.showItemAdvices returns True in any case (the meeting is not decided here)
-        self.assertEquals(meeting.adapted().showItemAdvices(), True)
+        # So now we should have 1 normal item and 2 recurring items; 1 late item in the meeting
+        self.failUnless(len(meeting.getItems()) == 3)
+        self.failUnless(len(meeting.getLateItems()) == 1)
         self.do(meeting, 'decide')
-        # Meeting.showItemAdvices returns True in any case (the meeting is decided here)
-        self.assertEquals(meeting.adapted().showItemAdvices(), True)
-        # check that a delayed item is duplicated
-        self.assertEquals(len(item1.getBRefs('ItemPredecessor')), 0)
-        self.do(item1, 'delay')
-        # the duplicated item has item3 as predecessor
-        duplicatedItem = item1.getBRefs('ItemPredecessor')[0]
-        self.assertEquals(duplicatedItem.getPredecessor().UID(), item1.UID())
-        # when duplicated on delay, annexes are kept
-        self.assertEquals(len(duplicatedItem.getAnnexes()), 1)
-        self.addAnnex(item2, decisionRelated=True)
-        self.failIf(len(self.transitions(meeting)) != 2)
-        # When a meeting is closed, items without a decision are automatically 'accepted'
+        self.do(item1, 'refuse')
+        self.assertEquals(item1.queryState(), 'refused')
+        self.assertEquals(item2.queryState(), 'itemfrozen')
+        # every items without a decision are automatically accepted
         self.do(meeting, 'close')
         self.assertEquals(item2.queryState(), 'accepted')
-        # An already decided item keep his given decision
-        self.assertEquals(item1.queryState(), 'delayed')
-        # XXX added tests regarding ticket #5887
-        # test back transitions
-        self.changeUser('admin')
-        self.do(meeting, 'backToDecided')
-        self.changeUser('pmManager')
-        self.do(meeting, 'backToPublished')
-        # set an item back to published to test the 'freeze' meeting here under
-        self.do(item1, 'backToItemPublished')
-        self.do(meeting, 'backToFrozen')
-        # this also test the 'doBackToCreated' action on the meeting
-        self.do(meeting, 'backToCreated')
-        self.do(meeting, 'freeze')
-        self.do(meeting, 'publish')
-        self.do(meeting, 'decide')
-        self.do(meeting, 'close')
-
-    def test_subproduct_call_WorkflowPermissions(self):
-        """
-            This test checks whether workflow permissions are correct while
-            creating and changing state of items and meetings. During the test,
-            some users go from one group to the other. The test checks that in
-            this case local roles (whose permissions depend on) are correctly
-            updated.
-        """
-        #we do the test for the college config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-college')
-        # XXX comment test for now has things has changed around giving an advice when an item is created
-        # XXX test to set back on when using PloneMeeting 3
-        #pmtw.testWorkflowPermissions(self)
-        #we do the test for the council config => in a separate method : a rollback is needed
-
-    def test_subproduct_WorkflowPermissionsCouncil(self):
-        """
-            This test checks whether workflow permissions are correct while
-            creating and changing state of items and meetings. During the test,
-            some users go from one group to the other. The test checks that in
-            this case local roles (whose permissions depend on) are correctly
-            updated.
-        """
-        #we do the test for the council config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-council')
-        # XXX comment test for now has things has changed around giving an advice when an item is created
-        # XXX test to set back on when using PloneMeeting 3
-        #pmtw.testWorkflowPermissions(self)
-
-    def test_subproduct_call_RecurringItems(self):
-        """
-            Tests the recurring items system.
-        """
-        # we do the test for the college config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-college')
-        #pmtw.testRecurringItems(self) workflow is different
-        self.test_subproduct_RecurringItemsCollege()
-        # we do the test for the council config
-        # no recurring items defined...
-        self.meetingConfig = getattr(self.tool, 'meeting-config-council')
-        meeting = self.create('Meeting', date='2007/12/11 09:00:00')
-        self.assertEquals(len(meeting.getItems()), 0)
-
-    def test_subproduct_RecurringItemsCollege(self):
-        '''Tests the recurring items system.'''
-        # First, define recurring items in the meeting config
-        login(self.portal, 'admin')
-        #no recurring items are existing in the college config, so add one
-        self.create('RecurringMeetingItem', title='Rec item 1',
-                    proposingGroup='developers',
-                    meetingTransitionInsertingMe='_init_')
-        #backToCreated is not in MeetingItem.meetingTransitionsAcceptingRecurringItems
-        #so it will not be added...
-        self.create('RecurringMeetingItem', title='Rec item 2',
-                    proposingGroup='developers',
-                    meetingTransitionInsertingMe='backToCreated')
-        self.create('RecurringMeetingItem', title='Rec item 3',
-                    proposingGroup='developers',
-                    meetingTransitionInsertingMe='freeze')
-        self.create('RecurringMeetingItem', title='Rec item 4',
-                    proposingGroup='developers',
-                    meetingTransitionInsertingMe='decide')
-        self.changeUser('pmManager')
-        meeting = self.create('Meeting', date='2007/12/11 09:00:00')
-        # The recurring items must have as owner the meeting creator
-        for item in meeting.getItems():
-            self.assertEquals(item.getOwner().getId(), 'pmManager')
-        # The meeting must contain recurring items : 2 defined and one added here above
-        self.failUnless(len(meeting.getItems()) == 3)
-        self.failUnless(len(meeting.getLateItems()) == 0)
-        # After freeze, the meeting must have one recurring item more
-        self.do(meeting, 'freeze')
-        self.failUnless(len(meeting.getItems()) == 3)
-        self.failUnless(len(meeting.getLateItems()) == 1)
-        # Back to created: rec item 2 is not inserted because
-        # only some transitions can add a recurring item (see MeetingItem).
-        self.do(meeting, 'backToCreated')
-        self.failUnless(len(meeting.getItems()) == 3)
-        self.failUnless(len(meeting.getLateItems()) == 1)
-        # Recurring items can be added twice...
-        self.do(meeting, 'freeze')
-        self.failUnless(len(meeting.getItems()) == 3)
-        self.failUnless(len(meeting.getLateItems()) == 2)
-        self.do(meeting, 'decide')
-        self.failUnless(len(meeting.getItems()) == 3)
-        self.failUnless(len(meeting.getLateItems()) == 3)
+        self.assertEquals(item1.queryState(), 'refused')
 
     def test_subproduct_FreezeMeeting(self):
         """
@@ -343,18 +148,14 @@ class testWorkflows(MeetingCommunesTestCase, pmtw):
            'presented' state
         """
         # First, define recurring items in the meeting config
-        login(self.portal, 'pmManager')
+        self.changeUser('pmManager')
         #create a meeting
         meeting = self.create('Meeting', date='2007/12/11 09:00:00')
         #create 2 items and present them to the meeting
         item1 = self.create('MeetingItem', title='The first item')
-        self.do(item1, 'propose')
-        self.do(item1, 'validate')
-        self.do(item1, 'present')
         item2 = self.create('MeetingItem', title='The second item')
-        self.do(item2, 'propose')
-        self.do(item2, 'validate')
-        self.do(item2, 'present')
+        for item in (item1, item2,):
+            self.presentItem(item)
         wftool = self.portal.portal_workflow
         #every presented items are in the 'presented' state
         self.assertEquals('presented', wftool.getInfoFor(item1, 'review_state'))
@@ -377,7 +178,7 @@ class testWorkflows(MeetingCommunesTestCase, pmtw):
            not decided...
         """
         # First, define recurring items in the meeting config
-        login(self.portal, 'pmManager')
+        self.changeUser('pmManager')
         #create a meeting (with 7 items)
         meetingDate = DateTime().strftime('%y/%m/%d %H:%M:00')
         meeting = self.create('Meeting', date=meetingDate)
@@ -397,9 +198,7 @@ class testWorkflows(MeetingCommunesTestCase, pmtw):
         item7 = self.create('MeetingItem')  # id=o8
         item7.setProposingGroup('vendors')
         for item in (item1, item2, item3, item4, item5, item6, item7):
-            self.do(item, 'propose')
-            self.do(item, 'validate')
-            self.do(item, 'present')
+            self.presentItem(item)
         #we freeze the meeting
         self.do(meeting, 'freeze')
         #a MeetingManager can put the item back to presented
@@ -433,24 +232,52 @@ class testWorkflows(MeetingCommunesTestCase, pmtw):
         #presented change into accepted
         self.assertEquals('accepted', wftool.getInfoFor(item7, 'review_state'))
 
-    def test_subproduct_call_RemoveContainer(self):
+    def test_subproduct_call_RecurringItemsRespectSortingMethodOnAddItemPrivacy(self):
+            '''No sense...'''
+            pass
+
+    def test_subproduct_call_RemoveObjects(self):
         """
-          We avoid a strange behaviour of Plone.  Removal of a container
-          does not check inner objects security...
-          Check that removing an item or a meeting by is container fails.
+            Tests objects removal (items, meetings, annexes...).
         """
         #we do the test for the college config
         self.meetingConfig = getattr(self.tool, 'meeting-config-college')
-        pmtw.test_pm_RemoveContainer(self)
-        #we do the test for the council config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-council')
-        pmtw.test_pm_RemoveContainer(self)
+        self._RemoveObjects()
 
-    def test_subproduct_call_DeactivateMeetingGroup(self):
-        '''Deactivating a MeetingGroup will transfer every users of every
-           sub Plone groups to the '_observers' Plone group'''
-        #we do the test for the college config
-        pmtw.test_pm_DeactivateMeetingGroup(self)
+    def _RemoveObjects(self):
+        '''Tests objects removal (items, meetings, annexes...).'''
+        # Create an item with annexes
+        self.changeUser('pmCreator1')
+        item = self.create('MeetingItem')
+        parentFolder = item.getParentNode()
+        #test that we can remove an empty item...
+        self.portal.restrictedTraverse('@@delete_givenuid')(item.UID())
+        self.failIf(len(parentFolder.objectValues()) != 0)
+        #test removal of an item with annexes
+        item = self.create('MeetingItem')
+        annex1 = self.addAnnex(item)
+        self.changeUser('pmCreator1b')
+        annex2 = self.addAnnex(item)
+        self.failIf(len(item.objectValues()) != 2)
+        self.changeUser('pmCreator1')
+        self.portal.restrictedTraverse('@@delete_givenuid')(annex2.UID())
+        self.failIf(len(item.objectValues()) != 1)
+        # Propose the item
+        self.do(item, item.wfConditions().transitionsForPresentingAnItem[0])
+        # Remove the item with annexes
+        self.changeUser('pmCreator1b')
+        # Check that now MeetingMember(s) can't remove the item anymore
+        self.assertRaises(Unauthorized, self.portal.restrictedTraverse('@@delete_givenuid'), item.UID())
+        # a manager can't remove the item
+        self.changeUser('pmManager')
+        self.assertRaises(Unauthorized, self.portal.restrictedTraverse('@@delete_givenuid'), annex1.UID())
+        self.assertRaises(Unauthorized, self.portal.restrictedTraverse('@@delete_givenuid'), item.UID())
+        self.failIf(len(parentFolder.objectValues()) != 1)
+        # but super user (admin) could
+        self.changeUser('admin')
+        self.portal.restrictedTraverse('@@delete_givenuid')(annex1.UID())
+        self.portal.restrictedTraverse('@@delete_givenuid')(item.UID())
+        self.failIf(len(parentFolder.objectValues()) != 0)
 
 
 def test_suite():

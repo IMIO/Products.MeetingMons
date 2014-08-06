@@ -50,7 +50,7 @@ from Products.PloneMeeting.utils import prepareSearchValue
 from Products.PloneMeeting.model import adaptations
 
 # Names of available workflow adaptations.
-customWfAdaptations = ('return_to_proposing_group', )
+customWfAdaptations = ('return_to_proposing_group', 'hide_decisions_when_under_writing', )
 MeetingConfig.wfAdaptations = customWfAdaptations
 # configure parameters for the returned_to_proposing_group wfAdaptation
 # we keep also 'itemfrozen' and 'itempublished' in case this should be activated for meeting-config-college...
@@ -76,7 +76,7 @@ RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = {
     'PloneMeeting: Read item observations':
     ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
      'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader', ),
-    'MeetingMons: Write budget infos':
+    'MeetingMons: Read budget infos':
     ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
      'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'MeetingBudgetImpactReviewer', 'Reader', ),
     # edit permissions
@@ -111,7 +111,7 @@ RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = {
     ('Manager', 'MeetingMember', 'MeetingOfficeManager', 'MeetingManager', 'MeetingBudgetImpactReviewer', ),
     # MeetingManagers edit permissions
     'Delete objects':
-    ('Manager', 'MeetingManager', ),
+    ['Manager', 'MeetingManager', ],
     'PloneMeeting: Write item observations':
     ('Manager', 'MeetingManager', ),
 }
@@ -337,6 +337,7 @@ class CustomMeeting(Meeting):
         '''See doc in interfaces.py.'''
         return True
 
+
 # ------------------------------------------------------------------------------
 class CustomMeetingItem(MeetingItem):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
@@ -359,12 +360,6 @@ class CustomMeetingItem(MeetingItem):
     #for the Council, there is no "frozen" functionnality
     customMeetingAlreadyFrozenStates = ('frozen', 'decided', )
     MeetingItem.meetingAlreadyFrozenStates = customMeetingAlreadyFrozenStates
-
-    customMeetingNotClosedStates = ('frozen', 'in_committee', 'in_council', 'decided', )
-    MeetingItem.meetingNotClosedStates = customMeetingNotClosedStates
-
-    customMeetingTransitionsAcceptingRecurringItems = ('_init_', 'freeze', 'setInCommittee', 'setInCouncil', )
-    MeetingItem.meetingTransitionsAcceptingRecurringItems = customMeetingTransitionsAcceptingRecurringItems
 
     def __init__(self, item):
         self.context = item
@@ -451,6 +446,21 @@ class CustomMeetingItem(MeetingItem):
             if self.context.getProposingGroup() in group.getEchevinServices():
                 res.append(group.id)
         return res
+
+    security.declarePublic('getCertifiedSignatures')
+    def getCertifiedSignatures(self):
+        '''Returns certified signatures taking delegations into account.'''
+        tool = getToolByName(self.context, 'portal_plonemeeting')
+        item = self.getSelf()
+        mc = tool.getMeetingConfig(self)
+        specificSignatures = item.getProposingGroup(theObject=True).getSignatures()
+        res = []
+        if not specificSignatures:
+            res = mc.getCertifiedSignatures()
+        else:
+            res = specificSignatures
+        return res
+    MeetingItem.getCertifiedSignatures = getCertifiedSignatures
 
 
 class CustomMeetingGroup(MeetingGroup):
@@ -576,9 +586,10 @@ class MeetingCollegeMonsWorkflowActions(MeetingWorkflowActions):
     def doDecide(self, stateChange):
         '''We pass every item that is 'presented' in the 'itemfrozen'
            state.  It is the case for late items. '''
+        wfTool = getToolByName(self.context, 'portal_workflow')
         for item in self.context.getAllItems(ordered=True):
             if item.queryState() == 'presented':
-                self.context.portal_workflow.doActionFor(item, 'itemfreeze')
+                wfTool.doActionFor(item, 'itemfreeze')
 
     security.declarePrivate('doFreeze')
     def doFreeze(self, stateChange):
@@ -763,7 +774,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         res = False
         meeting = self.context.getMeeting()
         if checkPermission(ReviewPortalContent, self.context) and \
-           meeting and (meeting.queryState() in ['decided', 'published', 'closed']):
+           meeting and (meeting.queryState() in ['decided', 'closed', 'decisions_published', ]):
             res = True
         return res
 

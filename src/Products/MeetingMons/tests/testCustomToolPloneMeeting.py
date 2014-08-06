@@ -23,11 +23,10 @@
 #
 
 from plone.app.testing import login
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 
 
-class testCustomToolPloneMeeting(MeetingCommunesTestCase):
+class testCustomToolPloneMeeting(MeetingMonsTestCase):
     """
         Tests the ToolPloneMeeting adapted methods
     """

@@ -22,17 +22,12 @@
 # 02110-1301, USA.
 #
 
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
-from Products.PloneMeeting.tests.testPodTemplates import testPodTemplates as pmtpt
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from Products.MeetingCommunes.tests.testPodTemplates import testPodTemplates as mctpt
 
 
-class testPodTemplates(MeetingCommunesTestCase, pmtpt):
+class testPodTemplates(MeetingMonsTestCase, mctpt):
     '''Tests various aspects of document generation through POD templates.'''
-
-    def test_subproduct_call_Conditions(self):
-        '''Run the testConditions from PloneMeeting.'''
-        self.test_pm_Conditions()
 
 
 def test_suite():

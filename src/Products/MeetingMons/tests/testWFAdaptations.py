@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# File: testAdvices.py
+# File: testWFAdaptations.py
 #
-# Copyright (c) 2012 by Imio.be
+# Copyright (c) 2013 by Imio.be
 #
 # GNU General Public License (GPL)
 #
@@ -22,205 +22,128 @@
 # 02110-1301, USA.
 #
 
-import logging
+from DateTime import DateTime
 
-from plone.app.testing import login
+from Products.PloneMeeting.model.adaptations import RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS
 
-from Products.PloneMeeting.model.adaptations import performWorkflowAdaptations
-from Products.PloneMeeting.tests.testWFAdaptations import testWFAdaptations as pmtwfa
-
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from Products.MeetingCommunes.tests.testWFAdaptations import testWFAdaptations as mctwfa
 
 
-class testWFAdaptations(MeetingCommunesTestCase, pmtwfa):
-    '''See doc string in PloneMeeting.tests.testWFAdaptations.'''
+class testWFAdaptations(MeetingMonsTestCase, mctwfa):
+    '''Tests various aspects of votes management.'''
 
     def test_subproduct_call_WFA_availableWFAdaptations(self):
-        '''Test what are the available wfAdaptations.'''
+        '''Most of wfAdaptations makes no sense, just make sure most are disabled.'''
         self.assertEquals(set(self.meetingConfig.listWorkflowAdaptations()),
-                          set(('no_global_observation', 'only_creator_may_delete',
-                               'pre_validation', 'items_come_validated',
-                               'no_publication', 'no_proposal', 'everyone_reads_all',
-                               'creator_edits_unless_closed', 'local_meeting_managers',
-                               # our wfAdaptations
-                               'add_published_state',)))
+                          set(('return_to_proposing_group', 'hide_decisions_when_under_writing', )))
 
     def test_subproduct_call_WFA_no_publication(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
-        # we have a 'published' state in the "meetingcouncil_worflow" in self.meetingConfig2
-        self.meetingConfig = self.meetingConfig2
-        pmtwfa.test_pm_WFA_no_publication(self)
+        '''No sense...'''
+        pass
 
     def test_subproduct_call_WFA_no_proposal(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
-        pmtwfa.test_pm_WFA_no_proposal(self)
-        self.meetingConfig = self.meetingConfig2
-        pmtwfa.test_pm_WFA_no_proposal(self)
+        '''No sense...'''
+        pass
 
     def test_subproduct_call_WFA_pre_validation(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
-        pmtwfa.test_pm_WFA_pre_validation(self)
-        self.meetingConfig = self.meetingConfig2
-        pmtwfa.test_pm_WFA_pre_validation(self)
-
-    def test_subproduct_call_WFA_creator_initiated_decisions(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py
-           In MC WFs this wfAdaptation is not used (deactivated in adapters.py) because it is
-           always 'enabled', the creator can edit the decision field by default.'''
-        # we just call the subtest while wfAdaptation should be active
-        pmtwfa._creator_initiated_decisions_active(self)
+        '''No sense...'''
+        pass
 
     def test_subproduct_call_WFA_items_come_validated(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
-        pmtwfa.test_pm_WFA_items_come_validated(self)
-        self.meetingConfig = self.meetingConfig2
-        pmtwfa.test_pm_WFA_items_come_validated(self)
-
-    def test_subproduct_call_WFA_archiving(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
-        # we do not have an 'archived' state in the meeting/item WFs...
-        # just call the subtest while wfAdaptation sould be inactive
-        # it is deactived in adapters.py
-        pmtwfa._archiving_inactive(self)
+        '''No sense...'''
+        pass
 
     def test_subproduct_call_WFA_only_creator_may_delete(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
-        pmtwfa.test_pm_WFA_only_creator_may_delete(self)
-        self.meetingConfig = self.meetingConfig2
-        pmtwfa.test_pm_WFA_only_creator_may_delete(self)
+        '''No sense...'''
+        pass
 
     def test_subproduct_call_WFA_no_global_observation(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
-        # we have global observations in the meetingcouncil_workflow
-        # once item is 'itempublished'
-        self.meetingConfig = self.meetingConfig2
-        pmtwfa.test_pm_WFA_no_global_observation(self)
+        '''No sense...'''
+        pass
 
     def test_subproduct_call_WFA_everyone_reads_all(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
-        self.meetingConfig = self.meetingConfig2
-        pmtwfa.test_pm_WFA_everyone_reads_all(self)
+        '''No sense...'''
+        pass
 
     def test_subproduct_call_WFA_creator_edits_unless_closed(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
-        pmtwfa.test_pm_WFA_creator_edits_unless_closed(self)
-        self.meetingConfig = self.meetingConfig2
-        pmtwfa.test_pm_WFA_creator_edits_unless_closed(self)
-
-    def test_subproduct_call_WFA_local_meeting_managers(self):
-        '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
-        pmtwfa.test_pm_WFA_local_meeting_managers(self)
-        self.meetingConfig = self.meetingConfig2
-        pmtwfa.test_pm_WFA_local_meeting_managers(self)
+        '''No sense...'''
+        pass
 
     def test_subproduct_WFA_add_published_state(self):
-        '''Test the workflowAdaptation 'add_published_state'.
-           If meeting is in decided state, only the MeetingManagers can
-           view the real decision. The other people view a standard message taken from the MeetingConfig.'''
-        login(self.portal, 'pmManager')
-        # check while the wfAdaptation is not activated
-        self._add_published_state_inactive()
-        # activate the wfAdaptation and check
-        self.meetingConfig.setWorkflowAdaptations('add_published_state')
-        logger = logging.getLogger('MeetingCommunes: tests')
-        performWorkflowAdaptations(self.portal, self.meetingConfig, logger)
-        self._add_published_state_active()
-        # test also for the meetingcouncil_workflow
-        self.meetingConfig = self.meetingConfig2
-        self._add_published_state_inactive()
-        self.meetingConfig.setWorkflowAdaptations('add_published_state')
-        logger = logging.getLogger('MeetingCommunes: tests')
-        performWorkflowAdaptations(self.portal, self.meetingConfig, logger)
-        # check while the wfAdaptation is not activated
-        self._add_published_state_active()
+        '''No sense...'''
+        pass
 
-    def _add_published_state_inactive(self):
-        '''Tests while 'add_published_state' wfAdaptation is inactive.
-           In this case, the decision is always accessible by the creator no matter it is
-           adapted by any MeetingManagers.  There is NO extra 'published' state moreover.'''
-        login(self.portal, 'pmManager')
-        meeting = self._createMeetingWithItems()
-        item = meeting.getItems()[0]
-        item.setDecision('<p>testing decision field</p>')
-        self.changeUser('pmCreator1')
-        # relevant users can see the decision
-        self.assertEquals(item.getDecision(), '<p>testing decision field</p>')
-        self.changeUser('pmManager')
-        self.assertEquals(item.getDecision(), '<p>testing decision field</p>')
-        self.do(meeting, 'freeze')
-        self.assertEquals(item.getDecision(), '<p>testing decision field</p>')
-        # maybe we have a 'publish' transition
-        if 'publish' in self.transitions(meeting):
-            self.do(meeting, 'publish')
-            self.assertEquals(item.getDecision(), '<p>testing decision field</p>')
-        self.do(meeting, 'decide')
-        # set a decision...
-        item.setDecision('<p>Decision adapted by pmManager</p>')
-        item.reindexObject()
-        # it is immediatelly viewable by the item's creator as
-        # the 'add_published_state' wfAdaptation is not enabled
-        login(self.portal, 'pmCreator1')
-        self.assertEquals(item.getDecision(), '<p>Decision adapted by pmManager</p>')
-        self.changeUser('pmManager')
-        self.do(meeting, 'close')
-        login(self.portal, 'pmCreator1')
-        self.assertEquals(item.getDecision(), '<p>Decision adapted by pmManager</p>')
-        # the item has been automatically accepted
-        self.assertEquals(item.queryState(), 'accepted')
+    def test_subproduct_call_WFA_local_meeting_managers(self):
+        '''No sense...'''
+        pass
 
-    def _add_published_state_active(self):
-        '''Tests while 'add_published_state' wfAdaptation is active.'''
-        login(self.portal, 'pmManager')
-        meeting = self._createMeetingWithItems()
-        item = meeting.getItems()[0]
-        item.setDecision('<p>testing decision field</p>')
+    def _return_to_proposing_group_inactive(self):
+        '''Tests while 'return_to_proposing_group' wfAdaptation is inactive.'''
+        # this is active by default in MeetingMons council wf
+        return
+
+    def _return_to_proposing_group_active_state_to_clone(self):
+        '''Helper method to test 'return_to_proposing_group' wfAdaptation regarding the
+           RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE defined value.
+           In our usecase, this is Nonsense as we use RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS.'''
+        return
+
+    def _return_to_proposing_group_active_custom_permissions(self):
+        '''Helper method to test 'return_to_proposing_group' wfAdaptation regarding the
+           RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS defined value.
+           In our use case, just test that permissions of 'returned_to_proposing_group' state
+           are the one defined in RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS.'''
+        itemWF = getattr(self.wfTool, self.meetingConfig.getItemWorkflow())
+        returned_to_proposing_group_state_permissions = itemWF.states['returned_to_proposing_group'].permission_roles
+        for permission in returned_to_proposing_group_state_permissions:
+            self.assertEquals(returned_to_proposing_group_state_permissions[permission],
+                              RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS[permission])
+
+    def _return_to_proposing_group_active_wf_functionality(self):
+        '''Tests the workflow functionality of using the 'return_to_proposing_group' wfAdaptation.
+           Same as default test until the XXX here under.'''
+        # while it is active, the creators of the item can edit the item as well as the MeetingManagers
         self.changeUser('pmCreator1')
-        # relevant users can see the decision
-        self.assertEquals(item.getDecision(), '<p>testing decision field</p>')
+        item = self.create('MeetingItem')
+        self.proposeItem(item)
+        self.changeUser('pmReviewer1')
+        self.validateItem(item)
+        # create a Meeting and add the item to it
         self.changeUser('pmManager')
-        self.assertEquals(item.getDecision(), '<p>testing decision field</p>')
+        meeting = self.create('Meeting', date=DateTime())
+        self.presentItem(item)
+        # now that it is presented, the pmCreator1/pmReviewer1 can not edit it anymore
+        for userId in ('pmCreator1', 'pmReviewer1'):
+            self.changeUser(userId)
+            self.failIf(self.hasPermission('Modify portal content', item))
+        # the item can be send back to the proposing group by the MeetingManagers only
+        for userId in ('pmCreator1', 'pmReviewer1'):
+            self.changeUser(userId)
+            self.failIf(self.wfTool.getTransitionsFor(item))
+        self.changeUser('pmManager')
+        self.failUnless('return_to_proposing_group' in [tr['name'] for tr in self.wfTool.getTransitionsFor(item)])
+        # send the item back to the proposing group so the proposing group as an edit access to it
+        self.do(item, 'return_to_proposing_group')
+        self.changeUser('pmCreator1')
+        self.failUnless(self.hasPermission('Modify portal content', item))
+        # MeetingManagers can still edit it also
+        self.changeUser('pmManager')
+        self.failUnless(self.hasPermission('Modify portal content', item))
+        # the creator can send the item back to the meeting managers, as the meeting managers
+        for userId in ('pmCreator1', 'pmManager'):
+            self.changeUser(userId)
+            self.failUnless('backTo_presented_from_returned_to_proposing_group' in
+                            [tr['name'] for tr in self.wfTool.getTransitionsFor(item)])
+        # when the creator send the item back to the meeting, it is in the right state depending
+        # on the meeting state.  Here, when meeting is 'created', the item is back to 'presented'
+        self.do(item, 'backTo_presented_from_returned_to_proposing_group')
+        self.assertEquals(item.queryState(), 'presented')
+        # XXX changed by MeetingMons
+        # send the item back to proposing group, set the meeting in_committee then send the item back to the meeting
+        # the item should be now in the item state corresponding to the meeting frozen state, so 'itemfrozen'
+        self.do(item, 'return_to_proposing_group')
         self.do(meeting, 'freeze')
-        self.assertEquals(item.getDecision(), '<p>testing decision field</p>')
-        # maybe we have a 'publish' transition
-        if 'publish' in self.transitions(meeting):
-            self.do(meeting, 'publish')
-            self.assertEquals(item.getDecision(), '<p>testing decision field</p>')
-        self.do(meeting, 'decide')
-        # set a decision...
-        item.setDecision('<p>Decision adapted by pmManager</p>')
-        item.reindexObject()
-        # test that a presented item can be automatically accepted while the meeting
-        # is set to 'decisions_published', starting from 'presented'
-        # the item has been automatically frozen
-        while item.queryState() != 'presented':
-            for tr in self.transitions(item):
-                if tr.startswith('backTo'):
-                    self.do(item, tr)
-                    break
-        # the decision is NOT viewable by the item's creator as
-        # the 'add_published_state' wfAdaptation is enabled
-        login(self.portal, 'pmCreator1')
-        self.assertEquals(item.getDecision(),
-                          '<p>The decision is currently under edit by managers, you can not access it</p>')
-        self.changeUser('pmManager')
-        # MeetingManagers see it correctly
-        self.assertEquals(item.getDecision(), '<p>Decision adapted by pmManager</p>')
-        # a 'publish_decisions' transition is added after 'decide'
-        self.do(meeting, 'publish_decisions')
-        self.assertEquals(meeting.queryState(), 'decisions_published')
-        self.assertEquals(item.getDecision(), '<p>Decision adapted by pmManager</p>')
-        # now that the meeting is in the 'decisions_published' state, decision is viewable to item's creator
-        login(self.portal, 'pmCreator1')
-        self.assertEquals(item.getDecision(), '<p>Decision adapted by pmManager</p>')
-        # items are automatically accepted when decisions are published
-        self.assertEquals(item.queryState(), 'accepted')
-        self.changeUser('pmManager')
-        # every items of the meeting are accepted
-        for itemInMeeting in meeting.getItems():
-            self.assertEquals(itemInMeeting.queryState(), 'accepted')
-        self.do(meeting, 'close')
-        self.assertEquals(item.queryState(), 'accepted')
 
 
 def test_suite():

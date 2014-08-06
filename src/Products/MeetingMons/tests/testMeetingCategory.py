@@ -22,24 +22,12 @@
 # 02110-1301, USA.
 #
 
-from plone.app.testing import logout
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
-from Products.PloneMeeting.tests.testMeetingCategory import testMeetingCategory as pmmc
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from Products.MeetingCommunes.tests.testMeetingCategory import testMeetingCategory as mctmc
 
 
-class testMeetingCategory(MeetingCommunesTestCase, pmmc):
+class testMeetingCategory(MeetingMonsTestCase, mctmc):
     '''Tests the MeetingCategory class methods.'''
-
-    def test_subproduct_call_CanNotRemoveLinkedMeetingCategory(self):
-        '''Run the test_pm_CanNotRemoveLinkedMeetingCategory from PloneMeeting.'''
-        # remove every items in the metingConfig that are using the 'developers' group
-        self.changeUser('admin')
-        self.meetingConfig.recurringitems.manage_delObjects(
-            [item.getId() for item in (self.meetingConfig.getItems() + self.meetingConfig.getItems('as_template_item'))
-             if item.getProposingGroup() == 'developers'])
-        logout()
-        self.test_pm_CanNotRemoveLinkedMeetingCategory()
 
 
 def test_suite():

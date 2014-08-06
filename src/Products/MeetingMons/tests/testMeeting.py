@@ -22,64 +22,43 @@
 # 02110-1301, USA.
 #
 
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
-from Products.PloneMeeting.tests.testMeeting import testMeeting as pmtm
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from Products.MeetingCommunes.tests.testMeeting import testMeeting as mctm
+
+from plone.app.testing import login
+from AccessControl import Unauthorized
 
 
-class testMeeting(MeetingCommunesTestCase, pmtm):
-    """
-        Tests the Meeting class methods.
-    """
-
-    def test_subproduct_call_InsertItem(self):
-        """Run the test_pm_InsertItem from PloneMeeting."""
-        self.test_pm_InsertItem()
-
-    def test_subproduct_call_InsertItemCategories(self):
-        """Run the test_pm_InsertItemCategories from PloneMeeting."""
-        self.test_pm_InsertItemCategories()
-
-    def test_subproduct_call_InsertItemAllGroups(self):
-        """Run the test_pm_InsertItemAllGroups from PloneMeeting."""
-        self.test_pm_InsertItemAllGroups()
-
-    def test_subproduct_call_InsertItemPrivacyThenProposingGroups(self):
-        """Run the test_pm_InsertItemPrivacyThenProposingGroups from PloneMeeting."""
-        self.test_pm_InsertItemPrivacyThenProposingGroups()
-
-    def test_subproduct_call_InsertItemPrivacyThenCategories(self):
-        """Run the test_pm_InsertItemPrivacyThenCategories from PloneMeeting."""
-        self.test_pm_InsertItemPrivacyThenCategories()
+class testMeeting(MeetingMonsTestCase, mctm):
+    """Tests the Meeting class methods."""
 
     def test_subproduct_call_RemoveOrDeleteLinkedItem(self):
-        """Run the test_pm_RemoveOrDeleteLinkedItem from PloneMeeting."""
-        self.test_pm_RemoveOrDeleteLinkedItem()
+        """Run the test_pm_RemoveOrDeleteLinkedItem from PloneMeeting.
+           See docstring in PloneMeeting."""
+        self._removeOrDeleteLinkedItem()
 
-    def test_subproduct_call_MeetingNumbers(self):
-        """Run the test_pm_MeetingNumbers from PloneMeeting."""
-        self.test_pm_MeetingNumbers()
-
-    def test_subproduct_call_AvailableItems(self):
-        """Run the testAvailableItems from PloneMeeting."""
-        self.test_pm_AvailableItems()
-
-    def test_subproduct_call_PresentSeveralItems(self):
-        """
-          Run the testPresentSeveralItems from PloneMeeting
-        """
-        self.test_pm_PresentSeveralItems()
-
-    def test_subproduct_call_DecideSeveralItems(self):
-        """
-          Run the testDecideSeveralItems from PloneMeeting
-        """
-        self.test_pm_DecideSeveralItems()
+    def _removeOrDeleteLinkedItem(self):
+        '''Test that removing or deleting a linked item works.'''
+        login(self.portal, 'pmManager')
+        meeting = self._createMeetingWithItems()
+        self.assertEquals([item.id for item in meeting.getItemsInOrder()],
+                          ['recItem1', 'recItem2', 'o3', 'o5', 'o2', 'o4', 'o6'])
+        #remove an item
+        item5 = getattr(meeting, 'o5')
+        meeting.removeItem(item5)
+        self.assertEquals([item.id for item in meeting.getItemsInOrder()],
+                          ['recItem1', 'recItem2', 'o3', 'o2', 'o4', 'o6'])
+        #delete a linked item
+        item4 = getattr(meeting, 'o4')
+        self.assertRaises(Unauthorized, self.portal.restrictedTraverse('@@delete_givenuid'), item4.UID())
+        self.changeUser('admin')
+        meeting.restrictedTraverse('@@delete_givenuid')(item4.UID())
+        self.assertEquals([item.id for item in meeting.getItemsInOrder()],
+                          ['recItem1', 'recItem2', 'o3', 'o2', 'o6'])
 
 
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
-    # launch only tests prefixed by 'test_subproduct_' to avoid launching the tests coming from pmtm
     suite.addTest(makeSuite(testMeeting, prefix='test_subproduct_'))
     return suite

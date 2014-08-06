@@ -22,29 +22,12 @@
 # 02110-1301, USA.
 #
 
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
-from Products.PloneMeeting.tests.testChangeItemOrderView import testChangeItemOrderView as pmciov
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from Products.MeetingCommunes.tests.testChangeItemOrderView import testChangeItemOrderView as mctciov
 
 
-class testChangeItemOrderView(MeetingCommunesTestCase, pmciov):
+class testChangeItemOrderView(MeetingMonsTestCase, mctciov):
     '''Tests the ChangeItemOrderView class methods.'''
-
-    def test_subproduct_call_ChangeItemOrderMoveUpDown(self):
-        '''Check docstring in PloneMeeting.'''
-        self.test_pm_ChangeItemOrderMoveUpDown()
-
-    def test_subproduct_call_ChangeItemOrderMoveAtGivenNumber(self):
-        '''Check docstring in PloneMeeting.'''
-        self.test_pm_ChangeItemOrderMoveAtGivenNumber()
-
-    def test_subproduct_call_MoveLateItemDoNotChangeNormalItems(self):
-        '''Check docstring in PloneMeeting.'''
-        self.test_pm_MoveLateItemDoNotChangeNormalItems()
-
-    def test_subproduct_call_MayChangeItemOrder(self):
-        '''Check docstring in PloneMeeting.'''
-        self.test_pm_MayChangeItemOrder()
 
 
 def test_suite():

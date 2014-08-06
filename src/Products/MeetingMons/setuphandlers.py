@@ -50,7 +50,6 @@ def postInstall(context):
     #need to reinstall PloneMeeting after reinstalling MC workflows to re-apply wfAdaptations
     reinstallPloneMeeting(context, site)
     showHomeTab(context, site)
-    reorderCss(context)
     reorderSkinsLayers(context, site)
 
 
@@ -63,10 +62,6 @@ def isMeetingMonsConfigureProfile(context):
         context.readDataFile("MeetingMons_testing_marker.txt") or \
         context.readDataFile("MeetingMons_Mons_marker.txt") or \
         context.readDataFile("MeetingMons_cpas_marker.txt")
-
-
-def isMeetingMonsTestingProfile(context):
-    return context.readDataFile("MeetingMons_tests_marker.txt")
 
 
 def addSearches(context, portal):
@@ -150,13 +145,9 @@ def logStep(method, context):
                 (method, '/'.join(context._profile_path.split(os.sep)[-3:])))
 
 
-def isNotMeetingMonsMonsProfile(context):
-    return context.readDataFile("MeetingMons_Mons_marker.txt") is None
-
-
 def installMeetingMons(context):
     """ Run the default profile before bing able to run the mons profile"""
-    if isNotMeetingMonsMonsProfile(context):
+    if not isMeetingMonsConfigureProfile(context):
         return
 
     logStep("installMeetingMons", context)
@@ -167,7 +158,7 @@ def installMeetingMons(context):
 def initializeTool(context):
     '''Initialises the PloneMeeting tool based on information from the current
        profile.'''
-    if isNotMeetingMonsMonsProfile(context):
+    if not isMeetingMonsConfigureProfile(context):
         return
 
     logStep("initializeTool", context)
@@ -217,7 +208,7 @@ def reorderSkinsLayers(context, site):
        Re-apply MeetingMons skins.xml step
        as the reinstallation of MeetingMons and PloneMeeting changes the portal_skins layers order
     """
-    if isNotMeetingMonsProfile(context) and not isMeetingMonsConfigureProfile:
+    if isNotMeetingMonsProfile(context) and not isMeetingMonsConfigureProfile(context):
         return
 
     logStep("reorderSkinsLayers", context)
@@ -231,70 +222,15 @@ def reorderSkinsLayers(context, site):
         pass
 
 
-def finalizeExampleInstance(context):
+def finalizeInstance(context):
     """
-       Some parameters can not be handled by the PloneMeeting installation,
-       so we handle this here
+      Called at the very end of the installation process (after PloneMeeting).
     """
     if not isMeetingMonsConfigureProfile(context):
         return
 
-    # finalizeExampleInstance will behave differently if on
-    # a Commune instance or CPAS instance
-    specialUserId = 'bourgmestre'
-    meetingConfig1Id = 'meeting-config-college'
-    meetingConfig2Id = 'meeting-config-council'
-    if context.readDataFile("MeetingMons_cpas_marker.txt"):
-        specialUserId = 'president'
-        meetingConfig1Id = 'meeting-config-bp'
-        meetingConfig2Id = 'meeting-config-cas'
-
-    site = context.getSite()
-
-    logStep("finalizeExampleInstance", context)
-    # add the test user 'bourgmestre' to every '_powerobservers' groups
-    member = site.portal_membership.getMemberById(specialUserId)
-    if member:
-        site.portal_groups.addPrincipalToGroup(member.getId(), '%s_powerobservers' % meetingConfig1Id)
-        site.portal_groups.addPrincipalToGroup(member.getId(), '%s_powerobservers' % meetingConfig2Id)
-    # add the test user 'conseiller' to only the every 'meeting-config-council_powerobservers' groups
-    member = site.portal_membership.getMemberById('conseiller')
-    if member:
-        site.portal_groups.addPrincipalToGroup(member.getId(), '%s_powerobservers' % meetingConfig2Id)
-
-    # define some parameters for 'meeting-config-college'
-    # items are sendable to the 'meeting-config-council'
-    mc_college_or_bp = getattr(site.portal_plonemeeting, meetingConfig1Id)
-    mc_college_or_bp.setMeetingConfigsToCloneTo([meetingConfig2Id, ])
-    # add some topcis to the portlet_todo
-    mc_college_or_bp.setToDoListTopics(
-        [getattr(mc_college_or_bp.topics, 'searchdecideditems'),
-         getattr(mc_college_or_bp.topics, 'searchitemstovalidate'),
-         getattr(mc_college_or_bp.topics, 'searchallitemsincopy'),
-         getattr(mc_college_or_bp.topics, 'searchallitemstoadvice'),
-         ])
-    # call updateCloneToOtherMCActions inter alia
-    mc_college_or_bp.at_post_edit_script()
-
-    # define some parameters for 'meeting-config-council'
-    mc_council_or_cas = getattr(site.portal_plonemeeting, meetingConfig2Id)
-    # add some topcis to the portlet_todo
-    mc_council_or_cas.setToDoListTopics(
-        [getattr(mc_council_or_cas.topics, 'searchdecideditems'),
-         getattr(mc_council_or_cas.topics, 'searchitemstovalidate'),
-         getattr(mc_council_or_cas.topics, 'searchallitemsincopy'),
-         ])
-
-    # finally, re-launch plonemeetingskin and MeetingMons skins step
-    # because PM has been installed before the import_data profile and messed up skins layers
-    site.portal_setup.runImportStepFromProfile(u'profile-Products.MeetingMons:default', 'skins')
-    site.portal_setup.runImportStepFromProfile(u'profile-plonetheme.imioapps:default', 'skins')
-    site.portal_setup.runImportStepFromProfile(u'profile-plonetheme.imioapps:plonemeetingskin', 'skins')
-    # define default workflowAdaptations for council
-    # due to some weird problems, the wfAdaptations can not be defined
-    # thru the import_data...
-    mc_council_or_cas.setWorkflowAdaptations(['no_global_observation', 'no_publication'])
-    performWorkflowAdaptations(site, mc_council_or_cas, logger)
+    reorderSkinsLayers(context, context.getSite())
+    reorderCss(context)
 
 
 def reorderCss(context):
@@ -302,7 +238,7 @@ def reorderCss(context):
        Make sure CSS are correctly reordered in portal_css so things
        work as expected...
     """
-    if isNotMeetingMonsProfile(context) and not isMeetingMonsConfigureProfile(context):
+    if isNotMeetingMonsProfile(context) and isMeetingMonsConfigureProfile(context):
         return
 
     site = context.getSite()

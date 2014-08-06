@@ -22,18 +22,12 @@
 # 02110-1301, USA.
 #
 
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
-from Products.PloneMeeting.tests.testMeetingFileType import testMeetingFileType as pmmft
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from Products.MeetingCommunes.tests.testMeetingFileType import testMeetingFileType as mctmft
 
 
-class testMeetingFileType(MeetingCommunesTestCase, pmmft):
+class testMeetingFileType(MeetingMonsTestCase, mctmft):
     '''Tests the MeetingFileType class methods.'''
-
-    def test_subproduct_call_CanNotRemoveLinkedMeetingFileType(self):
-        '''Run the testCanNotRemoveLinkedMeetingFileType from PloneMeeting.'''
-        # remove every recurring items that are using the 'developers' group
-        self.test_pm_CanNotRemoveLinkedMeetingFileType()
 
 
 def test_suite():

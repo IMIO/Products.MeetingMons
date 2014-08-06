@@ -24,11 +24,10 @@
 
 from DateTime import DateTime
 from plone.app.testing import login
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 
 
-class testCustomMeetingItem(MeetingCommunesTestCase):
+class testCustomMeetingItem(MeetingMonsTestCase):
     """
         Tests the MeetingItem adapted methods
     """
@@ -71,40 +70,30 @@ class testCustomMeetingItem(MeetingCommunesTestCase):
         meetingDate = DateTime('2008/06/12 08:00:00')
         self.create('Meeting', date=meetingDate)
         #create items
-        login(self.portal, 'pmCreator1')
+        self.changeUser('pmCreator1')
         i1 = self.create('MeetingItem')
         i1.setProposingGroup('vendors')
-        #before present in meeting, certfiedSignatures must be empty
-        res, isGrpSign = i1.adapted().getCertifiedSignatures()
-        self.assertEquals(res, '')
-        self.assertEquals(isGrpSign, False)
-        self.do(i1, 'propose')
-        login(self.portal, 'pmReviewer1')
+        #certfiedSignatures must equal MeetingConfig.certifiedSignatures
+        res = i1.adapted().getCertifiedSignatures()
+        self.assertEquals(res, 'Mr Présent Actuellement, Bourgmestre ff - Charles Exemple, Secrétaire communal')
+        self.changeUser('pmManager')
         self.do(i1, 'validate')
-        login(self.portal, 'pmManager')
         self.do(i1, 'present')
         # no signatures defined for vendors group, the MeetingConfig.certifiedSignatures are used
-        res, isGrpSign = i1.adapted().getCertifiedSignatures()
-        self.assertEquals(
-            res,
-            'Mr Pr\xc3\xa9sent Actuellement, Bourgmestre ff - Charles Exemple, Secr\xc3\xa9taire communal')
-        self.assertEquals(isGrpSign, False)
-        login(self.portal, 'pmCreator1')
+        res = i1.adapted().getCertifiedSignatures()
+        self.assertEquals(res, 'Mr Présent Actuellement, Bourgmestre ff - Charles Exemple, Secrétaire communal')
+        self.changeUser('pmCreator1')
         i2 = self.create('MeetingItem')
         i2.setProposingGroup('developers')
-        #before present in meeting, certfiedSignatures must be empty
-        res, isGrpSign = i2.adapted().getCertifiedSignatures()
-        self.assertEquals(res, '')
-        self.assertEquals(isGrpSign, False)
-        self.do(i2, 'propose')
-        login(self.portal, 'pmReviewer1')
+        #signatures define for developer group
+        res = i2.adapted().getCertifiedSignatures()
+        self.assertEquals(res, 'developers signatures')
+        self.changeUser('pmManager')
         self.do(i2, 'validate')
-        login(self.portal, 'pmManager')
         self.do(i2, 'present')
         #signatures defined for developers group, get it
-        res, isGrpSign = i2.adapted().getCertifiedSignatures()
+        res = i2.adapted().getCertifiedSignatures()
         self.assertEquals(res, 'developers signatures')
-        self.assertEquals(isGrpSign, True)
 
     def test_GetEchevinsForProposingGroup(self):
         '''Check a meetingItem for developers group return an echevin (the Same group in our case)
@@ -155,8 +144,8 @@ class testCustomMeetingItem(MeetingCommunesTestCase):
         #change field itemDecisionReportText in configuration by python:'%s delay this item'%here.getDecision()'
         item = m1.getItems()[2]
         meetingConfig = item.portal_plonemeeting.getMeetingConfig(item)
-        meetingConfig.setItemDecisionReportText("python:'%s<p>Delay this item</p>' % here.getDecision()")
+        meetingConfig.setItemDecisionReportText("python:'%sDelay this item' % here.getDecision()")
         item.setDecision('<p>Testing decision field</p>')
         #field itemDecisionReportText in configuration is empty
         self.do(item, 'delay')
-        self.assertEquals(item.getDecision(), '<p>Testing decision field</p><p>Delay this item</p>')
+        self.assertEquals(item.getDecision(), '<p>Testing decision field</p>Delay this item')

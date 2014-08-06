@@ -2,7 +2,7 @@
 #
 # File: testVotes.py
 #
-# Copyright (c) 2012-2013 by PloneGov
+# Copyright (c) 2013 by Imio.be
 #
 # GNU General Public License (GPL)
 #
@@ -22,47 +22,12 @@
 # 02110-1301, USA.
 #
 
-from Products.PloneMeeting.tests.testVotes import testVotes as pmtv
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from Products.MeetingCommunes.tests.testVotes import testVotes as mctv
 
 
-class testVotes(MeetingCommunesTestCase, pmtv):
-    '''Tests various aspects of votes management.
-       Advices are enabled for PloneMeeting Assembly, not for PloneGov Assembly.
-       By default, vote are encoded by 'theVoterHimself'.'''
-
-    def test_subproduct_call_MayConsultVotes(self):
-        """
-           Run the testMayConsultVotes from PloneMeeting
-        """
-        # votes are only enabled for the meeting-config-council
-        self.setMeetingConfig(self.meetingConfig2.getId())
-        self.test_pm_MayConsultVotes()
-
-    def test_subproduct_call_MayEditVotes(self):
-        """
-           Run the testMayEditVotes from PloneMeeting
-        """
-        # votes are only enabled for the meeting-config-council
-        self.setMeetingConfig(self.meetingConfig2.getId())
-        self.test_pm_MayEditVotes()
-
-    def test_subproduct_call_OnSaveItemPeopleInfos(self):
-        """
-           Run the testOnSaveItemPeopleInfos from PloneMeeting
-        """
-        # votes are only enabled for the meeting-config-council
-        self.setMeetingConfig(self.meetingConfig2.getId())
-        self.test_pm_OnSaveItemPeopleInfos()
-
-    def test_subproduct_call_SecretVotes(self):
-        """
-           Run the testSecretVotes from PloneMeeting
-        """
-        # votes are only enabled for the meeting-config-council
-        self.setMeetingConfig(self.meetingConfig2.getId())
-        self.test_pm_SecretVotes()
+class testVotes(MeetingMonsTestCase, mctv):
+    '''Tests various aspects of votes management.'''
 
 
 def test_suite():

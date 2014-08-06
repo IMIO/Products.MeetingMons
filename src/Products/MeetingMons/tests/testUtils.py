@@ -25,28 +25,27 @@
 from AccessControl import Unauthorized
 from plone.app.testing import login
 from Products.ExternalMethod.ExternalMethod import manage_addExternalMethod
-from Products.MeetingCommunes.tests.MeetingCommunesTestCase import \
-    MeetingCommunesTestCase
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 
 
-class testUtils(MeetingCommunesTestCase):
+class testUtils(MeetingMonsTestCase):
     """
         Tests the Extensions/utils methods.
     """
 
     def setUp(self):
-        MeetingCommunesTestCase.setUp(self)
+        MeetingMonsTestCase.setUp(self)
         #add the ExternalMethod export_meetinggroups in Zope
         manage_addExternalMethod(self.portal.aq_inner.aq_parent,
                                  'export_meetinggroups',
                                  '',
-                                 'Products.MeetingCommunes.utils',
+                                 'Products.MeetingMons.utils',
                                  'export_meetinggroups')
         #add the ExternalMethod import_meetinggroups in Zope
         manage_addExternalMethod(self.portal.aq_inner.aq_parent,
                                  'import_meetinggroups',
                                  '',
-                                 'Products.MeetingCommunes.utils',
+                                 'Products.MeetingMons.utils',
                                  'import_meetinggroups')
 
     def _exportMeetingGroups(self):
@@ -68,9 +67,9 @@ class testUtils(MeetingCommunesTestCase):
         """
         login(self.portal, 'admin')
         expected = {
-            'vendors': ('Vendors', '', 'Devil', "python: item.id == 'recurringagenda1'"),
-            'endUsers': ('End users', '', 'EndUsers', 'python:False'),
-            'developers': ('Developers', '', 'Devel', 'python:False')}
+            'vendors': ('Vendors', '', 'Devil'),
+            'endUsers': ('End users', '', 'EndUsers'),
+            'developers': ('Developers', '', 'Devel')}
         res = self._exportMeetingGroups()
         self.assertEquals(expected, res)
 
@@ -88,7 +87,7 @@ class testUtils(MeetingCommunesTestCase):
         res = self._importMeetingGroups(dict)
         self.assertEquals(expected, res)
         #but it can also add a MeetingGroup if it does not exist
-        dict['newGroup'] = ('New group title', 'New group description', 'NGAcronym', 'python:False')
+        dict['newGroup'] = ('New group title', 'New group description', 'NGAcronym')
         expected = 'MeetingGroup endUsers already exists\n' \
                    'MeetingGroup vendors already exists\n' \
                    'MeetingGroup newGroup added\n' \

@@ -16,7 +16,7 @@ def export_meetinggroups(self):
 
     dict = {}
     for mgr in pm.objectValues('MeetingGroup'):
-        dict[mgr.getId()] = (mgr.Title(), mgr.Description(), mgr.getAcronym(), mgr.getGivesMandatoryAdviceOn())
+        dict[mgr.getId()] = (mgr.Title(), mgr.Description(), mgr.getAcronym())
     return dict
 
 
@@ -42,8 +42,7 @@ def import_meetinggroups(self, dict=None):
                                        id=elt,
                                        title=data[elt][0],
                                        description=data[elt][2],
-                                       acronym=data[elt][1],
-                                       givesMandatoryAdviceOn=data[elt][3])
+                                       acronym=data[elt][1], )
             group = getattr(pm, groupId)
             group.processForm()
             out.append("MeetingGroup %s added" % elt)

@@ -20,28 +20,138 @@
 # 02110-1301, USA.
 #
 
-from Products.PloneMeeting.tests.helpers import PloneMeetingTestingHelpers
+from DateTime import DateTime
+from Products.MeetingCommunes.tests.helpers import MeetingCommunesTestingHelpers
 
 
-class MeetingCommunesTestingHelpers(PloneMeetingTestingHelpers):
-    '''Stub class that provides some helper methods about testing.'''
+class MeetingMonsTestingHelpers(MeetingCommunesTestingHelpers):
+    '''Override some values of PloneMeetingTestingHelpers.'''
 
-    TRANSITIONS_FOR_PUBLISHING_MEETING_1 = TRANSITIONS_FOR_PUBLISHING_MEETING_2 = ('freeze', 'publish', )
+    TRANSITIONS_FOR_PROPOSING_ITEM_1 = ('proposeToServiceHead',
+                                        'proposeToOfficeManager',
+                                        'proposeToDivisionHead',
+                                        'proposeToDirector', )
+    TRANSITIONS_FOR_PROPOSING_ITEM_2 = ('validate',
+                                        'backToProposedToDirector', )
+    TRANSITIONS_FOR_VALIDATING_ITEM_1 = ('proposeToServiceHead',
+                                         'proposeToOfficeManager',
+                                         'proposeToDivisionHead',
+                                         'proposeToDirector',
+                                         'validate', )
+    TRANSITIONS_FOR_VALIDATING_ITEM_2 = ('validate', )
+    TRANSITIONS_FOR_PRESENTING_ITEM_1 = ('proposeToServiceHead',
+                                         'proposeToOfficeManager',
+                                         'proposeToDivisionHead',
+                                         'proposeToDirector',
+                                         'validate',
+                                         'present', )
+    TRANSITIONS_FOR_PRESENTING_ITEM_2 = ('validate', 'present', )
     TRANSITIONS_FOR_FREEZING_MEETING_1 = TRANSITIONS_FOR_FREEZING_MEETING_2 = ('freeze', )
-    TRANSITIONS_FOR_DECIDING_MEETING_1 = ('freeze', 'decide', )
-    TRANSITIONS_FOR_DECIDING_MEETING_2 = ('freeze', 'publish', 'decide', )
-    TRANSITIONS_FOR_CLOSING_MEETING_1 = TRANSITIONS_FOR_CLOSING_MEETING_2 = ('freeze',
-                                                                             'publish',
-                                                                             'decide',
-                                                                             'close', )
+    TRANSITIONS_FOR_PUBLISHING_MEETING_1 = TRANSITIONS_FOR_PUBLISHING_MEETING_2 = ('freeze', 'decide', )
+    TRANSITIONS_FOR_ACCEPTING_ITEMS_1 = ('freeze', 'decide', )
+    TRANSITIONS_FOR_ACCEPTING_ITEMS_2 = ('freeze', 'decide', )
 
-    def _getNecessaryMeetingTransitionsToAcceptItem(self):
-        '''Returns the necessary transitions to trigger on the Meeting before being
-           able to accept an item.'''
-        # add the 'publish' transition if it exists in the currently used wf for Meeting
-        currentMeetingWf = self.meetingConfig.getMeetingWorkflow()
-        wf = getattr(self.portal.portal_workflow, currentMeetingWf)
-        res = ['freeze', 'decide', ]
-        if 'publish' in wf.transitions:
-            res.insert(1, 'publish')
-        return res
+    TRANSITIONS_FOR_DECIDING_MEETING_1 = ('freeze', 'decide', )
+    TRANSITIONS_FOR_DECIDING_MEETING_2 = ('freeze', 'decide', )
+    TRANSITIONS_FOR_CLOSING_MEETING_1 = ('freeze', 'decide', 'close', )
+    TRANSITIONS_FOR_CLOSING_MEETING_2 = ('freeze', 'decide', 'close', )
+    BACK_TO_WF_PATH_1 = {
+        # Meeting
+        'created': ('backToDecided',
+                    'backToFrozen',
+                    'backToCreated',),
+        # MeetingItem
+        'itemcreated': ('backToItemFrozen',
+                        'backToPresented',
+                        'backToValidated',
+                        'backToProposedToDirector',
+                        'backToProposedToDivisionHead',
+                        'backToProposedToOfficeManager',
+                        'backToProposedToServiceHead',
+                        'backToItemCreated'),
+        'proposed_to_servicehead': ('backToItemFrozen',
+                                    'backToPresented',
+                                    'backToValidated',
+                                    'backToProposedToDirector',
+                                    'backToProposedToDivisionHead',
+                                    'backToProposedToOfficeManager',
+                                    'backToProposedToServiceHead'),
+        'proposed_to_officemanager': ('backToItemFrozen',
+                                      'backToPresented',
+                                      'backToValidated',
+                                      'backToProposedToDirector',
+                                      'backToProposedToDivisionHead',
+                                      'backToProposedToOfficeManager'),
+        'proposed_to_divisionhead': ('backToItemFrozen',
+                                     'backToPresented',
+                                     'backToValidated',
+                                     'backToProposedToDirector',
+                                     'backToProposedToDivisionHead'),
+        'proposed_to_director': ('backToItemFrozen',
+                                 'backToPresented',
+                                 'backToValidated',
+                                 'backToProposedToDirector', ),
+        'validated': ('backToItemFrozen',
+                      'backToPresented',
+                      'backToValidated', )}
+    BACK_TO_WF_PATH_2 = {
+        # Meeting
+        'created': ('backToDecided',
+                    'backToFrozen',
+                    'backToCreated',),
+        # MeetingItem
+        'itemcreated': ('backToItemFrozen',
+                        'backToPresented',
+                        'backToValidated',
+                        'backToProposedToDirector',
+                        'backToProposedToDivisionHead',
+                        'backToProposedToOfficeManager',
+                        'backToProposedToServiceHead',
+                        'backToItemCreated'),
+        'proposed_to_servicehead': ('backToItemFrozen',
+                                    'backToPresented',
+                                    'backToValidated',
+                                    'backToProposedToDirector',
+                                    'backToProposedToDivisionHead',
+                                    'backToProposedToOfficeManager',
+                                    'backToProposedToServiceHead'),
+        'proposed_to_officemanager': ('backToItemFrozen',
+                                      'backToPresented',
+                                      'backToValidated',
+                                      'backToProposedToDirector',
+                                      'backToProposedToDivisionHead',
+                                      'backToProposedToOfficeManager'),
+        'proposed_to_divisionhead': ('backToItemFrozen',
+                                     'backToPresented',
+                                     'backToValidated',
+                                     'backToProposedToDirector',
+                                     'backToProposedToDivisionHead'),
+        'proposed_to_director': ('backToItemFrozen',
+                                 'backToPresented',
+                                 'backToValidated',
+                                 'backToProposedToDirector', ),
+        'validated': ('backToItemFrozen',
+                      'backToPresented',
+                      'backToValidated', )}
+    WF_STATE_NAME_MAPPINGS = {'itemcreated': 'itemcreated',
+                              'proposed_to_servicehead': 'proposed_to_servicehead',
+                              'proposed_to_officemanager': 'proposed_to_officemanager',
+                              'proposed_to_divisionhead': 'proposed_to_divisionhead',
+                              'proposed_to_director': 'proposed_to_director',
+                              'proposed': 'proposed_to_director',
+                              'validated': 'validated',
+                              'presented': 'presented'}
+
+    def _createMeetingWithItems(self, withItems=True, meetingDate=DateTime()):
+        '''Create a meeting with a bunch of items.
+           Overrided to do it as 'Manager' to be able
+           to add recurring items.'''
+        from plone.app.testing.helpers import setRoles
+        currentMember = self.portal.portal_membership.getAuthenticatedMember()
+        currentMemberRoles = currentMember.getRoles()
+        setRoles(self.portal, currentMember.getId(), currentMemberRoles + ['Manager', ])
+        meeting = MeetingCommunesTestingHelpers._createMeetingWithItems(self,
+                                                                        withItems=withItems,
+                                                                        meetingDate=meetingDate)
+        setRoles(self.portal, currentMember.getId(), currentMemberRoles)
+        return meeting
