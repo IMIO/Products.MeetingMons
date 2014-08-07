@@ -134,8 +134,6 @@ def update_item_schema(baseSchema):
 
     ),)
 
-    baseSchema['budgetInfos'].write_permission = "MeetingMons: Write budget infos"
-    baseSchema['budgetInfos'].read_permission = "MeetingMons: Read budget infos"
     baseSchema['category'].widget.label_method = "getLabelCategory"
     baseSchema['decision'].default_method = 'getDefaultDecision'
     baseSchema['decision'].widget.label_method = 'getLabelDecision'

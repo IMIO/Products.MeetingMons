@@ -76,7 +76,7 @@ RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = {
     'PloneMeeting: Read item observations':
     ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
      'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader', ),
-    'MeetingMons: Read budget infos':
+    'PloneMeeting: Read budget infos':
     ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
      'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'MeetingBudgetImpactReviewer', 'Reader', ),
     # edit permissions
@@ -107,7 +107,7 @@ RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = {
     'PloneMeeting: Write optional advisers':
     ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
      'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager', ),
-    'MeetingMons: Write budget infos':
+    'PloneMeeting: Write budget infos':
     ('Manager', 'MeetingMember', 'MeetingOfficeManager', 'MeetingManager', 'MeetingBudgetImpactReviewer', ),
     # MeetingManagers edit permissions
     'Delete objects':
