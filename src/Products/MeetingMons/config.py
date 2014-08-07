@@ -67,9 +67,6 @@ WriteDecision = 'PloneMeeting: Write decision'
 setDefaultRoles(ReadDecision, ('Manager',))
 setDefaultRoles(WriteDecision, ('Manager',))
 
-PMconfig.ReadBudgetInfos = 'MeetingMons: Read budget infos'
-PMconfig.WriteBudgetInfos = 'MeetingMons: Write budget infos'
-
 STYLESHEETS = [{'id': 'meetingmons.css',
                 'title': 'MeetingMons CSS styles'}]
 
