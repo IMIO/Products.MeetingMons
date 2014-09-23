@@ -129,7 +129,6 @@ def update_item_schema(baseSchema):
                 description_msgid='MeetingMons_descr_validateByBudget',
                 i18n_domain='PloneMeeting',
             ),
-            write_permission="MeetingMons: Write budget infos"
         ),
 
     ),)
