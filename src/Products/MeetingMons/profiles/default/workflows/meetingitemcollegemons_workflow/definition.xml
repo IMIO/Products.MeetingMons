@@ -1151,7 +1151,6 @@
                   acquired="False">
    <permission-role>Manager</permission-role>
    <permission-role>MeetingReviewer</permission-role>
-   <permission-role>MeetingDivisionHead</permission-role>
   </permission-map>
   <permission-map name="PloneMeeting: Add MeetingFile"
                   acquired="False">
@@ -1248,7 +1247,6 @@
                   acquired="False">
    <permission-role>Manager</permission-role>
    <permission-role>MeetingReviewer</permission-role>
-   <permission-role>MeetingDivisionHead</permission-role>
   </permission-map>
   <permission-map name="View"
                   acquired="False">
