@@ -713,7 +713,7 @@ class MeetingItemCollegeMonsWorkflowActions(MeetingItemWorkflowActions):
            After, we replace decision for initial items'''
         creator = self.context.Creator()
         # We create a copy in the initial item state, in the folder of creator.
-        clonedItem = self.context.clone(copyAnnexes=False, newOwnerId=creator,
+        clonedItem = self.context.clone(copyAnnexes=True, newOwnerId=creator,
                                         cloneEventAction='create_from_predecessor')
         clonedItem.setPredecessor(self.context)
         # Send, if configured, a mail to the person who created the item
