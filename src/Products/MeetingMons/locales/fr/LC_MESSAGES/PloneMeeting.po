@@ -544,3 +544,24 @@ msgstr "Validé par le référent budgétaire"
 #. Default: "Validate By Budget Impact Reviwer"
 msgid "MeetingMons_descr_validateByBudget"
 msgstr "Ce dossier pourra être présenté par l'agent au N+1."
+
+#. Default: "Initialize the item decision when deciding meeting"
+msgid "MeetingCommunes_label_initItemDecisionIfEmptyOnDecide"
+msgstr "Initialiser le champ décision des points lorsque la séance passe 'En rédaction du PV'?"
+
+#. Default: "If you check this box, when a meeting will be decided, if an item does not have a decision defined, this decision will be automatically filled with title and description of the item"
+msgid "init_item_decision_if_empty_on_decide"
+msgstr "Si cette case est cochée, lorsqu'une séance passera 'En rédaction du PV', pour tous les points dont le champ 'Décision' est vide, ce champ sera automatiquement rempli avec une concaténation de ce qui est défini dans le titre et la description du point"
+
+# searches
+#. Default: "cdld synthesis"
+msgid "searchcdlditems"
+msgstr "Synthèse Avis DF"
+
+#. Default: "Choose proposing group for cdld advice"
+msgid "MeetingCommunes_descr_cdldProposingGroup"
+msgstr "Choisir les groupes donneurs d'avis qui seront repris dans la synthèse CDLD (avis DF)"
+
+#. Default: "Proposing group to keep for CDLD synthesis"
+msgid "MeetingCommunes_label_cdldProposingGroup"
+msgstr "Groupes proposants à garder pour la synthèse des avis pour le CDLD (avis DF)"

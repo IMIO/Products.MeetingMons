@@ -2,14 +2,14 @@
 #
 # File: MeetingMons.py
 #
-# Copyright (c) 2014 by CommunesPlone
+# Copyright (c) 2015 by IMIO
 # Generator: ArchGenXML Version 2.7
 #            http://plone.org/products/archgenxml
 #
 # GNU General Public License (GPL)
 #
 
-__author__ = """Andre NUYENS <andre@imio.be>"""
+__author__ = """Andre NUYENS <andre.nuyens@imio.be>"""
 __docformat__ = 'plaintext'
 
 
@@ -71,47 +71,6 @@ STYLESHEETS = [{'id': 'meetingmons.css',
                 'title': 'MeetingMons CSS styles'}]
 
 # define some more value in MeetingConfig.topicsInfo so extra topics are created for each MeetingConfig
-from Products.PloneMeeting.MeetingConfig import MeetingConfig
-topicsInfo = (
-    # Items in state 'proposed'
-    ('searchproposeditems',
-     (('Type', 'ATPortalTypeCriterion', ('MeetingItem',)),
-      ('review_state', 'ATListCriterion', ('proposed',),)
-      ),
-     'created',
-     '',
-     "python: not here.portal_plonemeeting.userIsAmong('reviewers')",
-     ),
-    # Items that need to be validated
-    ('searchitemstovalidate',
-    (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),),
-     'created',
-     'searchItemsToValidate',
-     "python: here.portal_plonemeeting.userIsAmong('reviewers')",
-     ),
-    # Items in state 'validated'
-    ('searchvalidateditems',
-     (('Type', 'ATPortalTypeCriterion', ('MeetingItem',)),
-     ('review_state', 'ATListCriterion', ('validated',),)
-      ),
-     'created',
-     '',
-     '',
-     ),
-    # All 'decided' items
-    ('searchdecideditems',
-     (('Type', 'ATPortalTypeCriterion', ('MeetingItem',)),
-     ('review_state', 'ATListCriterion', ('accepted', 'refused', 'delayed', 'accepted_but_modified',),)
-      ),
-     'created',
-     '',
-     '',
-     ),
-)
-existingTopicsInfo = MeetingConfig.topicsInfo
-existingTopicsInfo = list(existingTopicsInfo)
-existingTopicsInfo.extend(topicsInfo)
-MeetingConfig.topicsInfo = tuple(existingTopicsInfo)
 ##/code-section config-bottom
 
 

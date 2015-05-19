@@ -2,14 +2,14 @@
 #
 # File: setuphandlers.py
 #
-# Copyright (c) 2014 by CommunesPlone
+# Copyright (c) 2015 by IMIO
 # Generator: ArchGenXML Version 2.7
 #            http://plone.org/products/archgenxml
 #
 # GNU General Public License (GPL)
 #
 
-__author__ = """Andre NUYENS <andre@imio.be>"""
+__author__ = """Andre NUYENS <andre.nuyens@imio.be>"""
 __docformat__ = 'plaintext'
 
 
@@ -104,7 +104,15 @@ def addSearches(context, portal):
         # All 'decided' items
         ('searchdecideditems',
         (('Type', 'ATPortalTypeCriterion', 'MeetingItem'),),
-        ('accepted', 'refused', 'delayed', 'accepted_but_modified'), '', '',),)
+        ('accepted', 'refused', 'delayed', 'accepted_but_modified'), '', '',),
+        # Items for cdld synthesis
+        ('searchcdlditems',
+        (('Type', 'ATPortalTypeCriterion', ('MeetingItem',)),
+         ),
+        'created',
+        'searchCDLDItems',
+        "python: '%s_budgetimpacteditors' % here.portal_plonemeeting.getMeetingConfig(here)"
+        ".getId() in member.getGroups() or here.portal_plonemeeting.isManager(here)", ),)
 
     mcs = portal.portal_plonemeeting.objectValues("MeetingConfig")
     if not mcs:

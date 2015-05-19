@@ -2,7 +2,7 @@
 #
 # File: MeetingMons.py
 #
-# Copyright (c) 2014 by CommunesPlone
+# Copyright (c) 2015 by IMIO
 # Generator: ArchGenXML Version 2.7
 #            http://plone.org/products/archgenxml
 #
@@ -24,7 +24,7 @@
 # 02110-1301, USA.
 #
 
-__author__ = """Andre NUYENS <andre@imio.be>"""
+__author__ = """Andre NUYENS <andre.nuyens@imio.be>"""
 __docformat__ = 'plaintext'
 
 

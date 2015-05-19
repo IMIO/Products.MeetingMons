@@ -79,29 +79,8 @@ msgstr ""
 msgid "app_name"
 msgstr ""
 
-#. Default: "Decision"
-msgid "decision"
-msgstr ""
-
-#. Default: "Decisions"
-msgid "decisions"
-msgstr ""
-
-# Other
-#. Default: "Late items"
-msgid "late_presented_items"
-msgstr ""
-
 #. Default: "Description"
 msgid "meeting_item_description"
-msgstr ""
-
-#. Default: "Decision"
-msgid "portletdecisions_title"
-msgstr ""
-
-#. Default: "Meeting"
-msgid "portletmeetings_title"
 msgstr ""
 
 #. Default: "PowerObservers"
@@ -114,14 +93,6 @@ msgstr ""
 
 #. Default: "Configure PloneMeeting"
 msgid "search_advanced"
-msgstr ""
-
-#. Default: "Every decisions"
-msgid "searchalldecisions"
-msgstr ""
-
-#. Default: "decided items"
-msgid "searchdecideditems"
 msgstr ""
 
 #. Default: "Items of my group"
@@ -391,14 +362,6 @@ msgstr ""
 msgid "listingheader_premeeting_assembly"
 msgstr ""
 
-#. Default: "Public meeting"
-msgid "ip_public"
-msgstr ""
-
-#. Default: "Closed session"
-msgid "ip_secret"
-msgstr ""
-
 #. Default: "Add [[ ]] around absent people (like [[Mister Sample Peter]])"
 msgid "assembly_meeting_descr"
 msgstr ""
@@ -475,13 +438,6 @@ msgstr ""
 msgid "PloneMeeting_label_optionalAdvisers"
 msgstr ""
 
-#. Default: "Décision used when the item is reported"
-msgid "PloneMeeting_label_itemDecisionReportText"
-msgstr ""
-
-#. Default: "When an item is delay, the decision will be replace by the text defined here, as a TAL (Tag Attribute Language) expression whose context includes the name 'here' that represents the impacted item. If you don't know TAL, you may learn it <a href=\"http://zope.org/Documentation/Books/ZopeBook/2_6Edition/ZPT.stx\">here</a>."
-msgid "item_decision_report_text_descr"
-msgstr ""
 
 #. Default: "Decision used when the item is refused"
 msgid "PloneMeeting_label_itemDecisionRefuseText"
@@ -525,4 +481,25 @@ msgstr ""
 
 #. Default: "Validate By Budget Impact Reviwer"
 msgid "MeetingMons_descr_validateByBudget"
+msgstr ""
+
+#. Default: "Initialize the item decision when deciding meeting"
+msgid "MeetingCommunes_label_initItemDecisionIfEmptyOnDecide"
+msgstr ""
+
+#. Default: "If you check this box, when a meeting will be decided, if an item does not have a decision defined, this decision will be automatically filled with title and description of the item"
+msgid "init_item_decision_if_empty_on_decide"
+msgstr ""
+
+#searches
+#. Default: "cdld synthesis"
+msgid "searchcdlditems"
+msgstr ""
+
+#. Default: "Proposing group to keep for CDLD synthesis"
+msgid "MeetingCommunes_label_cdldProposingGroup"
+msgstr ""
+
+#. Default: "Choose proposing group for cdld advice"
+msgid "MeetingCommunes_descr_cdldProposingGroup"
 msgstr ""
