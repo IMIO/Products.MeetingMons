@@ -19,11 +19,11 @@ bpDelibTemplate.podCondition = 'python:(here.meta_type=="MeetingItem") and ' \
 bpOJTemplate = PodTemplateDescriptor('bp-oj', 'Ordre du jour')
 bpOJTemplate.podTemplate = 'bp_oj.odt'
 bpOJTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
-                              'here.portal_plonemeeting.isManager()'
+                              'here.portal_plonemeeting.isManager(here)'
 bpPVTemplate = PodTemplateDescriptor('bp-pv', 'Procès verbal')
 bpPVTemplate.podTemplate = 'bp_pv.odt'
 bpPVTemplate.podCondition = 'python:(here.meta_type=="Meeting") and ' \
-                              'here.portal_plonemeeting.isManager()'
+                              'here.portal_plonemeeting.isManager(here)'
 
 bpTemplates = [bpDelibTemplate,bpOJTemplate,bpPVTemplate]
 

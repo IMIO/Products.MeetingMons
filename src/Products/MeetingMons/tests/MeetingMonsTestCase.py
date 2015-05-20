@@ -21,7 +21,7 @@
 #
 
 from Products.MeetingCommunes.tests.MeetingCommunesTestCase import MeetingCommunesTestCase
-from Products.MeetingMons.testing import MM_TEST_PROFILE_FUNCTIONAL
+from Products.MeetingMons.testing import MM_TESTING_PROFILE_FUNCTIONAL
 from Products.MeetingMons.tests.helpers import MeetingMonsTestingHelpers
 
 # monkey patch the MeetingConfig.wfAdaptations again because it is done in
@@ -34,7 +34,7 @@ MeetingConfig.wfAdaptations = customWfAdaptations
 class MeetingMonsTestCase(MeetingCommunesTestCase, MeetingMonsTestingHelpers):
     """Base class for defining MeetingMons test cases."""
 
-    layer = MM_TEST_PROFILE_FUNCTIONAL
+    layer = MM_TESTING_PROFILE_FUNCTIONAL
 
 
 # this is necessary to execute base test

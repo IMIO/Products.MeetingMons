@@ -379,6 +379,19 @@ class CustomMeetingItem(MeetingItem):
                 res.append(group.id)
         return res
 
+    def _initDecisionFieldIfEmpty(self):
+        '''
+          If decision field is empty, it will be initialized
+          with data coming from title and description.
+        '''
+        # set keepWithNext to False as it will add a 'class' and so
+        # xhtmlContentIsEmpty will never consider it empty...
+        if xhtmlContentIsEmpty(self.getDeliberation(keepWithNext=False)):
+            self.setDecision("<p>%s</p>%s" % (self.Title(),
+                                              self.Description()))
+            self.reindexObject()
+    MeetingItem._initDecisionFieldIfEmpty = _initDecisionFieldIfEmpty
+
     security.declarePublic('getCertifiedSignatures')
     def getCertifiedSignatures(self):
         '''Returns certified signatures taking delegations into account.'''
@@ -491,12 +504,12 @@ class CustomMeetingConfig(MeetingConfig):
         foundGroups = {}
         #check that we have a real PM group, not "echevins", or "Administrators"
         for group in groups:
-            isOK = False
+            realPMGroup = False
             for reviewSuffix in reviewSuffixes:
                 if group.endswith(reviewSuffix):
-                    isOK = True
+                    realPMGroup = True
                     break
-            if not isOK:
+            if not realPMGroup:
                 continue
             #remove the suffix
             groupPrefix = '_'.join(group.split('_')[:-1])
@@ -512,7 +525,7 @@ class CustomMeetingConfig(MeetingConfig):
         #now we have in the dict foundGroups the group the user is in in the key and the highest level in the value
         res = []
         for foundGroup in foundGroups:
-            params = {'portal_type': 'MeetingItemCollege',
+            params = {'Type': unicode(self.getItemTypeName(), 'utf-8'),
                       'getProposingGroup': foundGroup,
                       'review_state': statesMapping[foundGroups[foundGroup]],
                       'sort_on': sortKey,
@@ -523,7 +536,8 @@ class CustomMeetingConfig(MeetingConfig):
             # update params with kwargs
             params.update(kwargs)
             # Perform the query in portal_catalog
-            brains = self.portal_catalog(**params)
+            catalog = getToolByName(self, 'portal_catalog')
+            brains = catalog(**params)
             res.extend(brains)
         return res
     MeetingConfig.searchReviewableItems = searchReviewableItems
@@ -660,8 +674,6 @@ class MeetingCollegeMonsWorkflowActions(MeetingWorkflowActions):
         for item in self.context.getAllItems(ordered=True):
             if item.queryState() == 'presented':
                 self.context.portal_workflow.doActionFor(item, 'itemfreeze')
-        #manage meeting number
-        self.initSequenceNumber()
 
     security.declarePrivate('doPublish')
     def doPublish(self, stateChange):
@@ -761,22 +773,6 @@ class MeetingItemCollegeMonsWorkflowActions(MeetingItemWorkflowActions):
     def doAsk_advices_by_itemcreator(self, stateChange):
         pass
 
-    security.declarePrivate('doRefuse')
-    def doRefuse(self, stateChange):
-        '''When an item is refused, the decision will be change'''
-        meetingConfig = self.context.portal_plonemeeting.getMeetingConfig(self.context)
-        itemDecisionRefuseText = meetingConfig.getItemDecisionRefuseText()
-        if itemDecisionRefuseText.strip():
-            from Products.CMFCore.Expression import Expression, createExprContext
-            portal = self.context.portal_url.getPortalObject()
-            ctx = createExprContext(self.context.getParentNode(), portal, self.context)
-            try:
-                res = Expression(itemDecisionRefuseText)(ctx)
-            except Exception, e:
-                self.context.portal_plonemeeting.plone_utils.addPortalMessage(PloneMeetingError('%s' % str(e)))
-                return
-            self.context.setDecision(res)
-
 
 # ------------------------------------------------------------------------------
 class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
@@ -820,7 +816,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
                 (user.has_role('MeetingReviewer', self.context) or user.has_role('Manager')):
             res = True
             #if the current item state is 'itemcreated', only the MeetingManager can validate
-            if self.context.queryState() in ('itemcreated',) and not self.context.portal_plonemeeting.isManager():
+            if self.context.queryState() in ('itemcreated',) and not self.context.portal_plonemeeting.isManager(self.context):
                 res = False
         return res
 
@@ -842,7 +838,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         res = False
         #if item have budget info, budget reviewer must validate it
         isValidateByBudget = not self.context.getBudgetRelated() or self.context.getValidateByBudget() or \
-            self.context.portal_plonemeeting.isManager()
+            self.context.portal_plonemeeting.isManager(self.context)
         if checkPermission(ReviewPortalContent, self.context) and isValidateByBudget:
             res = True
         return res
@@ -945,8 +941,6 @@ class MeetingCouncilMonsWorkflowActions(MeetingWorkflowActions):
         for item in self.context.getAllItems(ordered=True):
             if item.queryState() == 'presented':
                 self.context.portal_workflow.doActionFor(item, 'setItemInCommittee')
-        #manage meeting number
-        self.initSequenceNumber()
 
     security.declarePrivate('doSetInCouncil')
     def doSetInCouncil(self, stateChange):
@@ -957,29 +951,6 @@ class MeetingCouncilMonsWorkflowActions(MeetingWorkflowActions):
                 self.context.portal_workflow.doActionFor(item, 'setItemInCommittee')
             if item.queryState() == 'item_in_committee':
                 self.context.portal_workflow.doActionFor(item, 'setItemInCouncil')
-
-    security.declarePrivate('doClose')
-    def doClose(self, stateChange):
-        # Every item that is "presented" will be automatically set to "accepted"
-        for item in self.context.getAllItems():
-            if item.queryState() == 'presented':
-                self.context.portal_workflow.doActionFor(item, 'itemfreeze')
-            if item.queryState() == 'itemfrozen':
-                self.context.portal_workflow.doActionFor(item, 'setItemInCommittee')
-            if item.queryState() == 'item_in_committee':
-                self.context.portal_workflow.doActionFor(item, 'setItemInCouncil')
-            if item.queryState() == 'itemfrozen':
-                self.context.portal_workflow.doActionFor(item, 'setItemInCommittee')
-            if item.queryState() == 'item_in_council':
-                self.context.portal_workflow.doActionFor(item, 'accept')
-        # For this meeting, what is the number of the first item ?
-        meetingConfig = self.context.portal_plonemeeting.getMeetingConfig(
-            self.context)
-        self.context.setFirstItemNumber(meetingConfig.getLastItemNumber()+1)
-        # Update the item counter which is global to the meeting config
-        meetingConfig.setLastItemNumber(meetingConfig.getLastItemNumber() +
-                                        len(self.context.getItems()) +
-                                        len(self.context.getLateItems()))
 
     security.declarePrivate('doBackToCreated')
     def doBackToCreated(self, stateChange):
@@ -1122,7 +1093,12 @@ class MeetingItemCouncilMonsWorkflowConditions(MeetingItemWorkflowConditions):
         self.context = item  # Implements IMeetingItem
         self.sm = getSecurityManager()
         self.useHardcodedTransitionsForPresentingAnItem = True
-        self.transitionsForPresentingAnItem = ('proposeToDirector', 'validate', 'present')
+        self.transitionsForPresentingAnItem = ('proposeToServiceHead',
+                                               'proposeToOfficeManager',
+                                               'proposeToDivisionHead',
+                                               'proposeToDirector',
+                                               'validate',
+                                               'present')
 
     security.declarePublic('mayProposeToDirector')
     def mayProposeToDirector(self):

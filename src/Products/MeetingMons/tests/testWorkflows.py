@@ -24,7 +24,6 @@
 
 from AccessControl import Unauthorized
 from DateTime import DateTime
-from plone.app.testing import login
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 from Products.MeetingCommunes.tests.testWorkflows import testWorkflows as mctw
 
@@ -54,47 +53,47 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         '''This test covers the whole decision workflow. It begins with the
            creation of some items, and ends by closing a meeting.'''
         # pmCreator1 creates an item with 1 annex and proposes it
-        login(self.portal, 'pmCreator1')
+        self.changeUser('pmCreator1')
         item1 = self.create('MeetingItem', title='The first item')
         annex1 = self.addAnnex(item1)
-        self.addAnnex(item1, decisionRelated=True)
+        self.addAnnex(item1, relatedTo='item_decision')
         self.do(item1, 'proposeToServiceHead')
-        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
+        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.transitions(item1))  # He may trigger no more action
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
         # the ServiceHead validation level
         self.changeUser('pmServiceHead1')
         self.failUnless(self.hasPermission('Modify portal content', (item1, annex1)))
         self.do(item1, 'proposeToOfficeManager')
-        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
+        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.transitions(item1))  # He may trigger no more action
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
         # the OfficeManager validation level
         self.changeUser('pmOfficeManager1')
         self.failUnless(self.hasPermission('Modify portal content', (item1, annex1)))
         self.do(item1, 'proposeToDivisionHead')
-        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
+        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.transitions(item1))  # He may trigger no more action
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
         # the DivisionHead validation level
         self.changeUser('pmDivisionHead1')
         self.failUnless(self.hasPermission('Modify portal content', (item1, annex1)))
         self.do(item1, 'proposeToDirector')
-        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
-        # The division Head can modify items
-        self.failUnless(self.hasPermission('Modify portal content', (item1, annex1)))
+        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
+        # The division Head can't modify items
+        self.failIf(self.hasPermission('Modify portal content', (item1, annex1)))
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
         # the Director validation level
         self.changeUser('pmDirector1')
         self.failUnless(self.hasPermission('Modify portal content', (item1, annex1)))
         self.do(item1, 'validate')
-        self.assertRaises(Unauthorized, self.addAnnex, item1, decisionRelated=True)
+        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.transitions(item1))  # He may trigger no more action
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
         # pmManager creates a meeting
         self.changeUser('pmManager')
         meeting = self.create('Meeting', date='2007/12/11 09:00:00')
-        self.addAnnex(item1, decisionRelated=True)
+        self.addAnnex(item1, relatedTo='item_decision')
         # pmCreator2 creates and proposes an item
         self.changeUser('pmCreator2')
         item2 = self.create('MeetingItem', title='The second item',
@@ -107,14 +106,14 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.changeUser('pmManager')
         self.failIf(self.hasPermission('Modify portal content', item2))
         # do the complete validation
-        login(self.portal, 'admin')
+        self.changeUser('admin')
         self.do(item2, 'proposeToOfficeManager')
         self.do(item2, 'proposeToDivisionHead')
         self.do(item2, 'proposeToDirector')
         # pmManager inserts item1 into the meeting but can't delete this (only manager can)
         managerAnnex = self.addAnnex(item1)
         self.changeUser('pmManager')
-        self.assertRaises(Unauthorized, self.portal.restrictedTraverse('@@delete_givenuid'), managerAnnex.UID())
+        self.portal.restrictedTraverse('@@delete_givenuid')(managerAnnex.UID())
         self.do(item1, 'present')
         # Now reviewers can't add annexes anymore
         self.changeUser('pmDirector1')
@@ -167,10 +166,9 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         #when correcting the meeting back to created, the items must be corrected
         #back to "presented"
         self.do(meeting, 'backToCreated')
-        #when a point is in 'itemfrozen' it's must rest in this state
-        #because normally we backToCreated for add new point
-        self.assertEquals('itemfrozen', wftool.getInfoFor(item1, 'review_state'))
-        self.assertEquals('itemfrozen', wftool.getInfoFor(item2, 'review_state'))
+        #when a point is in 'itemfrozen' it's must place in presented state
+        self.assertEquals('presented', wftool.getInfoFor(item1, 'review_state'))
+        self.assertEquals('presented', wftool.getInfoFor(item2, 'review_state'))
 
     def test_subproduct_CloseMeeting(self):
         """
@@ -270,12 +268,11 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.assertRaises(Unauthorized, self.portal.restrictedTraverse('@@delete_givenuid'), item.UID())
         # a manager can't remove the item
         self.changeUser('pmManager')
-        self.assertRaises(Unauthorized, self.portal.restrictedTraverse('@@delete_givenuid'), annex1.UID())
+        self.portal.restrictedTraverse('@@delete_givenuid')(annex1.UID())
         self.assertRaises(Unauthorized, self.portal.restrictedTraverse('@@delete_givenuid'), item.UID())
         self.failIf(len(parentFolder.objectValues()) != 1)
         # but super user (admin) could
         self.changeUser('admin')
-        self.portal.restrictedTraverse('@@delete_givenuid')(annex1.UID())
         self.portal.restrictedTraverse('@@delete_givenuid')(item.UID())
         self.failIf(len(parentFolder.objectValues()) != 0)
 

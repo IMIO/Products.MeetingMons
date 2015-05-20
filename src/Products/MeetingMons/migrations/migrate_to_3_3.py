@@ -95,7 +95,7 @@ class Migrate_To_3_3(Migrator):
             cdldTemplate.podTemplate = 'synthese cdld.odt'
             cdldTemplate.podCondition = 'python:False'
             cfg.addPodTemplate(cdldTemplate,
-                               site.portal_setup.getProfileInfo(u'profile-Products.MeetingCommunes:examples_fr')['path'])
+                               site.portal_setup.getProfileInfo(u'profile-Products.MeetingMons:mons')['path'])
         logger.info('Done.')
 
     def run(self):
