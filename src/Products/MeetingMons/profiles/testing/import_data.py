@@ -171,6 +171,9 @@ developers.divisionheads.append(pmReviewer1)
 developers.serviceheads.append(pmManager)
 developers.officemanagers.append(pmManager)
 developers.divisionheads.append(pmManager)
+developers.budgetimpactreviewers.append(pmManager)
+developers.extraordinarybudget.append(pmManager)
+
 setattr(developers, 'signatures', 'developers signatures')
 setattr(developers, 'echevinServices', 'developers')
 # put pmReviewerLevel1 in first level of reviewers from what is in MEETINGREVIEWERS

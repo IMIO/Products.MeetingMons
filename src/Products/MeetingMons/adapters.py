@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
-# Copyright (c) 2011 by IMIO.be 
+# Copyright (c) 2011 by IMIO.be
 #
 # GNU General Public License (GPL)
 #
@@ -28,7 +28,7 @@ from zope.interface import implements
 from zope.i18n import translate
 from Products.CMFCore.permissions import ReviewPortalContent
 from Products.CMFCore.utils import getToolByName
-from imio.helpers.xhtml import xhtmlContentIsEmpty 
+from imio.helpers.xhtml import xhtmlContentIsEmpty
 from Products.Archetypes.atapi import DisplayList
 from Products.PloneMeeting.MeetingItem import MeetingItem, \
     MeetingItemWorkflowConditions, MeetingItemWorkflowActions
@@ -46,10 +46,8 @@ from Products.MeetingMons.interfaces import \
     IMeetingCollegeMonsWorkflowConditions, IMeetingCollegeMonsWorkflowActions, \
     IMeetingItemCouncilMonsWorkflowConditions, IMeetingItemCouncilMonsWorkflowActions,\
     IMeetingCouncilMonsWorkflowConditions, IMeetingCouncilMonsWorkflowActions
-from Products.PloneMeeting import PloneMeetingError
 from Products.PloneMeeting.utils import prepareSearchValue
 from Products.PloneMeeting.model import adaptations
-from Products.PloneMeeting.model.adaptations import WF_DOES_NOT_EXIST_WARNING, WF_APPLIED
 from DateTime import DateTime
 from Products.PloneMeeting.interfaces import IAnnexable
 
@@ -136,6 +134,7 @@ class CustomMeeting(Meeting):
 
     # Implements here methods that will be used by templates
     security.declarePublic('getItemsInOrder')
+
     def getItemsInOrder(self, itemuids, late=False, toDiscuss=True):
         ''' Return a list of items, depending of todiscuss state'''
         res = []
@@ -146,6 +145,7 @@ class CustomMeeting(Meeting):
         return res
 
     security.declarePublic('getPrintableItems')
+
     def getPrintableItems(self, itemUids, late=False, ignore_review_states=[],
                           privacy='*', oralQuestion='both', toDiscuss='both', categories=[],
                           excludedCategories=[], firstNumber=1, renumber=False):
@@ -205,6 +205,7 @@ class CustomMeeting(Meeting):
             return items
 
     security.declarePublic('getAvailableItems')
+
     def getAvailableItems(self):
         '''Items are available to the meeting no matter the meeting state (except 'closed').
            In the 'created' state, every validated items are availble, in other states, only items
@@ -241,6 +242,7 @@ class CustomMeeting(Meeting):
         return res
 
     security.declarePublic('getNumberOfItems')
+
     def getNumberOfItems(self, itemUids, privacy='*', categories=[], late=False):
         '''Returns the number of items depending on parameters.
            This is used in templates to know how many items of a particular kind exist and
@@ -265,6 +267,7 @@ class CustomMeeting(Meeting):
         return len(filteredItemUids)
 
     security.declarePublic('getLabelDescription')
+
     def getLabelDescription(self):
         '''Returns the label to use for field MeetingItem.description
           The label is different between college and council'''
@@ -275,6 +278,7 @@ class CustomMeeting(Meeting):
     MeetingItem.getLabelDescription = getLabelDescription
 
     security.declarePublic('getLabelDecision')
+
     def getLabelDecision(self):
         '''Returns the label to use for field MeetingItem.decision
           The label is different between college and council'''
@@ -285,6 +289,7 @@ class CustomMeeting(Meeting):
     MeetingItem.getLabelDecision = getLabelDecision
 
     security.declarePublic('getLabelCategory')
+
     def getLabelCategory(self):
         '''Returns the label to use for field MeetingItem.category
           The label is different between college and council'''
@@ -295,6 +300,7 @@ class CustomMeeting(Meeting):
     MeetingItem.getLabelCategory = getLabelCategory
 
     security.declarePublic('getLabelObservations')
+
     def getLabelObservations(self):
         '''Returns the label to use for field Meeting.observations
            The label is different between college and council'''
@@ -330,6 +336,7 @@ class CustomMeetingItem(MeetingItem):
         self.context = item
 
     security.declarePublic('getDefaultDecision')
+
     def getDefaultDecision(self):
         '''Returns the default item decision content from the MeetingConfig.'''
         mc = self.portal_plonemeeting.getMeetingConfig(self)
@@ -337,6 +344,7 @@ class CustomMeetingItem(MeetingItem):
     MeetingItem.getDefaultDecision = getDefaultDecision
 
     security.declarePublic('getIcons')
+
     def getIcons(self, inMeeting, meeting):
         '''Check docstring in PloneMeeting interfaces.py.'''
         item = self.getSelf()
@@ -392,21 +400,6 @@ class CustomMeetingItem(MeetingItem):
             self.reindexObject()
     MeetingItem._initDecisionFieldIfEmpty = _initDecisionFieldIfEmpty
 
-    security.declarePublic('getCertifiedSignatures')
-    def getCertifiedSignatures(self):
-        '''Returns certified signatures taking delegations into account.'''
-        tool = getToolByName(self.context, 'portal_plonemeeting')
-        item = self.getSelf()
-        mc = tool.getMeetingConfig(self)
-        specificSignatures = item.getProposingGroup(theObject=True).getSignatures()
-        res = []
-        if not specificSignatures:
-            res = mc.getCertifiedSignatures()
-        else:
-            res = specificSignatures
-        return res
-    MeetingItem.getCertifiedSignatures = getCertifiedSignatures
-
     security.declarePublic('printAllAnnexes')
 
     def printAllAnnexes(self):
@@ -440,6 +433,15 @@ class CustomMeetingItem(MeetingItem):
                             'comment': comment})
         return res
 
+    def getExtraFieldsToCopyWhenCloning(self, cloned_to_same_mc):
+        '''
+          Keep some new fields when item is cloned (to another mc or from itemtemplate).
+        '''
+        res = ['validateByBudget']
+        if cloned_to_same_mc:
+            res = res + []
+        return res
+
 
 class CustomMeetingGroup(MeetingGroup):
     '''Adapter that adapts a meetingGroup implementing IMeetingGroup to the
@@ -452,6 +454,7 @@ class CustomMeetingGroup(MeetingGroup):
         self.context = item
 
     security.declarePrivate('validate_signatures')
+
     def validate_signatures(self, value):
         '''Validate the MeetingGroup.signatures field.'''
         if value.strip() and not len(value.split('\n')) == 12:
@@ -459,6 +462,7 @@ class CustomMeetingGroup(MeetingGroup):
     MeetingGroup.validate_signatures = validate_signatures
 
     security.declarePublic('listEchevinServices')
+
     def listEchevinServices(self):
         '''Returns a list of groups that can be selected on an group (without isEchevin).'''
         res = []
@@ -486,6 +490,7 @@ class CustomMeetingConfig(MeetingConfig):
     MeetingConfig.listItemStatesInitExcepted = MeetingConfig.listItemStates
 
     security.declarePublic('searchReviewableItems')
+
     def searchReviewableItems(self, sortKey, sortOrder, filterKey, filterValue, **kwargs):
         '''Returns a list of items that the user could review.'''
         member = self.portal_membership.getAuthenticatedMember()
@@ -650,6 +655,7 @@ class CustomMeetingConfig(MeetingConfig):
                         res.append((advice, item))
         return res
 
+
 # ------------------------------------------------------------------------------
 class MeetingCollegeMonsWorkflowActions(MeetingWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
@@ -659,6 +665,7 @@ class MeetingCollegeMonsWorkflowActions(MeetingWorkflowActions):
     security = ClassSecurityInfo()
 
     security.declarePrivate('doDecide')
+
     def doDecide(self, stateChange):
         '''We pass every item that is 'presented' in the 'itemfrozen'
            state.  It is the case for late items. '''
@@ -666,23 +673,6 @@ class MeetingCollegeMonsWorkflowActions(MeetingWorkflowActions):
         for item in self.context.getAllItems(ordered=True):
             if item.queryState() == 'presented':
                 wfTool.doActionFor(item, 'itemfreeze')
-
-    security.declarePrivate('doFreeze')
-    def doFreeze(self, stateChange):
-        '''When freezing the meeting, every items must be automatically set to
-           "itemfrozen".'''
-        for item in self.context.getAllItems(ordered=True):
-            if item.queryState() == 'presented':
-                self.context.portal_workflow.doActionFor(item, 'itemfreeze')
-
-    security.declarePrivate('doPublish')
-    def doPublish(self, stateChange):
-        '''We passe every item that is 'itemfrozen' in the 'accept' state.'''
-        for item in self.context.getAllItems(ordered=True):
-            if item.queryState() == 'presented':
-                self.context.portal_workflow.doActionFor(item, 'itemfreeze')
-            if item.queryState() == 'itemfrozen':
-                self.context.portal_workflow.doActionFor(item, 'accept')
 
 
 class MeetingCollegeMonsWorkflowConditions(MeetingWorkflowConditions):
@@ -693,6 +683,7 @@ class MeetingCollegeMonsWorkflowConditions(MeetingWorkflowConditions):
     security = ClassSecurityInfo()
 
     security.declarePublic('mayFreeze')
+
     def mayFreeze(self):
         res = False
         if checkPermission(ReviewPortalContent, self.context):
@@ -702,6 +693,7 @@ class MeetingCollegeMonsWorkflowConditions(MeetingWorkflowConditions):
         return res
 
     security.declarePublic('mayClose')
+
     def mayClose(self):
         res = False
         # The user just needs the "Review portal content" permission on the
@@ -711,6 +703,7 @@ class MeetingCollegeMonsWorkflowConditions(MeetingWorkflowConditions):
         return res
 
     security.declarePublic('mayDecide')
+
     def mayDecide(self):
         res = False
         if checkPermission(ReviewPortalContent, self.context):
@@ -726,50 +719,62 @@ class MeetingItemCollegeMonsWorkflowActions(MeetingItemWorkflowActions):
     security = ClassSecurityInfo()
 
     security.declarePrivate('doAccept_but_modify')
+
     def doAccept_but_modify(self, stateChange):
         pass
 
     security.declarePrivate('doPreAccept')
+
     def doPre_accept(self, stateChange):
         pass
 
     security.declarePrivate('doRemove')
+
     def doRemove(self, stateChange):
         pass
 
     security.declarePrivate('doProposeToServiceHead')
+
     def doProposeToServiceHead(self, stateChange):
         pass
 
     security.declarePrivate('doProposeToDirector')
+
     def doProposeToDirector(self, stateChange):
         pass
 
     security.declarePrivate('doProposeToOfficeManager')
+
     def doProposeToOfficeManager(self, stateChange):
         pass
 
     security.declarePrivate('doProposeToDivisionHead')
+
     def doProposeToDivisionHead(self, stateChange):
         pass
 
     security.declarePrivate('doValidateByBudgetImpactReviewer')
+
     def doValidateByBudgetImpactReviewer(self, stateChange):
         pass
 
     security.declarePrivate('doProposeToBudgetImpactReviewer')
+
     def doProposeToBudgetImpactReviewer(self, stateChange):
         pass
 
     security.declarePrivate('doValidateByExtraordinaryBudget')
+
     def doValidateByExtraordinaryBudget(self, stateChange):
         pass
 
     security.declarePrivate('doProposeToExtraordinaryBudget')
+
     def doProposeToExtraordinaryBudget(self, stateChange):
         pass
 
     security.declarePrivate('doAsk_advices_by_itemcreator')
+
     def doAsk_advices_by_itemcreator(self, stateChange):
         pass
 
@@ -803,6 +808,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('mayValidate')
+
     def mayValidate(self):
         """
           Either the Director or the MeetingManager can validate
@@ -810,17 +816,23 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
           that is in the state 'itemcreated'
         """
         res = False
+        if not self.context.getCategory():
+            return No(translate('required_category_ko',
+                                domain="PloneMeeting",
+                                context=self.context.REQUEST))
         user = self.context.portal_membership.getAuthenticatedMember()
         #first of all, the use must have the 'Review portal content permission'
         if checkPermission(ReviewPortalContent, self.context) and \
-                (user.has_role('MeetingReviewer', self.context) or user.has_role('Manager')):
+                (user.has_role('MeetingReviewer', self.context) or user.has_role('Manager', self.context)):
             res = True
             #if the current item state is 'itemcreated', only the MeetingManager can validate
-            if self.context.queryState() in ('itemcreated',) and not self.context.portal_plonemeeting.isManager(self.context):
+            if self.context.queryState() in ('itemcreated',) and \
+                    not self.context.portal_plonemeeting.isManager(self.context):
                 res = False
         return res
 
     security.declarePublic('mayWaitAdvices')
+
     def mayWaitAdvices(self):
         """
           Check that the user has the 'Review portal content'
@@ -831,11 +843,16 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('mayProposeToServiceHead')
+
     def mayProposeToServiceHead(self):
         """
           Check that the user has the 'Review portal content'
         """
         res = False
+        if not self.context.getCategory():
+            return No(translate('required_category_ko',
+                                domain="PloneMeeting",
+                                context=self.context.REQUEST))
         #if item have budget info, budget reviewer must validate it
         isValidateByBudget = not self.context.getBudgetRelated() or self.context.getValidateByBudget() or \
             self.context.portal_plonemeeting.isManager(self.context)
@@ -844,6 +861,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('mayProposeToOfficeManager')
+
     def mayProposeToOfficeManager(self):
         """
           Check that the user has the 'Review portal content'
@@ -854,6 +872,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('mayProposeToDivisionHead')
+
     def mayProposeToDivisionHead(self):
         """
           Check that the user has the 'Review portal content'
@@ -864,6 +883,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('mayProposeToDirector')
+
     def mayProposeToDirector(self):
         """
           Check that the user has the 'Review portal content'
@@ -874,6 +894,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('mayRemove')
+
     def mayRemove(self):
         """
           We may remove an item if the linked meeting is in the 'decided'
@@ -887,6 +908,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('mayValidateByBudgetImpactReviewer')
+
     def mayValidateByBudgetImpactReviewer(self):
         """
           Check that the user has the 'Review portal content'
@@ -897,16 +919,22 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('mayProposeToBudgetImpactReviewer')
+
     def mayProposeToBudgetImpactReviewer(self):
         """
           Check that the user has the 'Review portal content'
         """
         res = False
+        if not self.context.getCategory():
+            return No(translate('required_category_ko',
+                                domain="PloneMeeting",
+                                context=self.context.REQUEST))
         if checkPermission(ReviewPortalContent, self.context):
                 res = True
         return res
 
     security.declarePublic('mayValidateByExtraordinaryBudget')
+
     def mayValidateByExtraordinaryBudget(self):
         """
           Check that the user has the 'Review portal content'
@@ -917,6 +945,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('mayProposeToExtraordinaryBudget')
+
     def mayProposeToExtraordinaryBudget(self):
         """
           Check that the user has the 'Review portal content'
@@ -935,6 +964,7 @@ class MeetingCouncilMonsWorkflowActions(MeetingWorkflowActions):
     security = ClassSecurityInfo()
 
     security.declarePrivate('doSetInCommittee')
+
     def doSetInCommittee(self, stateChange):
         '''When setting the meeting in committee, every items must be automatically
            set to "item_in_committee".'''
@@ -943,6 +973,7 @@ class MeetingCouncilMonsWorkflowActions(MeetingWorkflowActions):
                 self.context.portal_workflow.doActionFor(item, 'setItemInCommittee')
 
     security.declarePrivate('doSetInCouncil')
+
     def doSetInCouncil(self, stateChange):
         '''When setting the meeting in council, every items must be automatically
            set to "item_in_council".'''
@@ -953,12 +984,14 @@ class MeetingCouncilMonsWorkflowActions(MeetingWorkflowActions):
                 self.context.portal_workflow.doActionFor(item, 'setItemInCouncil')
 
     security.declarePrivate('doBackToCreated')
+
     def doBackToCreated(self, stateChange):
         '''When a meeting go back to the "created" state, for example the
            meeting manager wants to add an item, we do not do anything.'''
         pass
 
     security.declarePrivate('doBackToInCommittee')
+
     def doBackToInCommittee(self, stateChange):
         '''When a meeting go back to the "in_committee" we set every items 'in_council' back to 'in_committee'.'''
         for item in self.context.getAllItems():
@@ -966,6 +999,7 @@ class MeetingCouncilMonsWorkflowActions(MeetingWorkflowActions):
                 self.context.portal_workflow.doActionFor(item, 'backToItemInCommittee')
 
     security.declarePrivate('doBackToInCouncil')
+
     def doBackToInCouncil(self, stateChange):
         '''When a meeting go back to the "in_council" we do not do anything.'''
         pass
@@ -984,6 +1018,7 @@ class MeetingCouncilMonsWorkflowConditions(MeetingWorkflowConditions):
         self.acceptItemsStates = customAcceptItemsStates
 
     security.declarePublic('maySetInCommittee')
+
     def maySetInCommittee(self):
         res = False
         # The user just needs the "Review portal content" permission
@@ -992,6 +1027,7 @@ class MeetingCouncilMonsWorkflowConditions(MeetingWorkflowConditions):
         return res
 
     security.declarePublic('maySetInCouncil')
+
     def maySetInCouncil(self):
         # The user just needs the "Review portal content" permission
         if not checkPermission(ReviewPortalContent, self.context):
@@ -999,6 +1035,7 @@ class MeetingCouncilMonsWorkflowConditions(MeetingWorkflowConditions):
         return True
 
     security.declarePublic('mayClose')
+
     def mayClose(self):
         res = False
         # The user just needs the "Review portal content" permission on the
@@ -1020,18 +1057,22 @@ class MeetingItemCouncilMonsWorkflowActions(MeetingItemWorkflowActions):
     security = ClassSecurityInfo()
 
     security.declarePrivate('doProposeToDirector')
+
     def doProposeToDirector(self, stateChange):
         pass
 
     security.declarePrivate('doSetItemInCommittee')
+
     def doSetItemInCommittee(self, stateChange):
         pass
 
     security.declarePrivate('doSetItemInCouncil')
+
     def doSetItemInCouncil(self, stateChange):
         pass
 
     security.declarePrivate('doReturn_to_service')
+
     def doReturn_to_service(self, stateChange):
         '''Send an email to the creator and to the officemanagers'''
         recipients = []
@@ -1051,30 +1092,37 @@ class MeetingItemCouncilMonsWorkflowActions(MeetingItemWorkflowActions):
                  mapping={'comments': lastEvent['comments'].decode(enc)})
 
     security.declarePrivate('doReturn_to_secretary')
+
     def doReturn_to_secretary(self, stateChange):
         pass
 
     security.declarePrivate('doReturn_to_secretary_in_committee')
+
     def doReturn_to_secretary_in_committee(self, stateChange):
         pass
 
     security.declarePrivate('doReturn_to_secretary_in_council')
+
     def doReturn_to_secretary_in_council(self, stateChange):
         pass
 
     security.declarePrivate('doBackToItemInCommittee')
+
     def doBackToItemInCommittee(self, stateChange):
         pass
 
     security.declarePrivate('doBackToItemInCouncil')
+
     def doBackToItemInCouncil(self, stateChange):
         pass
 
     security.declarePrivate('doAccept_but_modify')
+
     def doAccept_but_modify(self, stateChange):
         pass
 
     security.declarePrivate('doDelay')
+
     def doDelay(self, stateChange):
         '''When an item is delayed, by default it is duplicated but we do not
            duplicate it here'''
@@ -1101,6 +1149,7 @@ class MeetingItemCouncilMonsWorkflowConditions(MeetingItemWorkflowConditions):
                                                'present')
 
     security.declarePublic('mayProposeToDirector')
+
     def mayProposeToDirector(self):
         """
           Check that the user has the 'Review portal content'
@@ -1116,6 +1165,7 @@ class MeetingItemCouncilMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return False
 
     security.declarePublic('maySetItemInCommittee')
+
     def maySetItemInCommittee(self):
         """
           Check that the user has the 'Review portal content'
@@ -1130,6 +1180,7 @@ class MeetingItemCouncilMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('maySetItemInCouncil')
+
     def maySetItemInCouncil(self):
         """
           Check that the user has the 'Review portal content'
@@ -1144,6 +1195,7 @@ class MeetingItemCouncilMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return res
 
     security.declarePublic('mayReturnToService')
+
     def mayReturnToService(self):
         """
           Check that the user has the 'Review portal content'
@@ -1154,6 +1206,7 @@ class MeetingItemCouncilMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return False
 
     security.declarePublic('mayReturnToSecretary')
+
     def mayReturnToSecretary(self):
         """
           Check that the user has the 'Review portal content'
@@ -1165,6 +1218,7 @@ class MeetingItemCouncilMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return False
 
     security.declarePublic('mayReturnToSecretaryInCommittee')
+
     def mayReturnToSecretaryInCommittee(self):
         """
           Check that the user has the 'Review portal content'
@@ -1176,6 +1230,7 @@ class MeetingItemCouncilMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return False
 
     security.declarePublic('mayReturnToSecretaryInCouncil')
+
     def mayReturnToSecretaryInCouncil(self):
         """
           Check that the user has the 'Review portal content'
@@ -1187,6 +1242,7 @@ class MeetingItemCouncilMonsWorkflowConditions(MeetingItemWorkflowConditions):
         return False
 
     security.declarePublic('mayDecide')
+
     def mayDecide(self):
         '''We may decide an item if the linked meeting is in the 'decided'
            state.'''
@@ -1206,6 +1262,7 @@ class CustomToolPloneMeeting(ToolPloneMeeting):
     security = ClassSecurityInfo()
 
     security.declarePublic('getSpecificAssemblyFor')
+
     def getSpecificAssemblyFor(self, assembly, startTxt=''):
         ''' Return the Assembly between two tag.
             This method is use in template
