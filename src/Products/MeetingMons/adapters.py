@@ -442,6 +442,17 @@ class CustomMeetingItem(MeetingItem):
             res = res + []
         return res
 
+    def getCreatorAndValidator(self):
+        res = {'creator': self.context.portal_membership.getMemberInfo(str(self.context.Creator()))['fullname'],
+               'validator': ''}
+        if self.context.queryState() not in ('itemcreated', 'proposed'):
+            events = self.context.getHistory()['events']
+            for event in events[::-1]:  # parcours inverse
+                if event['action'] == 'validate':
+                    res['validator'] = self.context.portal_membership.getMemberInfo(event['actor'])['fullname']
+                    break
+        return res
+
 
 class CustomMeetingGroup(MeetingGroup):
     '''Adapter that adapts a meetingGroup implementing IMeetingGroup to the
