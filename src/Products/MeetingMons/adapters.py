@@ -442,6 +442,8 @@ class CustomMeetingItem(MeetingItem):
             res = res + []
         return res
 
+    security.declarePublic('getCreatorAndValidator')
+
     def getCreatorAndValidator(self):
         res = {'creator': self.context.portal_membership.getMemberInfo(str(self.context.Creator()))['fullname'],
                'validator': ''}
