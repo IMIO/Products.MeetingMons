@@ -5,6 +5,7 @@ from AccessControl import Unauthorized
 from DateTime import DateTime
 import os
 import transaction
+from Products.PloneMeeting.interfaces import IAnnexable
 
 
 class TransformXmlToMeetingOrItem:
@@ -101,7 +102,7 @@ class TransformXmlToMeetingOrItem:
             meeting.portal_workflow.doActionFor(meeting, 'freeze')
             meeting.portal_workflow.doActionFor(meeting, 'decide')
             try:
-                meeting.portal_workflow.doActionFor(meeting, 'publish')
+                meeting.portal_workflow.doActionFor(meeting, 'publish_decisions')
             except:
                 pass  # publish state not use
             meeting.portal_workflow.doActionFor(meeting, 'close')
@@ -144,9 +145,9 @@ class TransformXmlToMeetingOrItem:
         _id = os.path.basename(_path)
         _file = file(_path, 'rb')
         meetingConfig = self.__portal__.portal_plonemeeting.getMeetingConfig(item)
-        annexeType = getattr(meetingConfig.meetingfiletypes, annexeType)
-        item.addAnnex(idCandidate=_id, annex_type=annexeType, annex_title=title, annex_file=_file,
-                      decisionRelated=False, meetingFileType=annexeType)
+        fileType = getattr(meetingConfig.meetingfiletypes, annexeType)
+        IAnnexable(item).addAnnex(idCandidate=_id, annex_title=title, annex_file=_file,
+                      relatedTo='item', meetingFileTypeUID=fileType.UID())
         _file.close()
 
     def addItemPDFPoint(self, item, node, Memberfolder):
@@ -201,10 +202,11 @@ class TransformXmlToMeetingOrItem:
         #nous utiliserons le répertoire de GRU Import
         Memberfolder = self.__portal__.Members.gruimport.mymeetings.get('meeting-config-college')
         #nous ajoutons les droits nécessaire sinon l'invoke factory va raler
-        Memberfolder.manage_addLocalRoles('admin', ('MeetingManagerLocal', 'MeetingManager'))
+        #Memberfolder.manage_addLocalRoles('admin', ('MeetingManagerLocal', 'MeetingManager'))
         lat = list(Memberfolder.getLocallyAllowedTypes())
         lat.append('MeetingCollege')
         Memberfolder.setLocallyAllowedTypes(tuple(lat))
+        cpt = 0
         for meetings in self.getRootElement().getElementsByTagName("seance"):
             if meetings.nodeType == meetings.ELEMENT_NODE:
                 try:
@@ -252,9 +254,17 @@ class TransformXmlToMeetingOrItem:
                     #Maintenant nous allons insérer les points de la séance.
                     self.insertItemInMeeting(meeting, meetings.getElementsByTagName("pointsRef")[0])
                     self.__meetingList__.append(meeting)
+
+                    cpt = cpt + 1
+                    # commit transaction si nous avons créé 25 séances
+                    if cpt >= 25:
+                        transaction.commit()
+                        cpt = 0
+                        print 'commit'
+
                 except Exception, msg:
                     self.__out__.append("L'importation de la seance %s a echouee. %s." % (_id, msg.value))
-        Memberfolder.manage_delLocalRoles('admin', ('MeetingManagerLocal', 'MeetingManager'))
+        #Memberfolder.manage_delLocalRoles('admin', ('MeetingManagerLocal', 'MeetingManager'))
         lat = list(Memberfolder.getLocallyAllowedTypes())
         lat.remove('MeetingCollege')
         Memberfolder.setLocallyAllowedTypes(tuple(lat))
@@ -274,14 +284,13 @@ class TransformXmlToMeetingOrItem:
         useridLst = [ud['userid'] for ud in self.__portal__.acl_users.searchUsers()]
 
         cpt = 0
-
         for items in self.getRootElement().getElementsByTagName("point"):
             if items.nodeType == items.ELEMENT_NODE:
                 try:
                     #récuptération des données du point
                     _id = self.getText(items.getElementsByTagName("id")[0])
-                    #if _id == '103513':
-                    #    import pdb;pdb.set_trace()
+                    if _id in ('104513'):
+                        continue
                     _title = self.getText(items.getElementsByTagName("title")[0])
                     _description = self.getText(items.getElementsByTagName("description")[0])
                     ''' Attention,
@@ -352,7 +361,9 @@ class TransformXmlToMeetingOrItem:
                         cpt = 0
                         print 'commit'
                 except Exception, msg:
+                    import pdb;pdb.set_trace()
                     self.__out__.append("L'importation du point %s a echouee.%s." % (_id, msg.value))
+        transaction.commit()
         return self.__itemList__
 
     def getText(self, node):
