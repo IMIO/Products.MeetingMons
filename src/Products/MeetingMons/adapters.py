@@ -789,6 +789,14 @@ class MeetingItemCollegeMonsWorkflowActions(MeetingItemWorkflowActions):
     def doAsk_advices_by_itemcreator(self, stateChange):
         pass
 
+    security.declarePrivate('doDelay')
+
+    def doDelay(self, stateChange):
+        '''After cloned item, we validate this item'''
+        MeetingItemWorkflowActions(self.context).doDelay(stateChange)
+        clonedItem = self.context.getBRefs('ItemPredecessor')[0]
+        self.context.portal_workflow.doActionFor(clonedItem, 'validate')
+
 
 # ------------------------------------------------------------------------------
 class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
