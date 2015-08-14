@@ -24,6 +24,7 @@ __docformat__ = 'plaintext'
 
 from Products.CMFCore.permissions import setDefaultRoles
 ##code-section config-head #fill in your manual code here
+from collections import OrderedDict
 ##/code-section config-head
 
 
@@ -54,6 +55,13 @@ MONSROLES['divisionheads'] = 'MeetingDivisionHead'
 PMconfig.MEETINGROLES.update(MONSROLES)
 PMconfig.MEETING_GROUP_SUFFIXES = PMconfig.MEETINGROLES.keys()
 #IN THE FUTURE : the divisionhead will use the default 'MeetingReviewer' role in replace to director
+
+MONSMEETINGREVIEWERS = OrderedDict([('reviewers', 'proposed_to_director'),
+                                    ('divisionheads', 'proposed_to_divisionhead'),
+                                    ('officemanagers', 'proposed_to_officemanager'),
+                                    ('serviceheads', 'proposed_to_servicehead'), ])
+PMconfig.MEETINGREVIEWERS = MONSMEETINGREVIEWERS
+
 # Define PloneMeeting-specific permissions
 AddAnnex = 'PloneMeeting: Add annex'
 setDefaultRoles(AddAnnex, ('Manager', 'Owner'))
