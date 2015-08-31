@@ -63,11 +63,11 @@ msgstr "Valeur par défaut du champ 'Délibération/Extrait du Procès-verbal'"
 
 #. Default: "Default value for the item decision field"
 msgid "default_meetingitem_detailledDescription"
-msgstr "Définissez ici le texte prédéfini qui sera présent dans le champ 'Motivation' chaque fois qu'un utilisateur crée un nouveau point."
+msgstr "Définissez ici le texte prédéfini qui sera présent dans le champ 'Description détaillée' chaque fois qu'un utilisateur crée un nouveau point."
 
-#. Default: "Default value for the item motivation field"
+#. Default: "Default value for the item description detailled field"
 msgid "MeetingMons_label_defaultMeetingItemDetailledDescription"
-msgstr "Valeur par défaut du champ 'Motivation'"
+msgstr "Valeur par défaut du champ 'Description détaillée'"
 
 #. Default: "Interventions"
 msgid "MeetingMons_label_interventions"
