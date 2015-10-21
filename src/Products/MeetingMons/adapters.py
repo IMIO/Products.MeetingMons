@@ -367,6 +367,50 @@ class CustomMeeting(Meeting):
             items = res
         return res
 
+    security.declarePublic('getPrintableItemsByCategoryAndSubProposingGroup')
+
+    def getPrintableItemsByCategoryAndSubProposingGroup(self, itemUids=[], late=False,
+                                                        ignore_review_states=[], by_proposing_group=False,
+                                                        group_prefixes={}, privacy='*', oralQuestion='both',
+                                                        toDiscuss='both', categories=[], excludedCategories=[],
+                                                        groupIds=[], firstNumber=1, renumber=False,
+                                                        includeEmptyCategories=False, includeEmptyGroups=False,
+                                                        forceCategOrderFromConfig=False):
+        '''Use getPrintableItemsByCategory method and add sub list for each new proposing group.
+           Category
+                Proposing group
+                    Item1, item2, ... itemX
+        '''
+        res = []
+        items_by_cat = self.getPrintableItemsByCategory(itemUids, late, ignore_review_states, by_proposing_group,
+                                                        group_prefixes, privacy, oralQuestion, toDiscuss, categories,
+                                                        excludedCategories, groupIds, firstNumber, renumber,
+                                                        includeEmptyCategories, includeEmptyGroups,
+                                                        forceCategOrderFromConfig)
+        for sublist in items_by_cat:
+            #new cat
+            previous_proposing_group = '--------'
+            cat_list = [sublist[0]]
+            item_list = []
+            for item in sublist[1:]:
+                #first element, we must add proposing group in item_list
+                if previous_proposing_group == '--------':
+                    item_list.append(item.getProposingGroup(theObject=True).Title())
+                if previous_proposing_group != item.getProposingGroup() and previous_proposing_group != '--------':
+                    #it's new proposing group and not the first
+                    #add new item list : (proposingGroup, item1, item2, ..., itemX) in category list
+                    cat_list.append(item_list)
+                    #and reinitialise item_list
+                    item_list = [item.getProposingGroup(theObject=True).Title()]
+                #add item in list
+                item_list.append(item)
+                previous_proposing_group = item.getProposingGroup()
+            #if not already add (ie. if only one category, or empty category at the end)
+            if item_list not in cat_list:
+                cat_list.append(item_list)
+            res.append(cat_list)
+        return res
+
     security.declarePublic('getAvailableItems')
 
     def getAvailableItems(self):
