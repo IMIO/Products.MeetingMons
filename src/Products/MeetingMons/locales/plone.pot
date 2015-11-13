@@ -427,3 +427,11 @@ msgstr ""
 #. Default: "Some items are still under corrections in services"
 msgid "some_item_still_in_service"
 msgstr ""
+
+#. Default: "create to meeting-config-cas from meeting-config-bp"
+msgid "create_to_meeting-config-cas_from_meeting-config-bp"
+msgstr ""
+
+#. Default: "create to meeting-config-cas from meeting-config-bp"
+msgid "create_to_meeting-config-council_from_meeting-config-college"
+msgstr ""

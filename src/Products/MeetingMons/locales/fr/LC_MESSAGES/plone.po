@@ -412,3 +412,10 @@ msgstr "Le point a été validé: il est maintenant visible par le gestionnaire 
 msgid "validated"
 msgstr "Validé"
 
+#. Default: "create to meeting-config-cas from meeting-config-bp"
+msgid "create_to_meeting-config-cas_from_meeting-config-bp"
+msgstr "Envoyer le point BP vers le CAS"
+
+#. Default: "create to meeting-config-cas from meeting-config-bp"
+msgid "create_to_meeting-config-council_from_meeting-config-college"
+msgstr "Envoyer le point Collège vers le Conseil"
