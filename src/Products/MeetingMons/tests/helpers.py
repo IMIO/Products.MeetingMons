@@ -55,46 +55,7 @@ class MeetingMonsTestingHelpers(MeetingCommunesTestingHelpers):
     TRANSITIONS_FOR_DECIDING_MEETING_2 = ('freeze', 'decide', )
     TRANSITIONS_FOR_CLOSING_MEETING_1 = ('freeze', 'decide', 'close', )
     TRANSITIONS_FOR_CLOSING_MEETING_2 = ('freeze', 'decide', 'close', )
-    BACK_TO_WF_PATH_1 = {
-        # Meeting
-        'created': ('backToDecided',
-                    'backToFrozen',
-                    'backToCreated',),
-        # MeetingItem
-        'itemcreated': ('backToItemFrozen',
-                        'backToPresented',
-                        'backToValidated',
-                        'backToProposedToDirector',
-                        'backToProposedToDivisionHead',
-                        'backToProposedToOfficeManager',
-                        'backToProposedToServiceHead',
-                        'backToItemCreated'),
-        'proposed_to_servicehead': ('backToItemFrozen',
-                                    'backToPresented',
-                                    'backToValidated',
-                                    'backToProposedToDirector',
-                                    'backToProposedToDivisionHead',
-                                    'backToProposedToOfficeManager',
-                                    'backToProposedToServiceHead'),
-        'proposed_to_officemanager': ('backToItemFrozen',
-                                      'backToPresented',
-                                      'backToValidated',
-                                      'backToProposedToDirector',
-                                      'backToProposedToDivisionHead',
-                                      'backToProposedToOfficeManager'),
-        'proposed_to_divisionhead': ('backToItemFrozen',
-                                     'backToPresented',
-                                     'backToValidated',
-                                     'backToProposedToDirector',
-                                     'backToProposedToDivisionHead'),
-        'proposed_to_director': ('backToItemFrozen',
-                                 'backToPresented',
-                                 'backToValidated',
-                                 'backToProposedToDirector', ),
-        'validated': ('backToItemFrozen',
-                      'backToPresented',
-                      'backToValidated', )}
-    BACK_TO_WF_PATH_2 = {
+    BACK_TO_WF_PATH_1 = BACK_TO_WF_PATH_2 = {
         # Meeting
         'created': ('backToDecided',
                     'backToFrozen',

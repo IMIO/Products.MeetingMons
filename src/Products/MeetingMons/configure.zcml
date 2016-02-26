@@ -28,23 +28,6 @@
            factory="Products.MeetingMons.adapters.MeetingCollegeMonsWorkflowConditions"
            provides="Products.MeetingMons.interfaces.IMeetingCollegeMonsWorkflowConditions"/>
 
-  <!-- WF actions and conditions for Meeting and MeetingItem for Council -->
-  <adapter for="Products.PloneMeeting.interfaces.IMeetingItem"
-           factory="Products.MeetingMons.adapters.MeetingItemCouncilMonsWorkflowActions"
-           provides="Products.MeetingMons.interfaces.IMeetingItemCouncilMonsWorkflowActions"/>
-
-  <adapter for="Products.PloneMeeting.interfaces.IMeetingItem"
-           factory="Products.MeetingMons.adapters.MeetingItemCouncilMonsWorkflowConditions"
-           provides="Products.MeetingMons.interfaces.IMeetingItemCouncilMonsWorkflowConditions"/>
-
-  <adapter for="Products.PloneMeeting.interfaces.IMeeting"
-           factory="Products.MeetingMons.adapters.MeetingCouncilMonsWorkflowActions"
-           provides="Products.MeetingMons.interfaces.IMeetingCouncilMonsWorkflowActions"/>
-
-  <adapter for="Products.PloneMeeting.interfaces.IMeeting"
-           factory="Products.MeetingMons.adapters.MeetingCouncilMonsWorkflowConditions"
-           provides="Products.MeetingMons.interfaces.IMeetingCouncilMonsWorkflowConditions"/>
-
   <adapter for="Products.PloneMeeting.interfaces.IMeeting"
            factory="Products.MeetingMons.adapters.CustomMeeting"
            provides="Products.PloneMeeting.interfaces.IMeetingCustom"/>
