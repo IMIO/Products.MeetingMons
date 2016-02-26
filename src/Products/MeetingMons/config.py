@@ -2,7 +2,7 @@
 #
 # File: MeetingMons.py
 #
-# Copyright (c) 2015 by IMIO
+# Copyright (c) 2016 by IMIO
 # Generator: ArchGenXML Version 2.7
 #            http://plone.org/products/archgenxml
 #
