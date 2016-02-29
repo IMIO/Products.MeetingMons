@@ -47,6 +47,7 @@ from Products.PloneMeeting.utils import prepareSearchValue
 from Products.PloneMeeting.model import adaptations
 from DateTime import DateTime
 from Products.PloneMeeting.interfaces import IAnnexable
+from plone.memoize import ram
 
 
 # Names of available workflow adaptations.
@@ -570,6 +571,29 @@ class CustomMeetingItem(MeetingItem):
                     res['validator'] = self.context.portal_membership.getMemberInfo(event['actor'])['fullname']
                     break
         return res
+
+    def showDuplicateItemAction_cachekey(method, self, brain=False):
+        '''cachekey method for self.showDuplicateItemAction.'''
+        return (self, str(self.REQUEST.debug))
+
+    security.declarePublic('customShowDuplicateItemAction')
+
+    @ram.cache(showDuplicateItemAction_cachekey)
+    def customShowDuplicateItemAction(self):
+        '''Condition for displaying the 'duplicate' action in the interface.
+           Returns True if the user can duplicate the item.'''
+        # Conditions for being able to see the "duplicate an item" action:
+        # - the user is not Plone-disk-aware;
+        # - the user is creator in some group;
+        # - the user must be able to see the item if it is private.
+        # - the item isn't delayed
+        # The user will duplicate the item in his own folder.
+        tool = getToolByName(self, 'portal_plonemeeting')
+        if self.isDefinedInTool() or not tool.userIsAmong('creators') or not self.adapted().isPrivacyViewable() or \
+           self.queryState() == 'delayed':
+            return False
+        return True
+    MeetingItem.showDuplicateItemAction = customShowDuplicateItemAction
 
 
 class CustomMeetingGroup(MeetingGroup):
