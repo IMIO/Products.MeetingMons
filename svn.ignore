@@ -17,4 +17,5 @@ parts
 python-eggs
 src
 versions-picked.cfg
+pip-selfcheck.json
 *.egg-info
