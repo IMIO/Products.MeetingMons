@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-03-01 09:00-100\n"
+"POT-Creation-Date: 2007-08-29 07:12-100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -9,413 +9,421 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: fr\n"
-"Language-Name: French\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: plone\n"
+"Language-code: fr\n"
+"Language-name: French\n"
+"Preferred-encodings: utf-8 latin1\n"
 "X-is-fallback-for: fr-be fr-ca fr-lu fr-mc fr-ch fr-fr\n"
 
-# types
+#. Default: "Meeting AG"
+msgid "MeetingAG"
+msgstr "Séance de l'AG"
+
+#. Default: "MeetingBourgmestre"
+msgid "MeetingBourgmestre"
+msgstr "Séance du Bourgmestre"
+
+#. Default: "MeetingCA"
+msgid "MeetingCA"
+msgstr "Séance du CA"
+
+#. Default: "MeetingCOGES"
+msgid "MeetingCOGES"
+msgstr "Séance du Comité de Gestion"
+
+#. Default: "MeetingCT"
+msgid "MeetingCT"
+msgstr "Séance de la Commission technique"
+
+#. Default: "MeetingCoDir"
+msgid "MeetingCoDir"
+msgstr "Séance du Comité de Direction"
+
 #. Default: "MeetingCollege"
 msgid "MeetingCollege"
-msgstr "Séance du Collège communal"
+msgstr "Séance du Collège Communal"
+
+#. Default: "MeetingCoordinateOffice"
+msgid "MeetingCoordinateOffice"
+msgstr "Séance du Bureau de Coordination"
 
 #. Default: "MeetincCouncil"
 msgid "MeetingCouncil"
-msgstr "Séance du Conseil communal"
+msgstr "Séance du Conseil Communal"
+
+#. Default: "Meeting EM"
+msgid "MeetingEM"
+msgstr "Séance de l'Etat-Major"
+
+#. Default: "Meeting Item AG"
+msgid "MeetingItemAG"
+msgstr "Point AG"
+
+#. Default: "MeetingItemBourgmestre"
+msgid "MeetingItemBourgmestre"
+msgstr "Point Bourgmestre"
+
+#. Default: "MeetingItemCA"
+msgid "MeetingItemCA"
+msgstr "Point CA"
+
+#. Default: "MeetingItemCOGES"
+msgid "MeetingItemCOGES"
+msgstr "Point Comité de Gestion"
+
+#. Default: "MeetingItemCT"
+msgid "MeetingItemCT"
+msgstr "Point Commission technique"
+
+#. Default: "MeetingItemCoDir"
+msgid "MeetingItemCoDir"
+msgstr "Point Comité de Direction"
 
 #. Default: "MeetingItemCollege"
 msgid "MeetingItemCollege"
-msgstr "Point Collège communal"
+msgstr "Point Collège Communal"
+
+#. Default: "MeetingItemCoordinateOffice"
+msgid "MeetingItemCoordinateOffice"
+msgstr "Point Bureau de Coordination"
 
 #. Default: "MeetingItemCouncil"
 msgid "MeetingItemCouncil"
-msgstr "Point Conseil communal"
+msgstr "Point Conseil Communal"
 
-# various
-# MeetingItem
-#. Default: "Decision"
-msgid "PloneMeeting_label_decision"
-msgstr "Décision"
+#. Default: "Meeting Item EM"
+msgid "MeetingItemEM"
+msgstr "Point Etat-Major"
 
-#. Default: "accept but modify"
-msgid "accept_but_modify"
-msgstr "Accepter avec modifications"
+#. Default: "MeetingItemNEGO"
+msgid "MeetingItemNEGO"
+msgstr "Point Comité de concertation et négociation "
 
-#. Default: "accept_but_modify_done_descr"
-msgid "accept_but_modify_done_descr"
-msgstr "Le point a été accepté avec modifications."
+#. Default: "MeetingItemREMUN"
+msgid "MeetingItemREMUN"
+msgstr "Point Comité de rémunération"
 
-#. Default: "accept_done_descr"
-msgid "accept_done_descr"
-msgstr "Le point a été accepté."
+#. Default: "Meeting Item Recurring AG"
+msgid "MeetingItemRecurringAG"
+msgstr "Point récurrent AG"
 
-#. Default: "Accepted but modified"
-msgid "accepted_but_modified"
-msgstr "Accepté avec modifications"
+#. Default: "MeetingItemRecurringBourgmestre"
+msgid "MeetingItemRecurringBourgmestre"
+msgstr "Point récurrent Bourgmestre"
 
-#. Default: "PloneMeeting"
-msgid "app_name"
-msgstr "PloneMeeting"
+#. Default: "MeetingItemRecurringCA"
+msgid "MeetingItemRecurringCA"
+msgstr "Point récurrent CA"
 
-# Workflow transitions
-#. Default: "Ask advices"
-msgid "ask_advices_by_itemcreator"
-msgstr "Demander les avis"
+#. Default: "MeetingItemRecurringCOGES"
+msgid "MeetingItemRecurringCOGES"
+msgstr "Point récurrent Comité de Gestion"
 
-#. Default: "backToCreated_done_descr"
-msgid "backToCreated_done_descr"
-msgstr "Vous venez d'annuler le gel de l'ordre du jour."
+#. Default: "MeetingItemRecurringCT"
+msgid "MeetingItemRecurringCT"
+msgstr "Point récurrent Commission technique"
 
-#. Default: "backToDecided_done_descr"
-msgid "backToDecided_done_descr"
-msgstr "Vous pouvez à nouveau modifier le procès-verbal."
+#. Default: "MeetingItemRecurringCoDir"
+msgid "MeetingItemRecurringCoDir"
+msgstr "Point récurrent Comité de Direction"
 
-#. Default: "backToFrozen_done_descr"
-msgid "backToFrozen_done_descr"
-msgstr "La séance est à nouveau gelée."
+#. Default: "MeetingItemRecurringCollege"
+msgid "MeetingItemRecurringCollege"
+msgstr "Point récurrent Collège Communal"
 
-msgid "backToInCommittee"
-msgstr "Remettre en commission"
+#. Default: "MeetingItemRecurring"
+msgid "MeetingItemRecurringCoordinateOffice"
+msgstr "Point récurrent Bureau de Coordination"
 
-#. Default: "send back to in committee"
-msgid "backToInCommittee_done_descr"
-msgstr "La séance a été remise en commission.  Tous les points qui étaient en conseil sont repassés en commission."
+#. Default: "MeetingItemRecurringCouncil"
+msgid "MeetingItemRecurringCouncil"
+msgstr "Point récurrent Conseil Communal"
 
-msgid "backToInCouncil"
-msgstr "Remettre en Conseil communal"
+#. Default: "Meeting Item Recurring EM"
+msgid "MeetingItemRecurringEM"
+msgstr "Point récurrent Etat-Major"
 
-#. Default: "send back to in council"
-msgid "backToInCouncil_done_descr"
-msgstr "La séance a été remise en conseil communal."
+#. Default: "MeetingItemRecurringNEGO"
+msgid "MeetingItemRecurringNEGO"
+msgstr "Point récurrent Comité de concertation et négociation "
 
-#. Default: "send back"
-msgid "backToItemCreated"
-msgstr "Renvoyer a l'agent"
+#. Default: "MeetingItemRecurringREMUN"
+msgid "MeetingItemRecurringREMUN"
+msgstr "Séance du Comité de rémunération"
 
-#. Default: "send back"
-msgid "backToItemBudgetImpactReviewers"
-msgstr "Renvoyer au référent budgétaire"
+#. Default: "MeetingItemRecurringSCRH"
+msgid "MeetingItemRecurringSCRH"
+msgstr "Point récurrent Comité spécial de la maison de repos "
 
-#. Default: "This item is back in its initial state. The person who created it (or another creator within the same group) can now modify it and will need to propose it again once finished."
-msgid "backToItemCreated_done_descr"
-msgstr "Le point est revenu dans l'état initial de sa création. Lorsque vous ou la personne pouvant corriger le point aura terminé, elle devra le proposer à nouveau."
+#. Default: "MeetingItemRecurringWB"
+msgid "MeetingItemRecurringWB"
+msgstr "Point récurrent Comité bien-être "
 
-#. Default: "bo to item frozen"
-msgid "backToItemFrozen"
-msgstr "Remettre en gelé"
+#. Default: "MeetingItemRecurringZCollege"
+msgid "MeetingItemRecurringZCollege"
+msgstr "Point récurrent Collège"
 
-#. Default: "The decision taken on this item has been canceled."
-msgid "backToItemFrozen_done_descr"
-msgstr "Le point est à nouveau gelé."
+#. Default: "MeetingItemRecurringZCouncil"
+msgid "MeetingItemRecurringZCouncil"
+msgstr "Point récurrent Conseil"
 
-msgid "backToItemInCommittee"
-msgstr "Remettre en commission"
+#. Default: "Meeting item recurring BP"
+msgid "MeetingItemRecurringbp"
+msgstr "Point récurrent Bureau Permanent"
 
-#. Default: "This item has been send back to the committee."
-msgid "backToItemInCommittee_done_descr"
-msgstr "Le point a été remis en commission."
+#. Default: "Meeting item recurring CAS"
+msgid "MeetingItemRecurringcas"
+msgstr "Point récurrent Conseil de l'Action Sociale"
 
-msgid "backToItemInCouncil"
-msgstr "Remettre en Conseil communal"
+#. Default: "Meeting item recurring Comitee"
+msgid "MeetingItemRecurringcomitee"
+msgstr "Point récurrent Comité de Concertation"
 
-#. Default: "This item has been send back to the council."
-msgid "backToItemInCouncil_done_descr"
-msgstr "Le point a été remis en Conseil communal."
+#. Default: "MeetingItemSCRH"
+msgid "MeetingItemSCRH"
+msgstr "Point Comité spécial de la maison de repos "
 
-#. Default: "send back"
-msgid "backToPresented"
-msgstr "Remettre en présenté"
+#. Default: "Meeting Item Template AG"
+msgid "MeetingItemTemplateAG"
+msgstr "Modèle de point AG"
 
-#. Default: "Item freeze has been cancelled."
-msgid "backToPresented_done_descr"
-msgstr "Le gel du point a été annulé."
+#. Default: "MeetingItemTemplateBourgmestre"
+msgid "MeetingItemTemplateBourgmestre"
+msgstr "Modèle de point Bourgmestre"
 
-#. Default: "send back"
-msgid "backToProposedToDirector"
-msgstr "Renvoyer au N+4"
+#. Default: "MeetingItemTemplateCA"
+msgid "MeetingItemTemplateCA"
+msgstr "Modèle de point CA"
 
-#. Default: "This item has been send back to the director."
-msgid "backToProposedToDirector_done_descr"
-msgstr "Le point a été renvoyé au N+4."
+#. Default: "MeetingItemTemplateCOGES"
+msgid "MeetingItemTemplateCOGES"
+msgstr "Modèle de point Comité de Gestion"
 
-#. Default: "send back"
-msgid "backToProposedToDivisionHead"
-msgstr "Renvoyer au N+3"
+#. Default: "MeetingItemTemplateCT"
+msgid "MeetingItemTemplateCT"
+msgstr "Modèle de point Commission technique"
 
-#. Default: "This item has been send back to the division head."
-msgid "backToProposedToDivisionHead_done_descr"
-msgstr "Le point a été renvoyé au N+3."
+#. Default: "MeetingItemTemplateCoDir"
+msgid "MeetingItemTemplateCoDir"
+msgstr "Modèle de point Comité de Direction"
 
-#. Default: "send back"
-msgid "backToProposedToOfficeManager"
-msgstr "Renvoyer au N+2"
+#. Default: "MeetingItemTemplateCollege"
+msgid "MeetingItemTemplateCollege"
+msgstr "Modèle de point Collège Communal"
 
-#. Default: "This item has been send back to the office manager."
-msgid "backToProposedToOfficeManager_done_descr"
-msgstr "Le point a été renvoyé au N+2."
+#. Default: "MeetingItemTemplateBourgmestre"
+msgid "MeetingItemTemplateCoordinateOffice"
+msgstr "Modèle de point Bureau de Coordination"
 
-#. Default: "send back"
-msgid "backToProposedToServiceHead"
-msgstr "Renvoyer au N+1"
+#. Default: "MeetingItemTemplateCouncil"
+msgid "MeetingItemTemplateCouncil"
+msgstr "Modèle de point Conseil Communal"
 
-#. Default: "This item has been send back to the service head."
-msgid "backToProposedToServiceHead_done_descr"
-msgstr "Le point a été renvoyé au N+1."
+#. Default: "Meeting Item Template EM"
+msgid "MeetingItemTemplateEM"
+msgstr "Modèle de point Etat-Major"
 
-#. Default: "The item has been removed from the meeting agenda."
-msgid "backToValidated_done_descr"
-msgstr "Le point a été retiré de l'ordre du jour."
+#. Default: "MeetingItemTemplateNEGO"
+msgid "MeetingItemTemplateNEGO"
+msgstr "Modèle de point Comité de concertation et négociation"
 
-#. Default: "The definitive decisions have been confirmed."
-msgid "close_done_descr"
-msgstr "La séance a été clôturée."
+#. Default: "MeetingItemTemplateREMUN"
+msgid "MeetingItemTemplateREMUN"
+msgstr "Modèle de point Comité de rémunération"
 
-#. Default: "Create a plonmeeting item from a plonegov item"
+#. Default: "MeetingItemTemplateSCRH"
+msgid "MeetingItemTemplateSCRH"
+msgstr "Modèle de point Comité spécial de la maison de repos"
+
+#. Default: "MeetingItemTemplateWB"
+msgid "MeetingItemTemplateWB"
+msgstr "Modèle de point Comité bien-être"
+
+#. Default: "MeetingItemTemplateZCollege"
+msgid "MeetingItemTemplateZCollege"
+msgstr "Modèle de point Collège"
+
+#. Default: "MeetingItemTemplateZCouncil"
+msgid "MeetingItemTemplateZCouncil"
+msgstr "Modèle de point Conseil"
+
+#. Default: "Meeting item template BP"
+msgid "MeetingItemTemplatebp"
+msgstr "Modèle de point Bureau Permanent"
+
+#. Default: "Meeting item template CAS"
+msgid "MeetingItemTemplatecas"
+msgstr "Modèle de point Conseil de l'Action Sociale"
+
+#. Default: "Meeting item template Comitee"
+msgid "MeetingItemTemplatecomitee"
+msgstr "Modèle de point Comité de Concertation"
+
+#. Default: "MeetingItemWB"
+msgid "MeetingItemWB"
+msgstr "Séance Comité bien-être"
+
+#. Default: "MeetingItemZCollege"
+msgid "MeetingItemZCollege"
+msgstr "Point Collège"
+
+#. Default: "MeetingItemZCouncil"
+msgid "MeetingItemZCouncil"
+msgstr "Point Conseil"
+
+#. Default: "Meeting item BP"
+msgid "MeetingItembp"
+msgstr "Point Bureau Permanent"
+
+#. Default: "Meeting item CAS"
+msgid "MeetingItemcas"
+msgstr "Point Conseil de l'Action Sociale"
+
+#. Default: "Meeting item Comitee"
+msgid "MeetingItemcomitee"
+msgstr "Point Comité de Concertation"
+
+#. Default: "MeetingNEGO"
+msgid "MeetingNEGO"
+msgstr "Séance Comité de concertation et négociation"
+
+#. Default: "MeetingREMUN"
+msgid "MeetingREMUN"
+msgstr "Séance du Comité de rémunération"
+
+#. Default: "MeetingSCRH"
+msgid "MeetingSCRH"
+msgstr "Séance comité spécial de la maison de repos"
+
+#. Default: "MeetingWB"
+msgid "MeetingWB"
+msgstr "Séance Comité bien-être"
+
+#. Default: "MeetingZCollege"
+msgid "MeetingZCollege"
+msgstr "Séance Collège"
+
+#. Default: "MeetingZCouncil"
+msgid "MeetingZCouncil"
+msgstr "Séance Conseil"
+
+#. Default: "Meeting BP"
+msgid "Meetingbp"
+msgstr "Séance du Bureau Permanent"
+
+#. Default: "Meeting CAS"
+msgid "Meetingcas"
+msgstr "Séance du Conseil de l'Action Sociale"
+
+#. Default: "Meeting Comitee"
+msgid "Meetingcomitee"
+msgstr "Séance du Comité de Concertation"
+
+#. Default: "Send back to 'financial controller'"
+msgid "backToProposedToFinancialController"
+msgstr "Renvoyer au contrôleur financier"
+
+#. Default: "Send back to 'financial editor'"
+msgid "backToProposedToFinancialEditor"
+msgstr "Renvoyer au rédacteur financier"
+
+#. Default: "Send back to 'financial manager'"
+msgid "backToProposedToFinancialManager"
+msgstr "Renvoyer au Directeur financier"
+
+#. Default: "Send back to 'financial reviewer'"
+msgid "backToProposedToFinancialReviewer"
+msgstr "Renvoyer au validateur financier"
+
+#. Default: "Create an item CoGest from an item College"
+msgid "create_to_cogest_from_meeting-config-college"
+msgstr "Envoyer vers Comité de Gestion"
+
+#. Default: "Create an item AG from an item ZCA"
+msgid "create_to_meeting-config-ag_from_ca"
+msgstr "Envoyer vers AG"
+
+#. Default: "Create an item BP from an item CoDir"
+msgid "create_to_meeting-config-bp_from_codir"
+msgstr "Envoyer vers BP"
+
+#. Default: "Create an item CAS from an item BP"
+msgid "create_to_meeting-config-cas_from_meeting-config-bp"
+msgstr "Envoyer vers CAS"
+
+#. Default: "Create an item college from an item CoDir"
+msgid "create_to_meeting-config-college_from_codir"
+msgstr "Envoyer vers Collège Communal"
+
+#. Default: "Create an item College from an item CoGest"
+msgid "create_to_meeting-config-college_from_cogest"
+msgstr "Envoyer vers Collège Communal"
+
+#. Default: "Create an item college from an item council"
+msgid "create_to_meeting-config-college_from_meeting-config-council"
+msgstr "Envoyer vers Collège Communal"
+
+#. Default: "Create an item council from an item college"
 msgid "create_to_meeting-config-council_from_meeting-config-college"
-msgstr "Créer un point Conseil depuis un point Collège"
+msgstr "Envoyer vers Conseil Communal"
 
-#. Default: "decide_done_descr"
-msgid "decide_done_descr"
-msgstr "Les décisions peuvent maintenant être encodées."
+#. Default: "Create an item ZCollege from an item EM"
+msgid "create_to_meeting-config-zcollege_from_em"
+msgstr "Envoyer vers Collège"
 
-#. Default: "Decisions"
-msgid "decisions"
-msgstr "Décisions"
+#. Default: "Create an item ZCollege from an item ZCouncil"
+msgid "create_to_meeting-config-zcollege_from_meeting-config-zcouncil"
+msgstr "Envoyer vers Collège"
 
-#. Default: "The item has been 'delayed'.  If it is the college, is has been duplicated, if it is the council, it has not been duplicated."
-msgid "delay_done_descr"
-msgstr "Le point a été reporté.  S'il s'agit d'un point collège, il a été dupliqué chez le service proposant afin qu'il puisse facilement le proposer à nouveau."
+#. Default: "Create an item ZCouncil from an item ZCollege"
+msgid "create_to_meeting-config-zcouncil_from_meeting-config-zcollege"
+msgstr "Envoyer vers Conseil"
 
-#. Default: "Freeze"
-msgid "freeze"
-msgstr "Geler"
+#. Default: "Financial advice signed"
+msgid "financial_advice_signed"
+msgstr "Avis finances signé"
 
-# transitions descriptions
-#. Default: "freeze_done_descr"
-msgid "freeze_done_descr"
-msgstr "L'ordre du jour est maintenant gelé."
-
-#. Default: "frozen"
+#. Default: "Frozen"
 msgid "frozen"
 msgstr "Gelée"
 
-#. Default: "In committee"
-msgid "in_committee"
-msgstr "En commission"
-
-#. Default: "In council"
-msgid "in_council"
-msgstr "En Conseil communal"
-
-#. Default: "In committee"
-msgid "item_in_committee"
-msgstr "En commission"
-
-#. Default: "In council"
-msgid "item_in_council"
-msgstr "En Conseil communal"
-
-# Workflow states
-#. Default: "Waiting advices"
-msgid "itemcreated_waiting_advices"
-msgstr "En attente des avis"
-
-#. Default: "itemfreeze_done_descr"
-msgid "itemfreeze_done_descr"
-msgstr "Le point a été gelé."
-
-#. Default: "frozen"
+#. Default: "Itemfrozen"
 msgid "itemfrozen"
 msgstr "Gelé"
 
-#. Default: "Description"
-msgid "meeting_item_description"
-msgstr "Description dans l'ordre du jour"
+#. Default: "Propose to financial controller"
+msgid "proposeToFinancialController"
+msgstr "Proposer au contrôleur financier"
 
-#. Default: "pre accept"
-msgid "pre_accept"
-msgstr "Accepter provisoirement"
+#. Default: "Propose to financial editor"
+msgid "proposeToFinancialEditor"
+msgstr "Proposer au rédacteur financier"
 
-#. Default: "pre_accept_done_descr"
-msgid "pre_accept_done_descr"
-msgstr "Le point a été accepté provisoirement."
+#. Default: "Propose to financial manager"
+msgid "proposeToFinancialManager"
+msgstr "Proposer au Directeur financier"
 
-#. Default: "Pre accepted"
-msgid "pre_accepted"
-msgstr "Accepté provisoirement"
+#. Default: "Propose to financial reviewer"
+msgid "proposeToFinancialReviewer"
+msgstr "Proposer au validateur financier"
 
-msgid "proposeToBudgetImpactReviewer"
-msgstr "Proposer au correspondant financier"
+#. Default: "Proposed to financial controller"
+msgid "proposed_to_financial_controller"
+msgstr "Proposé au contrôleur financier"
 
-msgid "proposeToExtraordinaryBudget"
-msgstr "Proposer au correspond du budget extraordinaire"
+#. Default: "Proposed to financial editor"
+msgid "proposed_to_financial_editor"
+msgstr "Proposé au rédacteur financier"
 
-msgid "proposeToDirector"
-msgstr "Proposer au N+4"
+#. Default: "Proposed to financial manager"
+msgid "proposed_to_financial_manager"
+msgstr "Proposé au Directeur financier"
 
-#. Default: "proposeToDirector_done_descr"
-msgid "proposeToDirector_done_descr"
-msgstr "Le point a été envoyé au N+4."
+#. Default: "Proposed to financial reviewer"
+msgid "proposed_to_financial_reviewer"
+msgstr "Proposé au validateur financier"
 
-msgid "proposeToDivisionHead"
-msgstr "Proposer au N+3"
-
-#. Default: "proposeToDivisionHead_done_descr"
-msgid "proposeToDivisionHead_done_descr"
-msgstr "Le point a été envoyé au N+3."
-
-msgid "proposeToOfficeManager"
-msgstr "Proposer au N+2"
-
-#. Default: "proposeToOfficeManager_done_descr"
-msgid "proposeToOfficeManager_done_descr"
-msgstr "Le point a été envoyé au N+2."
-
-msgid "proposeToServiceHead"
-msgstr "Proposer au N+1"
-
-#. Default: "proposeToServiceHead_done_descr"
-msgid "proposeToServiceHead_done_descr"
-msgstr "Le point a été envoyé au N+1"
-
-#. Default: "Proposed to budget impact reviewer"
-msgid "proposed_to_budgetimpact_reviewer"
-msgstr "Proposé au correspondant financier"
-
-#. Default: "Proposed to budget impact reviewer"
-msgid "proposed_to_extraordinarybudget"
-msgstr "Proposé au budget extraordinaire"
-
-#. Default: "Proposed to director"
-msgid "proposed_to_director"
-msgstr "Proposé au N+4"
-
-#. Default: "Proposed to division head"
-msgid "proposed_to_divisionhead"
-msgstr "Proposé au N+3"
-
-#. Default: "Proposed to office manager"
-msgid "proposed_to_officemanager"
-msgstr "Proposé au N+2"
-
-#. Default: "Proposed to service head"
-msgid "proposed_to_servicehead"
-msgstr "Proposé au N+1"
-
-#. Default: "refuse_done_descr"
-msgid "refuse_done_descr"
-msgstr "Le point a été refusé."
-
-msgid "remove"
-msgstr "Retirer de la séance"
-
-#. Default: "Removed from meeting"
-msgid "removed"
-msgstr "Retiré de la séance"
-
-msgid "return_to_secretary"
-msgstr "Renvoyer au secrétariat"
-
-#. Default: "return_to_secretary_done_descr"
-msgid "return_to_secretary_done_descr"
-msgstr "Le point a été renvoyé au Secrétariat communal."
-
-msgid "return_to_secretary_in_committee"
-msgstr "Renvoyer au secrétariat"
-
-#. Default: "return_to_secretary_in_committee_done_descr"
-msgid "return_to_secretary_in_committee_done_descr"
-msgstr "Le point a été renvoyé au Secrétariat communal."
-
-msgid "return_to_secretary_in_council"
-msgstr "Renvoyer au secrétariat"
-
-#. Default: "return_to_secretary_in_council_done_descr"
-msgid "return_to_secretary_in_council_done_descr"
-msgstr "Le point a été renvoyé au Secrétariat communal."
-
-msgid "return_to_service"
-msgstr "Renvoyer au service pour corrections"
-
-#. Default: "return_to_service_done_descr"
-msgid "return_to_service_done_descr"
-msgstr "Le point a été renvoyé au service."
-
-#. Default: "Returned to service"
-msgid "returned_to_service"
-msgstr "Renvoyé au service pour corrections"
-
-#. Default: "The item has been sent to the college."
-msgid "sendto_meeting-config-college_success"
-msgstr "Ce point a été envoyé au Collège communal."
-
-#. Default: "The item has been sent to the council."
-msgid "sendto_meeting-config-council_success"
-msgstr "Ce point a été envoyé au Conseil communal."
-
-#. Default: "The creator of this item does not exist in the meeting config you try to send the item to!"
-msgid "sendtocouncil_error_no_corresponding_meetingconfigfolder"
-msgstr "Le créateur de ce point n'a pas d'accès dans la partie Conseil communal, le point n'a pas pu être transféré!"
-
-#. Default: "The meeting config you try to send the item to does not exist!"
-msgid "sendtocouncil_error_no_existing_meetingconfig"
-msgstr "Le type de séance vers laquelle vous souhaitez envoyer ce point n'existe pas!"
-
-msgid "setInCommittee"
-msgstr "Mettre en commission"
-
-#. Default: "setInCommittee_done_descr"
-msgid "setInCommittee_done_descr"
-msgstr "La séance est passée en commission."
-
-msgid "setInCouncil"
-msgstr "Mettre en Conseil communal"
-
-#. Default: "setInCouncil_done_descr"
-msgid "setInCouncil_done_descr"
-msgstr "La séance est passée en Conseil communal."
-
-msgid "setItemInCommittee"
-msgstr "Mettre en commission"
-
-#. Default: "setItemInCommittee_done_descr"
-msgid "setItemInCommittee_done_descr"
-msgstr "Le point est passé en Commission."
-
-msgid "setItemInCouncil"
-msgstr "Mettre en Conseil communal"
-
-#. Default: "setItemInCouncil_done_descr"
-msgid "setItemInCouncil_done_descr"
-msgstr "Le point est passé en Conseil communal."
-
-#. Default: "Some items are still under corrections in services"
-msgid "some_item_still_in_service"
-msgstr "Certains points sont toujours dans des services pour corrections"
-
-#. Default: "Validate"
-msgid "validate"
-msgstr "Valider"
-
-msgid "validateByBudgetImpactReviewer"
-msgstr "Valider les infos budgétaires"
-
-msgid "validateByExtraordinaryBudget"
-msgstr "Valider le budget extraordinaire"
-
-#. Default: "The item has been validated."
-msgid "validate_done_descr"
-msgstr "Le point a été validé: il est maintenant visible par le gestionnaire de séance, qui peut décider de le présenter à l'ordre du jour d'une séance."
-
-#. Default: "Validated"
-msgid "validated"
-msgstr "Validé"
-
-#. Default: "create to meeting-config-cas from meeting-config-bp"
-msgid "create_to_meeting-config-cas_from_meeting-config-bp"
-msgstr "Envoyer le point BP vers le CAS"
-
-#. Default: "create to meeting-config-cas from meeting-config-bp"
-msgid "create_to_meeting-config-council_from_meeting-config-college"
-msgstr "Envoyer le point Collège vers le Conseil"
+#. Default: "Sign financial advice"
+msgid "signFinancialAdvice"
+msgstr "Signer l'avis finances"

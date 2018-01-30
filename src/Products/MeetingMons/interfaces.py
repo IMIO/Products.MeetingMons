@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
-# Copyright (c) 2011 by CommunesPlone.org
+# Copyright (c) 2007 by CommunesPlone
 #
 # GNU General Public License (GPL)
 #
@@ -20,7 +20,7 @@
 # 02110-1301, USA.
 #
 
-__author__ = """Andre Nuyens <a.nuyens@imio.be>"""
+__author__ = """Gauthier Bastien <gbastien@commune.sambreville.be>"""
 __docformat__ = 'plaintext'
 
 # ------------------------------------------------------------------------------
@@ -61,10 +61,6 @@ class IMeetingItemCollegeMonsWorkflowConditions(IMeetingItemWorkflowConditions):
     def mayFreeze():
         """
           Guard for the 'freeze' transition
-        """
-    def mayCorrect():
-        """
-          Guard for the 'backToXXX' transitions
         """
 
 
@@ -108,9 +104,3 @@ class IMeetingCollegeMonsWorkflowConditions(IMeetingWorkflowConditions):
         """
           Check if the user may or not changes the order of the items on the meeting
         """
-    def mayCorrect():
-        """
-          Guard for the 'backToXXX' transitions
-        """
-
-# ------------------------------------------------------------------------------

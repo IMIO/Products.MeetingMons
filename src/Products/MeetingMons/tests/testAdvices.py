@@ -2,7 +2,7 @@
 #
 # File: testAdvices.py
 #
-# Copyright (c) 2007-2012 by CommunesPlone.org
+# Copyright (c) 2016 by Imio.be
 #
 # GNU General Public License (GPL)
 #
@@ -23,20 +23,16 @@
 #
 
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.MeetingCommunes.tests.testAdvices import testAdvices as mcta
+from Products.PloneMeeting.tests.testAdvices import testAdvices as pmta
 
 
-class testAdvices(MeetingMonsTestCase, mcta):
+class testAdvices(MeetingMonsTestCase, pmta):
     '''Tests various aspects of advices management.
        Advices are enabled for PloneGov Assembly, not for PloneMeeting Assembly.'''
-
-    def test_subproduct_call_MayTriggerGiveAdviceWhenItemIsBackToANotViewableState(self):
-        '''Run the test_pm_MayTriggerGiveAdviceWhenItemIsBackToANotViewableState from PloneMeeting.'''
-        self.test_pm_MayTriggerGiveAdviceWhenItemIsBackToANotViewableState()
 
 
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
-    suite.addTest(makeSuite(testAdvices, prefix='test_subproduct_'))
+    suite.addTest(makeSuite(testAdvices, prefix='test_pm_'))
     return suite

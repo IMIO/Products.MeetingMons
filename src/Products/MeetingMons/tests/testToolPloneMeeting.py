@@ -23,15 +23,15 @@
 #
 
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.MeetingCommunes.tests.testToolPloneMeeting import testToolPloneMeeting as mctt
+from Products.PloneMeeting.tests.testToolPloneMeeting import testToolPloneMeeting as pmtt
 
 
-class testToolPloneMeeting(MeetingMonsTestCase, mctt):
+class testToolPloneMeeting(MeetingMonsTestCase, pmtt):
     '''Tests the ToolPloneMeeting class methods.'''
 
 
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
-    suite.addTest(makeSuite(testToolPloneMeeting, prefix='test_subproduct_'))
+    suite.addTest(makeSuite(testToolPloneMeeting, prefix='test_pm_'))
     return suite

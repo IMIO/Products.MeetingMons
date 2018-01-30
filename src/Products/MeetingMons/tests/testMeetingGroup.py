@@ -22,16 +22,28 @@
 # 02110-1301, USA.
 #
 
+from plone.app.testing import logout
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.MeetingCommunes.tests.testMeetingGroup import testMeetingGroup as mctmg
+from Products.PloneMeeting.tests.testMeetingGroup import testMeetingGroup as pmmg
 
 
-class testMeetingGroup(MeetingMonsTestCase, mctmg):
+class testMeetingGroup(MeetingMonsTestCase, pmmg):
     '''Tests the testMeetingGroup class methods.'''
+
+    def test_pm_CanNotRemoveUsedMeetingGroup(self):
+        '''Run the test_pm_CanNotRemoveUsedMeetingGroup from PloneMeeting.'''
+        # remove every recurring items in existing meetingConfigs except template2 in self.meetingConfig
+        self.changeUser('admin')
+        self._removeConfigObjectsFor(self.meetingConfig, folders=['recurringitems', ])
+        self.meetingConfig.itemtemplates.manage_delObjects(
+            [item.getId for item in self.meetingConfig.getItemTemplates() if not item.getId == 'template2'])
+        self._removeConfigObjectsFor(self.meetingConfig2, folders=['recurringitems', ])
+        logout()
+        super(testMeetingGroup, self).test_pm_CanNotRemoveUsedMeetingGroup()
 
 
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
-    suite.addTest(makeSuite(testMeetingGroup, prefix='test_subproduct_'))
+    suite.addTest(makeSuite(testMeetingGroup, prefix='test_pm_'))
     return suite

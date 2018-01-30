@@ -1,81 +1,5 @@
 /* Colors on states */
 /* Items */
-.state-itemcreated, .label-state-itemcreated {
-    color: red !important;
-}
-#plone-contentmenu-workflow .state-itemcreated {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: red;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid red;
-}
-
-.state-proposed, .label-state-proposed,
-.state-prevalidated, .label-state-prevalidated {
-    color: DarkOrange !important;
-}
-#plone-contentmenu-workflow .state-proposed,
-#plone-contentmenu-workflow .state-prevalidated {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: DarkOrange;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid DarkOrange;
-}
-
-.state-validated, .label-state-validated {
-    color: blue !important;
-}
-#plone-contentmenu-workflow .state-validated {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: blue;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid blue;
-}
-
-.state-presented, .label-state-presented {
-    color: brown !important;
-}
-#plone-contentmenu-workflow .state-presented {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: brown;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid brown;
-}
-
-#plone-contentmenu-workflow .state-itemfrozen {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: cornflowerBlue;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid cornflowerBlue;
-}
-
-.state-itempublished, .label-state-itempublished {
-    color: black !important;
-}
-#plone-contentmenu-workflow .state-itempublished {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: black;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid black;
-}
-
-.state-accepted, .label-state-accepted {
-    color: green !important;
-}
-#plone-contentmenu-workflow .state-accepted {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: green;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid green;
-}
-
 .state-accepted_but_modified, .label-state-accepted_but_modified {
     color: green !important;
 }
@@ -98,99 +22,24 @@
     border: 2px solid green;
 }
 
-.state-delayed, .label-state-delayed {
-    color: grey !important;
-}
-#plone-contentmenu-workflow .state-delayed,
-#plone-contentmenu-workflow .state-returned_to_proposing_group {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: grey;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid grey;
+/* make sure multiselect fields displayed on the edit form are not too long */
+div#archetypes-fieldname-echevinServices {
+    max-height: 300px;
+    max-width: 500px;
+    overflow-x: auto;
 }
 
-.state-refused, .label-state-refused {
-    color: violet !important;
+.state-proposed_to_financial_controller,
+.label-state-proposed_to_financial_controller,
+.state-proposed_to_financial_editor,
+.label-state-proposed_to_financial_editor,
+.state-proposed_to_financial_reviewer,
+.label-state-proposed_to_financial_reviewer,
+.state-proposed_to_financial_manager,
+.label-state-proposed_to_financial_manager {
+    color: DarkOrange;
 }
-#plone-contentmenu-workflow .state-refused {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: violet;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid violet;
+.state-financial_advice_signed,
+.label-state-financial_advice_signed {
+    color: blue;
 }
-
-/* Colors on states */
-/* Meetings */
-.state-created, .label-state-created {
-    color: red !important;
-}
-#plone-contentmenu-workflow .state-created {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: red;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid red;
-}
-
-.state-frozen, .label-state-frozen {
-    color: cornflowerBlue !important;
-}
-#plone-contentmenu-workflow .state-frozen {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: cornflowerBlue;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid cornflowerBlue;
-}
-
-.state-published, .label-state-published {
-    color: #436976 !important;
-}
-#plone-contentmenu-workflow .state-published {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: #436976;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid #436976;
-}
-
-.state-decided, .label-state-decided {
-    color: black !important;
-}
-#plone-contentmenu-workflow .state-decided {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: black;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid black;
-}
-
-.state-decisions_published, .label-state-decisions_published {
-    color: #436976 !important;
-}
-#plone-contentmenu-workflow .state-decisions_published {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: #436976;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid #436976;
-}
-
-.state-closed, .label-state-closed {
-    color: grey !important;
-}
-#plone-contentmenu-workflow .state-closed {
-    border-radius: 0.5em 0.5em 0.5em 0.5em;
-    background-color: grey;
-    padding: 0 0.5em;
-    color: white !important;
-    border: 2px solid grey;
-}
-
-/* used in element history */
-.transition-accept { color: green !important; }
-.transition-accept_but_modify { color: green !important; }
-.transition-publish_decisions { color: #436976 !important; }
-.transition-close { color: grey !important; }

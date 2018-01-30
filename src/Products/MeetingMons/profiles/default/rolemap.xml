@@ -13,6 +13,12 @@
     <role name="MeetingOfficeManager"/>
     <role name="MeetingReviewer"/>
     <role name="MeetingServiceHead"/>
+    <!--<role name="MeetingBudgetImpactEditor"/>-->
+    <!--<role name="MeetingManager"/>-->
+    <!--<role name="MeetingMember"/>-->
+    <!--<role name="MeetingObserverGlobal"/>-->
+    <!--<role name="MeetingObserverLocal"/>-->
+    <!--<role name="MeetingReviewer"/>-->
 <!-- ##code-section roles -->
 <!-- ##/code-section roles -->
   </roles>

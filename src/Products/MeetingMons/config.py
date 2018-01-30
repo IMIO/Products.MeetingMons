@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 #
-# File: MeetingMons.py
+# File: config.py
 #
-# Copyright (c) 2016 by IMIO
+# Copyright (c) 2016 by Imio.be
 # Generator: ArchGenXML Version 2.7
 #            http://plone.org/products/archgenxml
 #
 # GNU General Public License (GPL)
 #
+from collections import OrderedDict
 
-__author__ = """Andre NUYENS <andre.nuyens@imio.be>"""
+__author__ = """Gauthier Bastien <g.bastien@imio.be>, Stephan Geulette <s.geulette@imio.be>"""
 __docformat__ = 'plaintext'
-
 
 # Product configuration.
 #
@@ -23,12 +23,24 @@ __docformat__ = 'plaintext'
 # will be included (by importing) in this file if found.
 
 from Products.CMFCore.permissions import setDefaultRoles
-##code-section config-head #fill in your manual code here
-from collections import OrderedDict
-##/code-section config-head
-
+from Products.PloneMeeting import config as PMconfig
 
 PROJECTNAME = "MeetingMons"
+
+MONSROLES = {}
+MONSROLES['budgetimpactreviewers'] = 'MeetingBudgetImpactReviewer'
+MONSROLES['serviceheads'] = 'MeetingServiceHead'
+MONSROLES['officemanagers'] = 'MeetingOfficeManager'
+MONSROLES['extraordinarybudget'] = 'MeetingExtraordinaryBudget'
+MONSROLES['divisionheads'] = 'MeetingDivisionHead'
+PMconfig.MEETINGROLES.update(MONSROLES)
+PMconfig.MEETING_GROUP_SUFFIXES = PMconfig.MEETINGROLES.keys()
+
+MONSMEETINGREVIEWERS = OrderedDict([('reviewers', 'proposed_to_director'),
+                                    ('divisionheads', 'proposed_to_divisionhead'),
+                                    ('officemanagers', 'proposed_to_officemanager'),
+                                    ('serviceheads', 'proposed_to_servicehead'), ])
+PMconfig.MEETINGREVIEWERS = MONSMEETINGREVIEWERS
 
 # Permissions
 DEFAULT_ADD_CONTENT_PERMISSION = "Add portal content"
@@ -44,46 +56,38 @@ DEPENDENCIES = []
 # override in custom configuration
 PRODUCT_DEPENDENCIES = []
 
-##code-section config-bottom #fill in your manual code here
-from Products.PloneMeeting import config as PMconfig
-MONSROLES = {}
-MONSROLES['budgetimpactreviewers'] = 'MeetingBudgetImpactReviewer'
-MONSROLES['serviceheads'] = 'MeetingServiceHead'
-MONSROLES['officemanagers'] = 'MeetingOfficeManager'
-MONSROLES['extraordinarybudget'] = 'MeetingExtraordinaryBudget'
-MONSROLES['divisionheads'] = 'MeetingDivisionHead'
-PMconfig.MEETINGROLES.update(MONSROLES)
-PMconfig.MEETING_GROUP_SUFFIXES = PMconfig.MEETINGROLES.keys()
-#IN THE FUTURE : the divisionhead will use the default 'MeetingReviewer' role in replace to director
+# extra suffixes while using 'meetingadvicefinances_workflow'
+FINANCE_GROUP_SUFFIXES = ('financialcontrollers',
+                          'financialeditors',
+                          'financialreviewers',
+                          'financialmanagers')
+FINANCE_STATE_TO_GROUPS_MAPPINGS = {
+    'proposed_to_financial_controller': 'financialcontrollers',
+    'proposed_to_financial_editor': 'financialeditors',
+    'proposed_to_financial_reviewer': 'financialreviewers',
+    'proposed_to_financial_manager': 'financialmanagers', }
 
-MONSMEETINGREVIEWERS = OrderedDict([('reviewers', 'proposed_to_director'),
-                                    ('divisionheads', 'proposed_to_divisionhead'),
-                                    ('officemanagers', 'proposed_to_officemanager'),
-                                    ('serviceheads', 'proposed_to_servicehead'), ])
-PMconfig.MEETINGREVIEWERS = MONSMEETINGREVIEWERS
+# states in which the finance advice may be given
+FINANCE_WAITING_ADVICES_STATES = ['prevalidated_waiting_advices']
 
-# Define PloneMeeting-specific permissions
-AddAnnex = 'PloneMeeting: Add annex'
-setDefaultRoles(AddAnnex, ('Manager', 'Owner'))
-# We need 'AddAnnex', which is a more specific permission than
-# 'PloneMeeting: Add MeetingFile', because decision-related annexes, which are
-# also MeetingFile instances, must be secured differently.
-# There is no permission linked to annex deletion. Deletion of annexes is allowed
-# if one has the permission 'Modify portal content' on the corresponding item.
-ReadDecision = 'PloneMeeting: Read decision'
-WriteDecision = 'PloneMeeting: Write decision'
-setDefaultRoles(ReadDecision, ('Manager',))
-setDefaultRoles(WriteDecision, ('Manager',))
+# the id of the collection querying finance advices
+FINANCE_ADVICES_COLLECTION_ID = 'searchitemswithfinanceadvice'
 
-STYLESHEETS = [{'id': 'meetingmons.css',
+# if True, a positive finances advice may be signed by a finances reviewer
+# if not, only the finances manager may sign advices
+POSITIVE_FINANCE_ADVICE_SIGNABLE_BY_REVIEWER = False
+
+# text about FD advice used in templates
+FINANCE_ADVICE_LEGAL_TEXT_PRE = "<p>Attendu la demande d'avis adressée sur " \
+                                "base d'un dossier complet au Directeur financier en date du {0};<br/></p>"
+
+FINANCE_ADVICE_LEGAL_TEXT = "<p>Attendu l'avis {0} du Directeur financier " \
+                            "rendu en date du {1} conformément à l'article L1124-40 du Code de la " \
+                            "démocratie locale et de la décentralisation;</p>"
+
+FINANCE_ADVICE_LEGAL_TEXT_NOT_GIVEN = "<p>Attendu l'absence d'avis du " \
+                                      "Directeur financier rendu dans le délai prescrit à l'article L1124-40 " \
+                                      "du Code de la démocratie locale et de la décentralisation;</p>"
+
+STYLESHEETS = [{'id': 'MeetingMons.css',
                 'title': 'MeetingMons CSS styles'}]
-
-# define some more value in MeetingConfig.topicsInfo so extra topics are created for each MeetingConfig
-##/code-section config-bottom
-
-
-# Load custom configuration not managed by archgenxml
-try:
-    from Products.MeetingMons.AppConfig import *
-except ImportError:
-    pass

@@ -1,8 +1,6 @@
-from Products.Archetypes.atapi import BooleanField
+from Products.Archetypes.atapi import BooleanField, TextField, RichWidget
 from Products.Archetypes.atapi import LinesField
 from Products.Archetypes.atapi import MultiSelectionWidget
-from Products.Archetypes.atapi import TextField
-from Products.Archetypes.atapi import RichWidget
 from Products.Archetypes.atapi import Schema
 from Products.PloneMeeting.config import WriteRiskyConfig
 from Products.PloneMeeting.MeetingGroup import MeetingGroup
@@ -11,7 +9,6 @@ from Products.PloneMeeting.MeetingItem import MeetingItem
 
 
 def update_group_schema(baseSchema):
-
     specificSchema = Schema((
 
         # field used to define list of services for echevin for a MeetingGroup
@@ -23,6 +20,7 @@ def update_group_schema(baseSchema):
                 label_msgid='MeetingMons_label_echevinServices',
                 description='Leave empty if he is not an echevin',
                 description_msgid='MeetingMons_descr_echevinServices',
+                format="checkbox",
                 i18n_domain='PloneMeeting',
             ),
             enforceVocabulary=True,
@@ -31,9 +29,8 @@ def update_group_schema(baseSchema):
         ),
     ),)
 
-    completeGroupSchema = baseSchema + specificSchema.copy()
-
-    return completeGroupSchema
+    completeSchema = baseSchema + specificSchema.copy()
+    return completeSchema
 MeetingGroup.schema = update_group_schema(MeetingGroup.schema)
 
 
@@ -105,7 +102,6 @@ def update_config_schema(baseSchema):
     return completeConfigSchema
 MeetingConfig.schema = update_config_schema(MeetingConfig.schema)
 
-
 def update_item_schema(baseSchema):
 
     specificSchema = Schema((
@@ -138,7 +134,6 @@ def update_item_schema(baseSchema):
     completeItemSchema = baseSchema + specificSchema.copy()
     return completeItemSchema
 MeetingItem.schema = update_item_schema(MeetingItem.schema)
-
 
 # Classes have already been registered, but we register them again here
 # because we have potentially applied some schema adaptations (see above).

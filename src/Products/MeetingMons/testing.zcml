@@ -3,12 +3,11 @@
            i18n_domain="MeetingMons">
 
     <include file="configure.zcml"/>
-    <include package="Products.PloneMeeting"/>
 
     <genericsetup:registerProfile
         name="testing"
-        title="MeetingMons / Testing profile"
-        description="Testing profile for MeetingMons (PloneMeeting profile)"
+        title="PloneMeeting / Communes for unit tests : do not use manually"
+        description="PloneMeeting for City College and Council (Belgium) : unit test only"
         directory="profiles/testing"
         provides="Products.GenericSetup.interfaces.EXTENSION"
         for="Products.CMFCore.interfaces.ISiteRoot"/>

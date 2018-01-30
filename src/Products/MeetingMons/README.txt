@@ -2,7 +2,7 @@
 ===========
 MeetingMons is a specific profile for the package Products.PloneMeeting
 
-It configures PloneMeeting to be useable for college and council of Mons
+It configures PloneMeeting to be useable for college and council of belgian cities
 
 2. Project resources
 ====================

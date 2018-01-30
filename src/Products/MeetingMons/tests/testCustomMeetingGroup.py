@@ -22,15 +22,14 @@
 # 02110-1301, USA.
 #
 
-from plone.app.testing import login
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 
 
 class testCustomMeetingGroup(MeetingMonsTestCase):
     '''Tests the MeetingGroup adapted methods.'''
 
-    def testListEchevinServices(self):
-        login(self.portal, 'admin')
+    def test_ListEchevinServices(self):
+        self.changeUser('admin')
         from Products.Archetypes.atapi import DisplayList
         les = DisplayList([('developers', u'Developers'), ('vendors', u'Vendors')])
         meetingGroups = self.tool.objectValues('MeetingGroup')

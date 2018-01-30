@@ -1,437 +1,424 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: PloneMeeting\n"
-"POT-Creation-Date: 2011-03-01 09:00-100\n"
+"Project-Id-Version: MeetingMons\n"
+"POT-Creation-Date: 2007-08-29 07:12-100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-code: \n"
-"Language-name: \n"
-"Preferred-encodings: utf-8 latin1\n"
+"Language-Code: \n"
+"Language-Name: \n"
+"Preferred-Encodings: utf-8 latin1\n"
 "Domain: plone\n"
 
-# types
 #. Default: "MeetingCollege"
 msgid "MeetingCollege"
-msgstr ""
-
-#. Default: "MeetincCouncil"
-msgid "MeetingCouncil"
 msgstr ""
 
 #. Default: "MeetingItemCollege"
 msgid "MeetingItemCollege"
 msgstr ""
 
+#. Default: "MeetingItemTemplateCollege"
+msgid "MeetingItemTemplateCollege"
+msgstr ""
+
+#. Default: "MeetingItemRecurringCollege"
+msgid "MeetingItemRecurringCollege"
+msgstr ""
+
+#. Default: "MeetincCouncil"
+msgid "MeetingCouncil"
+msgstr ""
+
 #. Default: "MeetingItemCouncil"
 msgid "MeetingItemCouncil"
 msgstr ""
 
-# various
-# MeetingItem
-#. Default: "Decision"
-msgid "PloneMeeting_label_decision"
+#. Default: "MeetingItemTemplateCouncil"
+msgid "MeetingItemTemplateCouncil"
 msgstr ""
 
-#. Default: "In committee"
-msgid "in_committee"
+#. Default: "MeetingItemRecurringCouncil"
+msgid "MeetingItemRecurringCouncil"
 msgstr ""
 
-#. Default: "In council"
-msgid "in_council"
+#. Default: "MeetingCoDir"
+msgid "MeetingCoDir"
 msgstr ""
 
-#. Default: "In committee"
-msgid "item_in_committee"
+#. Default: "MeetingItemCoDir"
+msgid "MeetingItemCoDir"
 msgstr ""
 
-#. Default: "In council"
-msgid "item_in_council"
+#. Default: "MeetingItemTemplateCoDir"
+msgid "MeetingItemTemplateCoDir"
 msgstr ""
 
-#. Default: "Returned to service"
-msgid "returned_to_service"
+#. Default: "MeetingItemRecurringCoDir"
+msgid "MeetingItemRecurringCoDir"
 msgstr ""
 
-#. Default: "accept but modify"
-msgid "accept_but_modify"
+#. Default: "MeetingCA"
+msgid "MeetingCA"
 msgstr ""
 
-#. Default: "Accepted but modified"
-msgid "accepted_but_modified"
+#. Default: "MeetingItemCA"
+msgid "MeetingItemCA"
 msgstr ""
 
-#. Default: "PloneMeeting"
-msgid "app_name"
+#. Default: "MeetingItemTemplateCA"
+msgid "MeetingItemTemplateCA"
 msgstr ""
 
-# Workflow transitions
-#. Default: "Ask advices"
-msgid "ask_advices_by_itemcreator"
+#. Default: "MeetingItemRecurringCA"
+msgid "MeetingItemRecurringCA"
 msgstr ""
 
-#. Default: "backToCreated_done_descr"
-msgid "backToCreated_done_descr"
+#. Default: "MeetingCOGES"
+msgid "MeetingCOGES"
 msgstr ""
 
-#. Default: "proposeToOfficeManager_done_descr"
-msgid "proposeToOfficeManager_done_descr"
+#. Default: "MeetingItemCOGES"
+msgid "MeetingItemCOGES"
 msgstr ""
 
-#. Default: "proposeToDivisionHead_done_descr"
-msgid "proposeToDivisionHead_done_descr"
+#. Default: "MeetingItemTemplateCOGES"
+msgid "MeetingItemTemplateCOGES"
 msgstr ""
 
-#. Default: "proposeToServiceHead_done_descr"
-msgid "proposeToServiceHead_done_descr"
+#. Default: "MeetingItemRecurringCOGES"
+msgid "MeetingItemRecurringCOGES"
 msgstr ""
 
-#. Default: "proposeToDirector_done_descr"
-msgid "proposeToDirector_done_descr"
+#. Default: "MeetingCT"
+msgid "MeetingCT"
 msgstr ""
 
-#. Default: "accept_but_modify_done_descr"
-msgid "accept_but_modify_done_descr"
+#. Default: "MeetingItemCT"
+msgid "MeetingItemCT"
 msgstr ""
 
-#. Default: "return_to_service_done_descr"
-msgid "return_to_service_done_descr"
+#. Default: "MeetingItemTemplateCT"
+msgid "MeetingItemTemplateCT"
 msgstr ""
 
-#. Default: "return_to_secretary_done_descr"
-msgid "return_to_secretary_done_descr"
+#. Default: "MeetingItemRecurringCT"
+msgid "MeetingItemRecurringCT"
 msgstr ""
 
-#. Default: "return_to_secretary_in_committee_done_descr"
-msgid "return_to_secretary_in_committee_done_descr"
+#. Default: "MeetingSCRH"
+msgid "MeetingSCRH"
 msgstr ""
 
-#. Default: "return_to_secretary_in_council_done_descr"
-msgid "return_to_secretary_in_council_done_descr"
+#. Default: "MeetingItemSCRH"
+msgid "MeetingItemSCRH"
 msgstr ""
 
-#. Default: "decide_done_descr"
-msgid "decide_done_descr"
+#. Default: "MeetingItemTemplateSCRH"
+msgid "MeetingItemTemplateSCRH"
 msgstr ""
 
-#. Default: "backToDecided_done_descr"
-msgid "backToDecided_done_descr"
+#. Default: "MeetingItemRecurringSCRH"
+msgid "MeetingItemRecurringSCRH"
 msgstr ""
 
-#. Default: "backToFrozen_done_descr"
-msgid "backToFrozen_done_descr"
+#. Default: "MeetingNEGO"
+msgid "MeetingNEGO"
 msgstr ""
 
-msgid "backToProposedToDirector"
+#. Default: "MeetingItemNEGO"
+msgid "MeetingItemNEGO"
 msgstr ""
 
-msgid "backToProposedToDivisionHead"
+#. Default: "MeetingItemTemplateNEGO"
+msgid "MeetingItemTemplateNEGO"
 msgstr ""
 
-msgid "backToProposedToOfficeManager"
+#. Default: "MeetingItemRecurringNEGO"
+msgid "MeetingItemRecurringNEGO"
 msgstr ""
 
-msgid "backToProposedToServiceHead"
+#. Default: "MeetingWB"
+msgid "MeetingWB"
 msgstr ""
 
-msgid "setInCommittee"
+#. Default: "MeetingItemWB"
+msgid "MeetingItemWB"
 msgstr ""
 
-msgid "setItemInCommittee"
+#. Default: "MeetingItemTemplateWB"
+msgid "MeetingItemTemplateWB"
 msgstr ""
 
-msgid "setInCouncil"
+#. Default: "MeetingItemRecurringWB"
+msgid "MeetingItemRecurringWB"
 msgstr ""
 
-msgid "setItemInCouncil"
+#. Default: "MeetingREMUN"
+msgid "MeetingREMUN"
 msgstr ""
 
-msgid "return_to_service"
+#. Default: "MeetingItemREMUN"
+msgid "MeetingItemREMUN"
 msgstr ""
 
-msgid "return_to_secretary"
+#. Default: "MeetingItemTemplateREMUN"
+msgid "MeetingItemTemplateREMUN"
 msgstr ""
 
-msgid "return_to_secretary_in_committee"
-msgstr ""
-
-msgid "return_to_secretary_in_council"
-msgstr ""
-
-msgid "backToInCommittee"
-msgstr ""
-
-msgid "backToInCouncil"
-msgstr ""
-
-msgid "backToItemInCommittee"
-msgstr ""
-
-msgid "backToItemInCouncil"
-msgstr ""
-
-#. Default: "Decisions"
-msgid "decisions"
-msgstr ""
-
-#. Default: "Freeze"
-msgid "freeze"
-msgstr ""
-
-# transitions descriptions
-#. Default: "freeze_done_descr"
-msgid "freeze_done_descr"
-msgstr ""
-
-#. Default: "setInCommittee_done_descr"
-msgid "setInCommittee_done_descr"
-msgstr ""
-
-#. Default: "setInCouncil_done_descr"
-msgid "setInCouncil_done_descr"
-msgstr ""
-
-#. Default: "setItemInCommittee_done_descr"
-msgid "setItemInCommittee_done_descr"
-msgstr ""
-
-#. Default: "setItemInCouncil_done_descr"
-msgid "setItemInCouncil_done_descr"
+#. Default: "MeetingItemRecurringREMUN"
+msgid "MeetingItemRecurringREMUN"
 msgstr ""
 
 #. Default: "Frozen"
 msgid "frozen"
 msgstr ""
 
-# Workflow states
-#. Default: "Waiting advices"
-msgid "itemcreated_waiting_advices"
-msgstr ""
-
-#. Default: "Frozen"
+#. Default: "Itemfrozen"
 msgid "itemfrozen"
 msgstr ""
 
-#. Default: "itemfreeze_done_descr"
-msgid "itemfreeze_done_descr"
+#. Default: "Meeting BP"
+msgid "Meetingbp"
 msgstr ""
 
-#. Default: "Description"
-msgid "meeting_item_description"
+#. Default: "Meeting item BP"
+msgid "MeetingItembp"
 msgstr ""
 
-#. Default: "pre accept"
-msgid "pre_accept"
+#. Default: "Meeting item template BP"
+msgid "MeetingItemTemplatebp"
 msgstr ""
 
-#. Default: "pre_accept_done_descr"
-msgid "pre_accept_done_descr"
+#. Default: "Meeting item recurring BP"
+msgid "MeetingItemRecurringbp"
 msgstr ""
 
-#. Default: "refuse_done_descr"
-msgid "refuse_done_descr"
+#. Default: "Meeting CAS"
+msgid "Meetingcas"
 msgstr ""
 
-#. Default: "accept_done_descr"
-msgid "accept_done_descr"
+#. Default: "Meeting item CAS"
+msgid "MeetingItemcas"
 msgstr ""
 
-#. Default: "Pre accepted"
-msgid "pre_accepted"
+#. Default: "Meeting item template CAS"
+msgid "MeetingItemTemplatecas"
 msgstr ""
 
-msgid "proposeToBudgetImpactReviewer"
+#. Default: "Meeting item recurring CAS"
+msgid "MeetingItemRecurringcas"
 msgstr ""
 
-msgid "proposeToExtraordinaryBudget"
+#. Default: "Meeting Comitee"
+msgid "Meetingcomitee"
 msgstr ""
 
-msgid "proposeToDirector"
+#. Default: "Meeting item Comitee"
+msgid "MeetingItemcomitee"
 msgstr ""
 
-msgid "proposeToDivisionHead"
+#. Default: "Meeting item template Comitee"
+msgid "MeetingItemTemplatecomitee"
 msgstr ""
 
-msgid "proposeToOfficeManager"
+#. Default: "Meeting item recurring Comitee"
+msgid "MeetingItemRecurringcomitee"
 msgstr ""
 
-msgid "proposeToServiceHead"
-msgstr ""
-
-#. Default: "Proposed to budget impact reviewer"
-msgid "proposed_to_budgetimpact_reviewer"
-msgstr ""
-
-#. Default: "Proposed to budget impact reviewer"
-msgid "proposed_to_extraordinarybudget"
-msgstr ""
-
-#. Default: "Proposed to director"
-msgid "proposed_to_director"
-msgstr ""
-
-#. Default: "Proposed to division head"
-msgid "proposed_to_divisionhead"
-msgstr ""
-
-#. Default: "Proposed to office manager"
-msgid "proposed_to_officemanager"
-msgstr ""
-
-#. Default: "Proposed to service head"
-msgid "proposed_to_servicehead"
-msgstr ""
-
-msgid "remove"
-msgstr ""
-
-#. Default: "Removed from meeting"
-msgid "removed"
-msgstr ""
-
-#. Default: "Validate"
-msgid "validate"
-msgstr ""
-
-msgid "validateByBudgetImpactReviewer"
-msgstr ""
-
-msgid "validateByExtraordinaryBudget"
-msgstr ""
-
-#. Default: "Validated"
-msgid "validated"
-msgstr ""
-
-#. Default: "send back"
-msgid "backToItemCreated"
-msgstr ""
-
-#. Default: "send back"
-msgid "backToItemBudgetImpactReviewers"
-msgstr ""
-
-#. Default: "This item is back in its initial state. The person who created it (or another creator within the same group) can now modify it and will need to propose it again once finished."
-msgid "backToItemCreated_done_descr"
-msgstr ""
-
-#. Default: "send back"
-msgid "backToProposedToServiceHead"
-msgstr ""
-
-#. Default: "This item has been send back to the service head."
-msgid "backToProposedToServiceHead_done_descr"
-msgstr ""
-
-#. Default: "This item has been send back to the committee."
-msgid "backToItemInCommittee_done_descr"
-msgstr ""
-
-#. Default: "This item has been send back to the council."
-msgid "backToItemInCouncil_done_descr"
-msgstr ""
-
-#. Default: "The item has been 'delayed'.  If it is the college, is has been duplicated, if it is the council, it has not been duplicated."
-msgid "delay_done_descr"
-msgstr ""
-
-#. Default: "send back"
-msgid "backToProposedToOfficeManager"
-msgstr ""
-
-#. Default: "This item has been send back to the office manager."
-msgid "backToProposedToOfficeManager_done_descr"
-msgstr ""
-
-#. Default: "send back"
-msgid "backToProposedToDivisionHead"
-msgstr ""
-
-#. Default: "This item has been send back to the division head."
-msgid "backToProposedToDivisionHead_done_descr"
-msgstr ""
-
-#. Default: "send back"
-msgid "backToProposedToDirector"
-msgstr ""
-
-#. Default: "This item has been send back to the director."
-msgid "backToProposedToDirector_done_descr"
-msgstr ""
-
-#. Default: "bo to item frozen"
-msgid "backToItemFrozen"
-msgstr ""
-
-#. Default: "The decision taken on this item has been canceled."
-msgid "backToItemFrozen_done_descr"
-msgstr ""
-
-#. Default: "send back"
-msgid "backToPresented"
-msgstr ""
-
-#. Default: "send back to in council"
-msgid "backToInCouncil_done_descr"
-msgstr ""
-
-#. Default: "send back to in committee"
-msgid "backToInCommittee_done_descr"
-msgstr ""
-
-#. Default: "Item freeze has been cancelled."
-msgid "backToPresented_done_descr"
-msgstr ""
-
-#. Default: "The item has been removed from the meeting agenda."
-msgid "backToValidated_done_descr"
-msgstr ""
-
-#. Default: "The item has been validated."
-msgid "validate_done_descr"
-msgstr ""
-
-#. Default: "frozen"
-msgid "frozen"
-msgstr ""
-
-#. Default: "frozen"
-msgid "itemfrozen"
-msgstr ""
-
-#. Default: "The definitive decisions have been confirmed."
-msgid "close_done_descr"
-msgstr ""
-
-#. Default: "Create a plonmeeting item from a plonegov item"
+#. Default: "Create an item council from an item college"
 msgid "create_to_meeting-config-council_from_meeting-config-college"
 msgstr ""
 
-#. Default: "The meeting config you try to send the item to does not exist!"
-msgid "sendtocouncil_error_no_existing_meetingconfig"
+#. Default: "Create an item college from an item council"
+msgid "create_to_meeting-config-college_from_meeting-config-council"
 msgstr ""
 
-#. Default: "The creator of this item does not exist in the meeting config you try to send the item to!"
-msgid "sendtocouncil_error_no_corresponding_meetingconfigfolder"
-msgstr ""
-
-#. Default: "The item has been sent to the council."
-msgid "sendto_meeting-config-council_success"
-msgstr ""
-
-#. Default: "The item has been sent to the college."
-msgid "sendto_meeting-config-college_success"
-msgstr ""
-
-#. Default: "Some items are still under corrections in services"
-msgid "some_item_still_in_service"
-msgstr ""
-
-#. Default: "create to meeting-config-cas from meeting-config-bp"
+#. Default: "Create an item CAS from an item BP"
 msgid "create_to_meeting-config-cas_from_meeting-config-bp"
 msgstr ""
 
-#. Default: "create to meeting-config-cas from meeting-config-bp"
-msgid "create_to_meeting-config-council_from_meeting-config-college"
+#. Default: "Create an item college from an item CoDir"
+msgid "create_to_meeting-config-college_from_codir"
+msgstr ""
+
+#. Default: "Create an item BP from an item CoDir"
+msgid "create_to_meeting-config-bp_from_codir"
+msgstr ""
+
+#. Default: "Create an item CoGest from an item College"
+msgid "create_to_cogest_from_meeting-config-college"
+msgstr ""
+
+#. Default: "Create an item College from an item CoGest"
+msgid "create_to_meeting-config-college_from_cogest"
+msgstr ""
+
+#. Default: "MeetingBourgmestre"
+msgid "MeetingBourgmestre"
+msgstr ""
+
+#. Default: "MeetingItemBourgmestre"
+msgid "MeetingItemBourgmestre"
+msgstr ""
+
+#. Default: "MeetingItemRecurringBourgmestre"
+msgid "MeetingItemRecurringBourgmestre"
+msgstr ""
+
+#. Default: "MeetingItemTemplateBourgmestre"
+msgid "MeetingItemTemplateBourgmestre"
+msgstr ""
+
+#. Default: "MeetingZCollege"
+msgid "MeetingZCollege"
+msgstr ""
+
+#. Default: "MeetingZCouncil"
+msgid "MeetingZCouncil"
+msgstr ""
+
+#. Default: "MeetingItemZCollege"
+msgid "MeetingItemZCollege"
+msgstr ""
+
+#. Default: "MeetingItemZCouncil"
+msgid "MeetingItemZCouncil"
+msgstr ""
+
+#. Default: "MeetingItemRecurringZCollege"
+msgid "MeetingItemRecurringZCollege"
+msgstr ""
+
+#. Default: "MeetingItemRecurringZCouncil"
+msgid "MeetingItemRecurringZCouncil"
+msgstr ""
+
+#. Default: "MeetingItemTemplateZCollege"
+msgid "MeetingItemTemplateZCollege"
+msgstr ""
+
+#. Default: "MeetingItemTemplateZCouncil"
+msgid "MeetingItemTemplateZCouncil"
+msgstr ""
+
+#. Default: "Propose to financial controller"
+msgid "proposeToFinancialController"
+msgstr ""
+
+#. Default: "Proposed to financial controller"
+msgid "proposed_to_financial_controller"
+msgstr ""
+
+#. Default: "Propose to financial editor"
+msgid "proposeToFinancialEditor"
+msgstr ""
+
+#. Default: "Proposed to financial editor"
+msgid "proposed_to_financial_editor"
+msgstr ""
+
+#. Default: "Propose to financial reviewer"
+msgid "proposeToFinancialReviewer"
+msgstr ""
+
+#. Default: "Proposed to financial reviewer"
+msgid "proposed_to_financial_reviewer"
+msgstr ""
+
+#. Default: "Propose to financial manager"
+msgid "proposeToFinancialManager"
+msgstr ""
+
+#. Default: "Proposed to financial manager"
+msgid "proposed_to_financial_manager"
+msgstr ""
+
+#. Default: "Sign financial advice"
+msgid "signFinancialAdvice"
+msgstr ""
+
+#. Default: "Financial advice signed"
+msgid "financial_advice_signed"
+msgstr ""
+
+#. Default: "Send back to 'financial controller'"
+msgid "backToProposedToFinancialController"
+msgstr ""
+
+#. Default: "Send back to 'financial editor'"
+msgid "backToProposedToFinancialEditor"
+msgstr ""
+
+#. Default: "Send back to 'financial reviewer'"
+msgid "backToProposedToFinancialReviewer"
+msgstr ""
+
+#. Default: "Send back to 'financial manager'"
+msgid "backToProposedToFinancialManager"
+msgstr ""
+
+#. Default: "Create an item ZCollege from an item ZCouncil"
+msgid "create_to_meeting-config-zcollege_from_meeting-config-zcouncil"
+msgstr ""
+
+#. Default: "Create an item ZCouncil from an item ZCollege"
+msgid "create_to_meeting-config-zcouncil_from_meeting-config-zcollege"
+msgstr ""
+
+#. Default: "Meeting AG"
+msgid "MeetingAG"
+msgstr ""
+
+#. Default: "Meeting Item AG"
+msgid "MeetingItemAG"
+msgstr ""
+
+#. Default: "Meeting Item Recurring AG"
+msgid "MeetingItemRecurringAG"
+msgstr ""
+
+#. Default: "Meeting Item Template AG"
+msgid "MeetingItemTemplateAG"
+msgstr ""
+
+#. Default: "Create an item AG from an item ZCA"
+msgid "create_to_meeting-config-ag_from_ca"
+msgstr ""
+
+#. Default: "Meeting EM"
+msgid "MeetingEM"
+msgstr ""
+
+#. Default: "Meeting Item EM"
+msgid "MeetingItemEM"
+msgstr ""
+
+#. Default: "Meeting Item Recurring EM"
+msgid "MeetingItemRecurringEM"
+msgstr ""
+
+#. Default: "Meeting Item Template EM"
+msgid "MeetingItemTemplateEM"
+msgstr ""
+
+#. Default: "Create an item ZCollege from an item EM"
+msgid "create_to_meeting-config-zcollege_from_em"
+msgstr ""
+
+#. Default: "MeetingCoordinateOffice"
+msgid "MeetingCoordinateOffice"
+msgstr ""
+
+#. Default: "MeetingItemCoordinateOffice"
+msgid "MeetingItemCoordinateOffice"
+msgstr ""
+
+#. Default: "MeetingItemRecurring"
+msgid "MeetingItemRecurringCoordinateOffice"
+msgstr ""
+
+#. Default: "MeetingItemTemplateBourgmestre"
+msgid "MeetingItemTemplateCoordinateOffice"
 msgstr ""

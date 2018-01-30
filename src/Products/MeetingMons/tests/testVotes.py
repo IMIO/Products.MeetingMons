@@ -2,7 +2,7 @@
 #
 # File: testVotes.py
 #
-# Copyright (c) 2013 by Imio.be
+# Copyright (c) 2012-2013 by PloneGov
 #
 # GNU General Public License (GPL)
 #
@@ -22,16 +22,24 @@
 # 02110-1301, USA.
 #
 
+from Products.PloneMeeting.tests.testVotes import testVotes as pmtv
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.MeetingCommunes.tests.testVotes import testVotes as mctv
 
 
-class testVotes(MeetingMonsTestCase, mctv):
-    '''Tests various aspects of votes management.'''
+class testVotes(MeetingMonsTestCase, pmtv):
+    '''Tests various aspects of votes management.
+       Advices are enabled for PloneMeeting Assembly, not for PloneGov Assembly.
+       By default, vote are encoded by 'theVoterHimself'.'''
+
+    def setUp(self):
+        """ """
+        super(testVotes, self).setUp()
+        # use meetingConfig2
+        self.setMeetingConfig(self.meetingConfig2.getId())
 
 
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
-    suite.addTest(makeSuite(testVotes, prefix='test_subproduct_'))
+    suite.addTest(makeSuite(testVotes, prefix='test_pm_'))
     return suite

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PloneMeeting\n"
-"POT-Creation-Date: 2011-03-01 09:00-100\n"
+"POT-Creation-Date: 2005-05-17 15:00-100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,495 +11,112 @@ msgstr ""
 "Preferred-encodings: utf-8 latin1\n"
 "Domain: PloneMeeting\n"
 
-#. Default: "Welcome to HubSessions!"
-msgid "hs_welcome_title"
-msgstr ""
-
-# MeetingGroup
-#. Default: "Signatures delegation"
-msgid "MeetingMons_label_signatures"
-msgstr ""
-
-#. Default: "Assembly which are specific to this meeting item"
-msgid "MeetingMons_label_itemAssembly"
-msgstr ""
-
-# MeetingGroup
-#. Default: "Leave empty to use the signatures defined on the meeting"
-msgid "MeetingMons_descr_signatures"
-msgstr ""
-
-#. Default: "If you don't fill this field, meeting assembly will be used for this item."
-msgid "MeetingMons_descr_assembly"
-msgstr ""
-
-# Suffix
-#. Default: "reviewers"
-msgid "reviewers"
-msgstr ""
-
-# Suffix
-#. Default: "service heads"
-msgid "serviceheads"
-msgstr ""
-
-# Suffix
-#. Default: "office managers"
-msgid "officemanagers"
-msgstr ""
-
-# Suffix
-#. Default: "division heads"
-msgid "divisionheads"
-msgstr ""
-
-# Suffix
-#. Default: "directors"
-msgid "directors"
-msgstr ""
-
-# Suffix
-#. Default: "budget impact reviewers"
-msgid "budgetimpactreviewers"
-msgstr ""
-
-# Suffix
-#. Default: "extraordinary budget"
-msgid "extraordinarybudget"
-msgstr ""
-
-#import what was done in MeetingCommunes
-
 # MeetingItem
-#. Default: "Decision"
-msgid "PloneMeeting_label_decision"
-msgstr ""
-
-#. Default: "PloneMeeting"
-msgid "app_name"
-msgstr ""
-
-#. Default: "Description"
-msgid "meeting_item_description"
-msgstr ""
-
-#. Default: "PowerObservers"
-msgid "powerObserversGroupTitle"
-msgstr ""
-
-#. Default: "Present every selected items"
-msgid "present_several_items"
-msgstr ""
-
-#. Default: "Configure PloneMeeting"
-msgid "search_advanced"
-msgstr ""
-
-#. Default: "Items of my group"
-msgid "searchgroupitems"
-msgstr ""
-
-# searches
-#. Default: "proposed items"
+#searches
+#. Default: "Proposed items"
 msgid "searchproposeditems"
 msgstr ""
 
-#. Default: "validated items"
+#. Default: "Validated items"
 msgid "searchvalidateditems"
 msgstr ""
 
-#. Default: "items to validate"
-msgid "searchitemstovalidate"
+#. Default: "Synthesis finance advices"
+msgid "searchitemswithfinanceadvice"
 msgstr ""
 
-#. Default: "items to correct"
-msgid "searchreturnedtoserviceitems"
-msgstr ""
-
-#. Default: "corrected items"
-msgid "searchcorrecteditems"
-msgstr ""
-
-#. Default: "items of my commissions"
-msgid "searchitemsofmycommissions"
-msgstr ""
-
-#. Default: "items of my commissions to edit"
-msgid "searchitemsofmycommissionstoedit"
-msgstr ""
-
-#. Default: "Choose advisers that will have to issue an optional advice for this item"
-msgid "optional_advisers_item_descr"
-msgstr ""
-
-#portal_tabs
-#. Default: "College"
-msgid "Meeting config Mons College"
-msgstr ""
-
-#. Default: "Council"
-msgid "Meeting config Mons Council"
-msgstr ""
-
-#object_buttons
-#. Default: "Send to council"
-msgid "Send to council"
-msgstr ""
-
-#. Default: "Transcript of commission"
-msgid "MeetingMons_label_commissionTranscript"
-msgstr ""
-
-#. Default: "Transcript of commission"
-msgid "MeetingMons_descr_commissionTranscript"
-msgstr ""
-
-#. Default: "Interventions"
-msgid "MeetingMons_label_interventions"
-msgstr ""
-
-#. Default: "Transcription of interventions"
-msgid "MeetingMons_descr_interventions"
-msgstr ""
-
-#. Default: "MeetingItemCollege"
-msgid "predecessor_MeetingItemCollege"
-msgstr ""
-
-#. Default: "MeetingItemCouncil"
-msgid "predecessor_MeetingItemCouncil"
-msgstr ""
-
-#. Default: "Linked items"
-msgid "PloneMeeting_label_predecessor"
-msgstr ""
-
-#. Default: "Sent to council"
-msgid "Sent to council"
-msgstr ""
-
-#. Default: "Item created from a college item"
-msgid "create_to_meeting-config-council_from_meeting-config-college_comments"
-msgstr ""
-
-#. Default: "Explanatory note"
-msgid "MeetingMons_label_councildescription"
-msgstr ""
-
-#. Default: "Commission"
-msgid "MeetingMons_label_councilcategory"
-msgstr ""
-
-#. Default: "Deliberation"
-msgid "MeetingMons_label_councildecision"
-msgstr ""
-
-#. Default: "Premeeting observations"
-msgid "MeetingMons_label_meetingcouncilobservations"
-msgstr ""
-
-#. Default: "Default date for the pre-meeting"
-msgid "PloneMeeting_label_preMeetingDateDefault"
-msgstr ""
-
-#. Default: "Default value for the item decision field"
-msgid "default_meetingitem_decision"
-msgstr ""
-
-#. Default: "Default value for the item decision field"
-msgid "MeetingMons_label_defaultMeetingItemDecision"
-msgstr ""
-
-#. Default: "Default value for the item decision field"
-msgid "default_meetingitem_detailledDescription"
-msgstr ""
-
-#. Default: "Default value for the item motivation field"
-msgid "MeetingMons_label_defaultMeetingItemDetailledDescription"
-msgstr ""
-
-#. Default: "The preparatory meeting must occur before the meeting."
-msgid "pre_date_after_meeting_date"
-msgstr ""
-
-#. Default: "Preparatory meeting"
-msgid "pre_meeting"
-msgstr ""
-
-#. Default: "Specify here the date of the pre-meeting, relative to its meeting, in the same format as fields above.  Leave empty not to use this functionnality."
-msgid "pre_meeting_date_default_descr"
-msgstr ""
-
-#. Default: "Observations for the preparatory meeting"
-msgid "PloneMeeting_label_preObservations"
-msgstr ""
-
-#. Default: "Date"
-msgid "PloneMeeting_label_preMeetingDate"
-msgstr ""
-
-#. Default: "Place"
-msgid "PloneMeeting_label_preMeetingPlace"
-msgstr ""
-
-#. Default: "Assembly"
-msgid "MeetingMons_label_preMeetingAssembly"
-msgstr ""
-
-#. Default: "Add [[ ]] around absent people (like [[Mister Sample Peter]])"
-msgid "premeeting_assembly_descr"
-msgstr ""
-
-#. Default: "Date"
-msgid "PloneMeeting_label_preMeetingDate_2"
-msgstr ""
-
-#. Default: "Place"
-msgid "PloneMeeting_label_preMeetingPlace_2"
-msgstr ""
-
-#. Default: "Assembly"
-msgid "MeetingMons_label_preMeetingAssembly_2"
-msgstr ""
-
-#. Default: "Add [[ ]] around absent people (like [[Mister Sample Peter]])"
-msgid "premeeting_assembly_2_descr"
-msgstr ""
-
-#. Default: "Date"
-msgid "PloneMeeting_label_preMeetingDate_3"
-msgstr ""
-
-#. Default: "Place"
-msgid "PloneMeeting_label_preMeetingPlace_3"
-msgstr ""
-
-#. Default: "Assembly"
-msgid "MeetingMons_label_preMeetingAssembly_3"
-msgstr ""
-
-#. Default: "Add [[ ]] around absent people (like [[Mister Sample Peter]])"
-msgid "premeeting_assembly_3_descr"
-msgstr ""
-
-#. Default: "Date"
-msgid "PloneMeeting_label_preMeetingDate_4"
-msgstr ""
-
-#. Default: "Place"
-msgid "PloneMeeting_label_preMeetingPlace_4"
-msgstr ""
-
-#. Default: "Assembly"
-msgid "MeetingMons_label_preMeetingAssembly_4"
-msgstr ""
-
-#. Default: "Add [[ ]] around absent people (like [[Mister Sample Peter]])"
-msgid "premeeting_assembly_4_descr"
-msgstr ""
-
-#. Default: "Date"
-msgid "PloneMeeting_label_preMeetingDate_5"
-msgstr ""
-
-#. Default: "Place"
-msgid "PloneMeeting_label_preMeetingPlace_5"
-msgstr ""
-
-#. Default: "Assembly"
-msgid "MeetingMons_label_preMeetingAssembly_5"
-msgstr ""
-
-#. Default: "Add [[ ]] around absent people (like [[Mister Sample Peter]])"
-msgid "premeeting_assembly_5_descr"
-msgstr ""
-
-#. Default: "Date"
-msgid "PloneMeeting_label_preMeetingDate_6"
-msgstr ""
-
-#. Default: "Place"
-msgid "PloneMeeting_label_preMeetingPlace_6"
-msgstr ""
-
-#. Default: "Assembly"
-msgid "MeetingMons_label_preMeetingAssembly_6"
-msgstr ""
-
-#. Default: "Add [[ ]] around absent people (like [[Mister Sample Peter]])"
-msgid "premeeting_assembly_6_descr"
-msgstr ""
-
-#. Default: "Date"
-msgid "PloneMeeting_label_preMeetingDate_7"
-msgstr ""
-
-#. Default: "Place"
-msgid "PloneMeeting_label_preMeetingPlace_7"
-msgstr ""
-
-#. Default: "Assembly"
-msgid "MeetingMons_label_preMeetingAssembly_7"
-msgstr ""
-
-#. Default: "Add [[ ]] around absent people (like [[Mister Sample Peter]])"
-msgid "premeeting_assembly_7_descr"
-msgstr ""
-
-#. Default: "Premeeting"
-msgid "listingheader_premeeting_name"
-msgstr ""
-
-#. Default: "Date"
-msgid "listingheader_premeeting_date"
-msgstr ""
-
-#. Default: "Place"
-msgid "listingheader_premeeting_place"
-msgstr ""
-
-#. Default: "Assembly"
-msgid "listingheader_premeeting_assembly"
-msgstr ""
-
-#. Default: "Add [[ ]] around absent people (like [[Mister Sample Peter]])"
-msgid "assembly_meeting_descr"
-msgstr ""
-
-#. Default: "The comment was : ${comments}.\n\nMore information at ${objectUrl}."
-msgid "returnedToService_mail_body"
-msgstr ""
-
-#. Default: "The item '${itemTitle}' has been send back to you by the secretary"
-msgid "returnedToService_mail_subject"
-msgstr ""
-
-#. Default: "Please as you defined an item initiator, check if the linked category should not be 'Points conseillers'. If not, just ignore this message, it will not be displayed anymore when the item will be validated."
-msgid "check_intitiator_and_category"
-msgstr ""
-
-#. Default: "Please as this item comes from the college, you need to define the 'commission' for it before being able to propose it."
-msgid "check_category"
-msgstr ""
-
-#. Default: "Configure PloneMeeting"
-msgid "hs_configuration"
-msgstr ""
-
-#. Default: "Please enter 12 lines for signatures delegations"
-msgid "signatures_length_error"
-msgstr ""
-
-#. Default: "searchserviceheaditems"
-msgid "searchserviceheaditems"
-msgstr ""
-
-#. Default: "searchbudgetimpactreviewersitems"
-msgid "searchbudgetimpactreviewersitems"
-msgstr ""
-
-#. Default: "searchextraordinarybudgetsitems"
-msgid "searchextraordinarybudgetsitems"
-msgstr ""
-
-#. Default: "searchofficemanageritems"
-msgid "searchofficemanageritems"
-msgstr ""
-
-#. Default: "searchdivisionheaditems"
-msgid "searchdivisionheaditems"
-msgstr ""
-
-#. Default: "searchdirectoritems"
-msgid "searchdirectoritems"
-msgstr ""
-
-#. Default: "Description"
-msgid "projectOfDecision"
-msgstr ""
-
-#. Default: "Description"
-msgid "projectOfDecision_label"
-msgstr ""
-
-#. Default: "Gives mandatory advice on"
-msgid "PloneMeeting_label_givesMandatoryAdviceOn"
-msgstr ""
-
-#. Default: "When advice mandatoriness is enforced, an item can't be inserted into a meeting unless all mandatory advices are given and positive."
-msgid "enforce_advice_mandatoriness_descr"
-msgstr ""
-
-#. Default: "Specify here a TAL expression that will return True if the group must give a mandatory advice on an item.  We receive 'item' as the meeting item to give an advice on.  WARNING if the group of advisers linked to this PloneMeeting group os empty, it will no be considered, despite the result of the TAL expression"
-msgid "gives_mandatory_advice_on_descr"
-msgstr ""
-
-#. Default: "Optional advisers"
-msgid "PloneMeeting_label_optionalAdvisers"
-msgstr ""
-
-
-#. Default: "Decision used when the item is refused"
-msgid "PloneMeeting_label_itemDecisionRefuseText"
-msgstr ""
-
-#. Default: "When an item is refused, the decision will be replace by the text defined here, as a TAL (Tag Attribute Language) expression whose context includes the name 'here' that represents the impacted item. If you don't know TAL, you may learn it <a href=\"http://zope.org/Documentation/Books/ZopeBook/2_6Edition/ZPT.stx\">here</a>."
-msgid "item_decision_refuse_text_descr"
-msgstr ""
-
-#. Default: "Item Motivation Description"
-msgid "item_motivation_descr"
-msgstr ""
-
-#. Default: "Alderman"
-msgid "aldermanGroupTitle"
-msgstr ""
-
-#. Default: "Echevin' Services"
-msgid "EchevinServices"
-msgstr ""
-
-#. Default: "Echevin' Services"
+#. Default: "Alderman of the following services (departments)"
 msgid "MeetingMons_label_echevinServices"
 msgstr ""
 
-#. Default: "Leave empty if he is not an echevin"
+#. Default: "If the group is responsible of other groups, select them here above, either do not select any elements of the list."
 msgid "MeetingMons_descr_echevinServices"
 msgstr ""
 
-#. Default: "Item is treated ?"
-msgid "PloneMeeting_label_itemIsSigned"
+#portal_tabs
+#. Default: "Meeting config College"
+msgid "Meeting config College"
 msgstr ""
 
-#. Default: "The item is not treated."
-msgid "item_is_signed_no"
+#. Default: "Meeting config Council"
+msgid "Meeting config Council"
 msgstr ""
 
-#. Default: "ValidateByBudget"
-msgid "MeetingMons_label_validateByBudget"
-msgstr ""
-
-#. Default: "Validate By Budget Impact Reviwer"
-msgid "MeetingMons_descr_validateByBudget"
+msgid "front_page_body"
 msgstr ""
 
 #. Default: "Initialize the item decision when deciding meeting"
-msgid "MeetingCommunes_label_initItemDecisionIfEmptyOnDecide"
+msgid "MeetingMons_label_initItemDecisionIfEmptyOnDecide"
 msgstr ""
 
 #. Default: "If you check this box, when a meeting will be decided, if an item does not have a decision defined, this decision will be automatically filled with title and description of the item"
 msgid "init_item_decision_if_empty_on_decide"
 msgstr ""
 
-#searches
-#. Default: "cdld synthesis"
-msgid "searchcdlditems"
+#. Default: "Add a finances advice"
+msgid "add_new_meetingadvicefinances"
 msgstr ""
 
-#. Default: "Proposing group to keep for CDLD synthesis"
-msgid "MeetingCommunes_label_cdldProposingGroup"
+#. Default: "Finances advice"
+msgid "MeetingAdviceFinances"
 msgstr ""
 
-#. Default: "Choose proposing group for cdld advice"
-msgid "MeetingCommunes_descr_cdldProposingGroup"
+#. Default: "Items to control completeness of"
+msgid "searchitemstocontrolcompletenessof"
+msgstr ""
+
+#. Default: "Advices proposed to financial controller"
+msgid "searchadviceproposedtocontroller"
+msgstr ""
+
+#. Default: "Advices proposed to financial editor"
+msgid "searchadviceproposedtoeditor"
+msgstr ""
+
+#. Default: "Advices proposed to financial reviewer"
+msgid "searchadviceproposedtoreviewer"
+msgstr ""
+
+#. Default: "Advices proposed to financial manager"
+msgid "searchadviceproposedtomanager"
+msgstr ""
+
+#. Default: "Unfavorable opinion"
+msgid "negative_finance"
+msgstr ""
+
+#. Default: "Not given opinion"
+msgid "not_given_finance"
+msgstr ""
+
+#. Default: "Favorable opinion"
+msgid "positive_finance"
+msgstr ""
+
+#. Default: "Favorable opinion with remarks"
+msgid "positive_with_remarks_finance"
+msgstr ""
+
+#. Default: "Cautious opinion"
+msgid "cautious_finance"
+msgstr ""
+
+#. Default: "Not required opinion"
+msgid "not_required_finance"
+msgstr ""
+
+#. Default: "Financial controllers"
+msgid "financialcontrollers"
+msgstr ""
+
+#. Default: "Financial editors"
+msgid "financialeditors"
+msgstr ""
+
+#. Default: "Financial reviewers"
+msgid "financialreviewers"
+msgstr ""
+
+#. Default: "Financial managers"
+msgid "financialmanagers"
 msgstr ""

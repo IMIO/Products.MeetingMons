@@ -2,7 +2,7 @@
 #
 # File: testUtils.py
 #
-# Copyright (c) 2007-2012 by CommunesPlone.org
+# Copyright (c) 2017 by Imio.be
 #
 # GNU General Public License (GPL)
 #
@@ -22,75 +22,16 @@
 # 02110-1301, USA.
 #
 
-from AccessControl import Unauthorized
-from plone.app.testing import login
-from Products.ExternalMethod.ExternalMethod import manage_addExternalMethod
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from Products.PloneMeeting.tests.testUtils import testUtils as pmtu
 
 
-class testUtils(MeetingMonsTestCase):
-    """
-        Tests the Extensions/utils methods.
-    """
+class testUtils(MeetingMonsTestCase, pmtu):
+    ''' '''
 
-    def setUp(self):
-        MeetingMonsTestCase.setUp(self)
-        #add the ExternalMethod export_meetinggroups in Zope
-        manage_addExternalMethod(self.portal.aq_inner.aq_parent,
-                                 'export_meetinggroups',
-                                 '',
-                                 'Products.MeetingMons.utils',
-                                 'export_meetinggroups')
-        #add the ExternalMethod import_meetinggroups in Zope
-        manage_addExternalMethod(self.portal.aq_inner.aq_parent,
-                                 'import_meetinggroups',
-                                 '',
-                                 'Products.MeetingMons.utils',
-                                 'import_meetinggroups')
 
-    def _exportMeetingGroups(self):
-        return self.portal.export_meetinggroups()
-
-    def _importMeetingGroups(self, dict):
-        return self.portal.import_meetinggroups(dict=str(dict))
-
-    def test_accessToMethods(self):
-        """
-          Check that only Managers can access the methods
-        """
-        self.assertRaises(Unauthorized, self._exportMeetingGroups)
-        self.assertRaises(Unauthorized, self._importMeetingGroups, {})
-
-    def test_exportMeetingGroups(self):
-        """
-          Check that calling this method returns the right content
-        """
-        login(self.portal, 'admin')
-        expected = {
-            'vendors': ('Vendors', '', 'Devil'),
-            'endUsers': ('End users', '', 'EndUsers'),
-            'developers': ('Developers', '', 'Devel')}
-        res = self._exportMeetingGroups()
-        self.assertEquals(expected, res)
-
-    def test_importMeetingGroups(self):
-        """
-          Check that calling this method creates the MeetingGroups if not exist
-        """
-        login(self.portal, 'admin')
-        #if we pass a dict containing the existing groups, it does nothing but
-        #returning that the groups already exist
-        dict = self._exportMeetingGroups()
-        expected = 'MeetingGroup endUsers already exists\n' \
-                   'MeetingGroup vendors already exists\n' \
-                   'MeetingGroup developers already exists'
-        res = self._importMeetingGroups(dict)
-        self.assertEquals(expected, res)
-        #but it can also add a MeetingGroup if it does not exist
-        dict['newGroup'] = ('New group title', 'New group description', 'NGAcronym')
-        expected = 'MeetingGroup endUsers already exists\n' \
-                   'MeetingGroup vendors already exists\n' \
-                   'MeetingGroup newGroup added\n' \
-                   'MeetingGroup developers already exists'
-        res = self._importMeetingGroups(dict)
-        self.assertEquals(expected, res)
+def test_suite():
+    from unittest import TestSuite, makeSuite
+    suite = TestSuite()
+    suite.addTest(makeSuite(testUtils, prefix='test_pm_'))
+    return suite
