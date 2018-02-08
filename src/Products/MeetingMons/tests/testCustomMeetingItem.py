@@ -191,7 +191,7 @@ class testCustomMeetingItem(MeetingMonsTestCase):
         # ask advice with delay but without the good RowId and not timed out
         item.setOptionalAdvisers(('developers__rowid__unique_id_003', ))
         item.at_post_edit_script()
-        self.do(item, 'propose')
+        self.proposeItem(item)
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers'), False)
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers',
                                                                         rowIds=['unique_id_002']), False)

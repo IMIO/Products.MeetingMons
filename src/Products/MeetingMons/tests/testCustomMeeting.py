@@ -143,9 +143,9 @@ class testCustomMeeting(MeetingMonsTestCase):
         item1 = orderedItems[0]
         item2 = orderedItems[1]
         item3 = orderedItems[2]
-        self.backToState(item1, 'proposed')
-        self.backToState(item2, 'proposed')
-        self.backToState(item3, 'proposed')
+        self.backToState(item1, 'proposed_to_director')
+        self.backToState(item2, 'proposed_to_director')
+        self.backToState(item3, 'proposed_to_director')
         self.freezeMeeting(meeting)
         item1.setPreferredMeeting(meeting.UID())
         item2.setPreferredMeeting(meeting.UID())
@@ -391,8 +391,8 @@ class testCustomMeeting(MeetingMonsTestCase):
         # remove to items, freeze the meeting then add the items
         item1 = orderedItems[0]
         item2 = orderedItems[1]
-        self.backToState(item1, 'proposed')
-        self.backToState(item2, 'proposed')
+        self.backToState(item1, 'proposed_to_director')
+        self.backToState(item2, 'proposed_to_director')
         self.freezeMeeting(meeting)
         item1.setPreferredMeeting(meeting.UID())
         item2.setPreferredMeeting(meeting.UID())

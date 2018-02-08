@@ -26,46 +26,87 @@ from Products.PloneMeeting.tests.helpers import PloneMeetingTestingHelpers
 class MeetingMonsTestingHelpers(PloneMeetingTestingHelpers):
     '''Stub class that provides some helper methods about testing.'''
 
-    TRANSITIONS_FOR_PUBLISHING_MEETING_1 = TRANSITIONS_FOR_PUBLISHING_MEETING_2 = ('freeze', 'publish', )
-    TRANSITIONS_FOR_FREEZING_MEETING_1 = TRANSITIONS_FOR_FREEZING_MEETING_2 = ('freeze', )
-    TRANSITIONS_FOR_DECIDING_MEETING_1 = ('freeze', 'decide', )
-    TRANSITIONS_FOR_DECIDING_MEETING_2 = ('freeze', 'publish', 'decide', )
+    TRANSITIONS_FOR_PROPOSING_ITEM_FIRST_LEVEL_1 = TRANSITIONS_FOR_PROPOSING_ITEM_FIRST_LEVEL_2 = (
+    'proposeToServiceHead', 'proposeToOfficeManager', 'proposeToDivisionHead', 'proposeToDirector')
+    TRANSITIONS_FOR_PROPOSING_ITEM_1 = TRANSITIONS_FOR_PROPOSING_ITEM_2 = (
+    'proposeToServiceHead', 'proposeToOfficeManager', 'proposeToDivisionHead', 'proposeToDirector')
+    TRANSITIONS_FOR_PUBLISHING_MEETING_1 = TRANSITIONS_FOR_PUBLISHING_MEETING_2 = ('freeze',)
+    TRANSITIONS_FOR_FREEZING_MEETING_1 = TRANSITIONS_FOR_FREEZING_MEETING_2 = ('freeze',)
+    TRANSITIONS_FOR_DECIDING_MEETING_1 = ('freeze', 'decide',)
+    TRANSITIONS_FOR_DECIDING_MEETING_2 = ('freeze', 'decide',)
     TRANSITIONS_FOR_CLOSING_MEETING_1 = TRANSITIONS_FOR_CLOSING_MEETING_2 = ('freeze',
-                                                                             'publish',
                                                                              'decide',
-                                                                             'close', )
-    TRANSITIONS_FOR_ACCEPTING_ITEMS_1 = ('freeze', 'decide', )
-    TRANSITIONS_FOR_ACCEPTING_ITEMS_2 = ('freeze', 'publish', 'decide', )
+                                                                             'close',)
+    TRANSITIONS_FOR_ACCEPTING_ITEMS_1 = ('freeze', 'decide',)
+    TRANSITIONS_FOR_ACCEPTING_ITEMS_2 = ('freeze', 'decide',)
+
+    WF_ITEM_STATE_NAME_MAPPINGS_1 = {'itemcreated': 'itemcreated',
+                                     'proposed_first_level': 'proposed_to_director',
+                                     'proposed': 'proposed_to_director',
+                                     'validated': 'validated',
+                                     'presented': 'presented',
+                                     'itemfrozen': 'itemfrozen'}
+    WF_ITEM_STATE_NAME_MAPPINGS_2 = {'itemcreated': 'itemcreated',
+                                     'proposed_first_level': 'proposed_to_director',
+                                     'proposed': 'proposed_to_director',
+                                     'validated': 'validated',
+                                     'presented': 'presented',
+                                     'itemfrozen': 'itemfrozen'}
+
     BACK_TO_WF_PATH_1 = BACK_TO_WF_PATH_2 = {
         # Meeting
-        'created': ('backToDecisionsPublished',
-                    'backToDecided',
-                    'backToPublished',
-                    'backToFrozen',
+        'created': ('backToFrozen',
                     'backToCreated',),
         # MeetingItem
-        'itemcreated': ('backToItemPublished',
-                        'backToItemFrozen',
+        'itemcreated': ('backToItemFrozen',
                         'backToPresented',
                         'backToValidated',
                         'backToPreValidated',
-                        'backToProposed',
-                        'backToItemCreated', ),
-        'proposed': ('backToItemPublished',
-                     'backToItemFrozen',
-                     'backToPresented',
-                     'backToValidated',
-                     'backToPreValidated',
-                     'backToProposed', ),
-        'validated': ('backToItemPublished',
-                      'backToItemFrozen',
+                        'backToProposedToDirector',
+                        'backToProposedToDivisionHead',
+                        'backToProposedToOfficeManager',
+                        'backToProposedToServiceHead',
+                        'backToItemCreated',),
+        'proposed_to_servicehead': ('backToItemFrozen',
+                                    'backToPresented',
+                                    'backToValidated',
+                                    'backToPreValidated',
+                                    'backToProposedToDirector',
+                                    'backToProposedToDivisionHead',
+                                    'backToProposedToOfficeManager',
+                                    'backToProposedToServiceHead',),
+        'proposed_to_officemanager': ('backToItemFrozen',
+                                      'backToPresented',
+                                      'backToValidated',
+                                      'backToPreValidated',
+                                      'backToProposedToDirector',
+                                      'backToProposedToDivisionHead',
+                                      'backToProposedToOfficeManager',),
+        'proposed_to_divisionhead': ('backToItemFrozen',
+                                     'backToPresented',
+                                     'backToValidated',
+                                     'backToPreValidated',
+                                     'backToProposedToDirector',
+                                     'backToProposedToDivisionHead'),
+        'proposed_to_director': ('backToItemFrozen',
+                                 'backToPresented',
+                                 'backToValidated',
+                                 'backToPreValidated',
+                                 'backToProposedToDirector',),
+        'validated': ('backToItemFrozen',
                       'backToPresented',
                       'backToValidated',),
-        'presented': ('backToItemPublished',
-                      'backToItemFrozen',
-                      'backToPresented', )}
+        'presented': ('backToItemFrozen',
+                      'backToPresented',)}
     # in which state an item must be after an particular meeting transition?
     ITEM_WF_STATE_AFTER_MEETING_TRANSITION = {'publish_decisions': 'accepted',
                                               'close': 'accepted'}
 
-    TRANSITIONS_FOR_ACCEPTING_ITEMS_MEETING_1 = TRANSITIONS_FOR_ACCEPTING_ITEMS_MEETING_2 = ('freeze', 'decide', )
+    TRANSITIONS_FOR_ACCEPTING_ITEMS_MEETING_1 = TRANSITIONS_FOR_ACCEPTING_ITEMS_MEETING_2 = ('freeze', 'decide',)
+
+    WF_ITEM_TRANSITION_NAME_MAPPINGS_1 = {
+        'backToItemCreated': 'backToItemCreated',
+        'backToProposed': 'backToProposedToDirector', }
+    WF_ITEM_TRANSITION_NAME_MAPPINGS_2 = {
+        'backToItemCreated': 'backToItemCreated',
+        'backToProposed': 'backToProposedToDirector', }

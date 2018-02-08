@@ -139,19 +139,14 @@ class testCustomWorkflows(MeetingMonsTestCase):
             for read_permission in read_permissions:
                 self.assertTrue(self.hasPermission(read_permission, item))
             self.changeUser(original_user_id)
-        # enable prevalidation
-        cfg = self.meetingConfig
-        cfg.setWorkflowAdaptations(('pre_validation', ))
-        performWorkflowAdaptations(cfg, logger=pm_logger)
+
         self.changeUser('pmManager')
-        self._turnUserIntoPrereviewer(self.member)
         item = self.create('MeetingItem')
         item.setDecision(self.decisionText)
+        import ipdb; ipdb.set_trace()
         meeting = self.create('Meeting', date=DateTime('2017/03/27'))
         _checkObserverMayView(item)
-        self.do(item, 'propose')
-        _checkObserverMayView(item)
-        self.do(item, 'prevalidate')
+        self.proposeItem(item)
         _checkObserverMayView(item)
         self.do(item, 'validate')
         _checkObserverMayView(item)
