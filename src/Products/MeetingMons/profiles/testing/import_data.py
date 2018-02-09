@@ -59,6 +59,7 @@ budgetAnalysisCfg1 = ItemAnnexTypeDescriptor(
 
 itemAnnex = ItemAnnexTypeDescriptor(
     'item-annex', 'Other annex(es)', u'itemAnnex.png')
+
 # Could be used once we
 # will digitally sign decisions ? Indeed, once signed, we will need to
 # store them (together with the signature) as separate files.
@@ -216,10 +217,6 @@ developers.serviceheads.append(pmServiceHead1)
 developers.officemanagers.append(pmOfficeManager1)
 developers.divisionheads.append(pmDivisionHead1)
 developers.reviewers.append(pmDirector1)
-#pmReviewer1 can validate every levels
-developers.serviceheads.append(pmReviewer1)
-developers.officemanagers.append(pmReviewer1)
-developers.divisionheads.append(pmReviewer1)
 developers.serviceheads.append(pmManager)
 developers.officemanagers.append(pmManager)
 developers.divisionheads.append(pmManager)

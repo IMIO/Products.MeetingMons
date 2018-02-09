@@ -673,14 +673,7 @@ class CustomMeetingItem(MeetingItem):
                     break
         return res
 
-    def showDuplicateItemAction_cachekey(method, self, brain=False):
-        '''cachekey method for self.showDuplicateItemAction.'''
-        return (self, str(self.REQUEST.debug))
-
-    security.declarePublic('customShowDuplicateItemAction')
-
-    @ram.cache(showDuplicateItemAction_cachekey)
-    def customShowDuplicateItemAction(self):
+    def showDuplicateItemAction(self):
         '''Condition for displaying the 'duplicate' action in the interface.
            Returns True if the user can duplicate the item.'''
         # Conditions for being able to see the "duplicate an item" action:
@@ -690,11 +683,11 @@ class CustomMeetingItem(MeetingItem):
         # - the item isn't delayed
         # The user will duplicate the item in his own folder.
         tool = getToolByName(self, 'portal_plonemeeting')
-        if self.isDefinedInTool() or not tool.userIsAmong('creators') or not self.adapted().isPrivacyViewable() or \
-           self.queryState() == 'delayed':
+        cfg = tool.getMeetingConfig(self)
+        if not cfg.getEnableItemDuplication() or self.isDefinedInTool() or not tool.userIsAmong(['creators']) or not self.adapted().isPrivacyViewable() or self.queryState() == 'delayed':
             return False
         return True
-    MeetingItem.showDuplicateItemAction = customShowDuplicateItemAction
+    MeetingItem.showDuplicateItemAction = showDuplicateItemAction
 
     def getFinanceAdviceId(self):
         """ """
