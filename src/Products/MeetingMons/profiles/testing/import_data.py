@@ -206,20 +206,20 @@ developers = GroupDescriptor('developers', 'Developers', 'Devel')
 developers.creators.append(pmCreator1)
 developers.creators.append(pmCreator1b)
 developers.creators.append(pmManager)
-developers.reviewers.append(pmReviewer1)
-developers.reviewers.append(pmManager)
 developers.observers.append(pmObserver1)
 developers.observers.append(pmReviewer1)
 developers.observers.append(pmManager)
 developers.advisers.append(pmAdviser1)
 developers.advisers.append(pmManager)
 developers.serviceheads.append(pmServiceHead1)
-developers.officemanagers.append(pmOfficeManager1)
-developers.divisionheads.append(pmDivisionHead1)
-developers.reviewers.append(pmDirector1)
 developers.serviceheads.append(pmManager)
+developers.officemanagers.append(pmOfficeManager1)
 developers.officemanagers.append(pmManager)
+developers.divisionheads.append(pmDivisionHead1)
 developers.divisionheads.append(pmManager)
+developers.reviewers.append(pmDirector1)
+developers.reviewers.append(pmReviewer1)
+developers.reviewers.append(pmManager)
 developers.budgetimpactreviewers.append(pmManager)
 developers.extraordinarybudget.append(pmManager)
 
@@ -299,8 +299,7 @@ collegeMeeting.itemActionsInterface = 'Products.MeetingMons.interfaces.IMeetingI
 collegeMeeting.meetingConditionsInterface = 'Products.MeetingMons.interfaces.IMeetingCollegeMonsWorkflowConditions'
 collegeMeeting.meetingActionsInterface = 'Products.MeetingMons.interfaces.IMeetingCollegeMonsWorkflowActions'
 collegeMeeting.transitionsToConfirm = []
-collegeMeeting.transitionsForPresentingAnItem = ['proposeToServiceHead', 'proposeToOfficeManager', 'proposeToDivisionHead',
-                                                 'proposeToDirector', 'validate', 'present']
+collegeMeeting.transitionsForPresentingAnItem = ('proposeToServiceHead', 'proposeToOfficeManager', 'proposeToDivisionHead', 'proposeToDirector', 'validate', 'present',)
 collegeMeeting.onMeetingTransitionItemTransitionToTrigger = ({'meeting_transition': 'freeze',
                                                               'item_transition': 'itemfreeze'},
 
@@ -387,8 +386,7 @@ councilMeeting.itemActionsInterface = 'Products.MeetingMons.interfaces.IMeetingI
 councilMeeting.meetingConditionsInterface = 'Products.MeetingMons.interfaces.IMeetingCollegeMonsWorkflowConditions'
 councilMeeting.meetingActionsInterface = 'Products.MeetingMons.interfaces.IMeetingCollegeMonsWorkflowActions'
 councilMeeting.transitionsToConfirm = []
-councilMeeting.transitionsForPresentingAnItem = ['proposeToServiceHead', 'proposeToOfficeManager', 'proposeToDivisionHead',
-                                                 'proposeToDirector', 'validate', 'present']
+councilMeeting.transitionsForPresentingAnItem = ('proposeToServiceHead', 'proposeToOfficeManager', 'proposeToDivisionHead', 'proposeToDirector', 'validate', 'present',)
 councilMeeting.onMeetingTransitionItemTransitionToTrigger = ({'meeting_transition': 'freeze',
                                                               'item_transition': 'itemfreeze'},
 

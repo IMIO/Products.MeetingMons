@@ -24,6 +24,8 @@
 
 from Products.PloneMeeting.tests.testWFAdaptations import testWFAdaptations as pmtwfa
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from Products.PloneMeeting.model.adaptations import RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS
+
 
 
 class testWFAdaptations(MeetingMonsTestCase, pmtwfa):
@@ -33,25 +35,8 @@ class testWFAdaptations(MeetingMonsTestCase, pmtwfa):
         '''Test what are the available wfAdaptations.'''
         # we removed the 'archiving' and 'creator_initiated_decisions' wfAdaptations
         self.assertEquals(sorted(self.meetingConfig.listWorkflowAdaptations().keys()),
-                          ['creator_edits_unless_closed',
-                           'everyone_reads_all',
-                           'hide_decisions_when_under_writing',
-                           'items_come_validated',
-                           'mark_not_applicable',
-                           'no_global_observation',
-                           'no_proposal',
-                           'no_publication',
-                           'only_creator_may_delete',
-                           'postpone_next_meeting',
-                           'pre_validation',
-                           'pre_validation_keep_reviewer_permissions',
-                           'removed',
-                           'removed_and_duplicated',
-                           'return_to_proposing_group',
-                           'return_to_proposing_group_with_all_validations',
-                           'return_to_proposing_group_with_last_validation',
-                           'reviewers_take_back_validated_item',
-                           'waiting_advices'])
+                          ['hide_decisions_when_under_writing',
+                           'return_to_proposing_group'])
 
     def test_pm_Validate_workflowAdaptations_added_no_publication(self):
         '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
@@ -132,6 +117,22 @@ class testWFAdaptations(MeetingMonsTestCase, pmtwfa):
         self.meetingConfig = self.meetingConfig2
         super(testWFAdaptations, self).test_pm_WFA_return_to_proposing_group()
 
+    def _return_to_proposing_group_active_state_to_clone(self):
+        '''Helper method to test 'return_to_proposing_group' wfAdaptation regarding the
+           RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE defined value.
+           In our usecase, this is Nonsense as we use RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS.'''
+        return
+
+    def _return_to_proposing_group_active_custom_permissions(self):
+        '''Helper method to test 'return_to_proposing_group' wfAdaptation regarding the
+           RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS defined value.
+           In our use case, just test that permissions of 'returned_to_proposing_group' state
+           are the one defined in RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS.'''
+        itemWF = self.wfTool.getWorkflowsFor(self.meetingConfig.getItemTypeName())[0]
+        returned_to_proposing_group_state_permissions = itemWF.states['returned_to_proposing_group'].permission_roles
+        for permission in returned_to_proposing_group_state_permissions:
+            self.assertEquals(returned_to_proposing_group_state_permissions[permission],
+                              RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS[self.meetingConfig.getItemWorkflow()][permission])
 
 def test_suite():
     from unittest import TestSuite, makeSuite

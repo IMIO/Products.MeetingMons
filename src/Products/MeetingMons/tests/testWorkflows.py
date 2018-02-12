@@ -68,7 +68,7 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         item1 = self.create('MeetingItem', title='The first item')
         self.addAnnex(item1)
         self.addAnnex(item1, relatedTo='item_decision')
-        self.do(item1, 'propose')
+        self.proposeItem(item1)
         self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.transitions(item1))  # He may trigger no more action
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
@@ -80,14 +80,13 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         self.changeUser('pmCreator2')
         item2 = self.create('MeetingItem', title='The second item',
                             preferredMeeting=meeting.UID())
-        self.do(item2, 'propose')
+        self.proposeItem(item2)
         # pmReviewer1 validates item1 and adds an annex to it
         self.changeUser('pmReviewer1')
         self.addAnnex(item1, relatedTo='item_decision')
         self.do(item1, 'validate')
         self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
-        # pmManager inserts item1 into the meeting and publishes it
         self.changeUser('pmManager')
         managerAnnex = self.addAnnex(item1)
         self.portal.restrictedTraverse('@@delete_givenuid')(managerAnnex.UID())
@@ -97,7 +96,7 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         self.assertRaises(Unauthorized, self.addAnnex, item2)
         # meeting is frozen
         self.changeUser('pmManager')
-        self.do(meeting, 'freeze')  # publish in pm forkflow
+        self.do(meeting, 'freeze')
         # pmReviewer2 validates item2
         self.changeUser('pmReviewer2')
         self.do(item2, 'validate')
@@ -145,7 +144,7 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         self.addAnnex(item1)
         # The creator can add a decision annex on created item
         self.addAnnex(item1, relatedTo='item_decision')
-        self.do(item1, 'propose')
+        self.proposeItem(item1)
         # The creator cannot add a decision annex on proposed item
         self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.transitions(item1))  # He may trigger no more action
@@ -158,7 +157,7 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         self.changeUser('pmCreator2')
         item2 = self.create('MeetingItem', title='The second item',
                             preferredMeeting=meeting.UID())
-        self.do(item2, 'propose')
+        self.proposeItem(item2)
         # pmReviewer1 validates item1 and adds an annex to it
         self.changeUser('pmReviewer1')
         # The reviewer can add a decision annex on proposed item
@@ -191,10 +190,8 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         # pmReviewer1 can not add an annex on item1 as it is frozen
         self.changeUser('pmReviewer1')
         self.assertRaises(Unauthorized, self.addAnnex, item1)
-        # pmManager adds a decision to item1 and publishes the meeting
         self.changeUser('pmManager')
         item1.setDecision(self.decisionText)
-        self.do(meeting, 'publish')
         # Now reviewers can't add annexes anymore
         self.changeUser('pmReviewer2')
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item2))
@@ -227,14 +224,10 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         self.changeUser('admin')
         self.do(meeting, 'backToDecided')
         self.changeUser('pmManager')
-        self.do(meeting, 'backToPublished')
-        # set an item back to published to test the 'freeze' meeting here under
-        self.do(item1, 'backToItemPublished')
         self.do(meeting, 'backToFrozen')
         # this also test the 'doBackToCreated' action on the meeting
         self.do(meeting, 'backToCreated')
         self.do(meeting, 'freeze')
-        self.do(meeting, 'publish')
         self.do(meeting, 'decide')
         self.do(meeting, 'close')
 

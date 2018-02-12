@@ -73,7 +73,7 @@ adaptations.RETURN_TO_PROPOSING_GROUP_FROM_ITEM_STATES = ('presented', 'itemfroz
 adaptations.WF_NOT_CREATOR_EDITS_UNLESS_CLOSED = ('delayed', 'refused', 'accepted',
                                                   'pre_accepted', 'accepted_but_modified')
 
-RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE = {'meetingitemcommunes_workflow': 'meetingitemcommunes_workflow.itemcreated'}
+RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE = {'meetingitemcollegemons_workflow': 'meetingitemcollegemons_workflow.itemcreated'}
 adaptations.RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE = RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE
 
 RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = {'meetingitemcollegemons_workflow':
@@ -132,7 +132,7 @@ RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = {'meetingitemcollegemons_workflow
             ('Manager', 'MeetingManager',),
         # MeetingManagers edit permissions
         'Delete objects':
-            ['Manager', 'MeetingManager', ],
+            ('Manager', 'MeetingManager', ),
         'PloneMeeting: Write item observations':
             ('Manager', 'MeetingManager',),
         'PloneMeeting: Write item MeetingManager reserved fields':
@@ -1184,7 +1184,7 @@ class MeetingCollegeMonsWorkflowConditions(MeetingWorkflowConditions):
 
     security.declarePublic('mayCorrect')
 
-    def mayCorrect(self, destinationState=None):
+    def mayDecide(self, destinationState=None):
         '''Override to avoid call to _decisionsWereConfirmed.'''
         if not _checkPermission(ReviewPortalContent, self.context):
             return
@@ -1272,7 +1272,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
     def __init__(self, item):
         self.context = item  # Implements IMeetingItem
 
-    security.declarePublic('mayDecide')
+    security.declarePublic('mayDecidpresente')
 
     def mayDecide(self):
         '''We may decide an item if the linked meeting is in relevant state.'''
@@ -1298,8 +1298,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
                                 context=self.context.REQUEST))
         user = self.context.portal_membership.getAuthenticatedMember()
         # first of all, the use must have the 'Review portal content permission'
-        if _checkPermission(ReviewPortalContent, self.context) and \
-                (user.has_role('MeetingReviewer', self.context) or user.has_role('Manager', self.context)):
+        if _checkPermission(ReviewPortalContent, self.context):
             res = True
             # if the current item state is 'itemcreated', only the MeetingManager can validate
             if self.context.queryState() in ('itemcreated',) and \
