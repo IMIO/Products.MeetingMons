@@ -427,3 +427,85 @@ msgstr "Proposé au validateur financier"
 #. Default: "Sign financial advice"
 msgid "signFinancialAdvice"
 msgstr "Signer l'avis finances"
+
+
+############################################
+### Spécific translation of this profile ###
+############################################
+
+### Item states ###
+
+#. Default: "Proposed to budget impact reviewer"
+msgid "proposed_to_budgetimpact_reviewer"
+msgstr "Proposé au correspondant financier"
+
+#. Default: "Proposed to extraordinary budget impact reviewer"
+msgid "proposed_to_extraordinarybudget"
+msgstr "Proposé au budget extraordinaire"
+
+#. Default: "Proposed to service head"
+msgid "proposed_to_servicehead"
+msgstr "Proposé au N+1"
+
+#. Default: "Proposed to office manager"
+msgid "proposed_to_officemanager"
+msgstr "Proposé au N+2"
+
+#. Default: "Proposed to division head"
+msgid "proposed_to_divisionhead"
+msgstr "Proposé au N+3"
+
+#. Default: "Proposed to director"
+msgid "proposed_to_director"
+msgstr "Proposé au N+4"
+
+
+### Item transitions ###
+
+msgid "proposeToBudgetImpactReviewer"
+msgstr "Proposer au correspondant financier"
+
+msgid "validateByBudgetImpactReviewer"
+msgstr "Valider les infos budgétaires"
+
+msgid "proposeToExtraordinaryBudget"
+msgstr "Proposer au correspond du budget extraordinaire"
+
+msgid "validateByExtraordinaryBudget"
+msgstr "Valider le budget extraordinaire"
+
+msgid "proposeToServiceHead"
+msgstr "Proposer au N+1"
+
+msgid "proposeToOfficeManager"
+msgstr "Proposer au N+2"
+
+msgid "proposeToDivisionHead"
+msgstr "Proposer au N+3"
+
+msgid "proposeToDirector"
+msgstr "Proposer au N+4"
+
+#. Default: "send back"
+msgid "backToProposedToDirector"
+msgstr "Renvoyer au N+4"
+
+#. Default: "send back"
+msgid "backToProposedToDivisionHead"
+msgstr "Renvoyer au N+3"
+
+#. Default: "send back"
+msgid "backToProposedToOfficeManager"
+msgstr "Renvoyer au N+2"
+
+#. Default: "send back"
+msgid "backToProposedToServiceHead"
+msgstr "Renvoyer au N+1"
+
+#. Default: "send back"
+msgid "backToItemBudgetImpactReviewers"
+msgstr "Renvoyer au référent budgétaire"
+
+#. Default: "send back"
+msgid "backToItemCreated"
+msgstr "Renvoyer a l'agent"

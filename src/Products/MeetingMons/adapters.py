@@ -1272,7 +1272,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
     def __init__(self, item):
         self.context = item  # Implements IMeetingItem
 
-    security.declarePublic('mayDecidpresente')
+    security.declarePublic('mayDecide')
 
     def mayDecide(self):
         '''We may decide an item if the linked meeting is in relevant state.'''

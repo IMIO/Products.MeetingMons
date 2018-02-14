@@ -422,3 +422,85 @@ msgstr ""
 #. Default: "MeetingItemTemplateBourgmestre"
 msgid "MeetingItemTemplateCoordinateOffice"
 msgstr ""
+
+
+############################################
+### Spécific translation of this profile ###
+############################################
+
+### Item states ###
+
+#. Default: "Proposed to budget impact reviewer"
+msgid "proposed_to_budgetimpact_reviewer"
+msgstr ""
+
+#. Default: "Proposed to extraordinary budget impact reviewer"
+msgid "proposed_to_extraordinarybudget"
+msgstr ""
+
+#. Default: "Proposed to service head"
+msgid "proposed_to_servicehead"
+msgstr ""
+
+#. Default: "Proposed to office manager"
+msgid "proposed_to_officemanager"
+msgstr ""
+
+#. Default: "Proposed to division head"
+msgid "proposed_to_divisionhead"
+msgstr ""
+
+#. Default: "Proposed to director"
+msgid "proposed_to_director"
+msgstr ""
+
+
+### Item transitions ###
+
+msgid "proposeToBudgetImpactReviewer"
+msgstr ""
+
+msgid "validateByBudgetImpactReviewer"
+msgstr ""
+
+msgid "proposeToExtraordinaryBudget"
+msgstr ""
+
+msgid "validateByExtraordinaryBudget"
+msgstr ""
+
+msgid "proposeToServiceHead"
+msgstr ""
+
+msgid "proposeToOfficeManager"
+msgstr ""
+
+msgid "proposeToDivisionHead"
+msgstr ""
+
+msgid "proposeToDirector"
+msgstr ""
+
+#. Default: "send back"
+msgid "backToProposedToDirector"
+msgstr ""
+
+#. Default: "send back"
+msgid "backToProposedToDivisionHead"
+msgstr ""
+
+#. Default: "send back"
+msgid "backToProposedToOfficeManager"
+msgstr ""
+
+#. Default: "send back"
+msgid "backToProposedToServiceHead"
+msgstr ""
+
+#. Default: "send back"
+msgid "backToItemBudgetImpactReviewers"
+msgstr ""
+
+#. Default: "send back"
+msgid "backToItemCreated"
+msgstr ""

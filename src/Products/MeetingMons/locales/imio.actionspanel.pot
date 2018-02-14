@@ -46,3 +46,44 @@ msgstr ""
 #. Default: "Decisions have been published and are now visible to relevant proposing groups."
 msgid "publish_decisions_done_descr"
 msgstr ""
+
+
+############################################
+### Spécific translation of this profile ###
+############################################
+
+
+#. Default: "proposeToServiceHead_done_descr"
+msgid "proposeToServiceHead_done_descr"
+msgstr ""
+
+#. Default: "proposeToOfficeManager_done_descr"
+msgid "proposeToOfficeManager_done_descr"
+msgstr ""
+
+#. Default: "proposeToDivisionHead_done_descr"
+msgid "proposeToDivisionHead_done_descr"
+msgstr ""
+
+#. Default: "proposeToDirector_done_descr"
+msgid "proposeToDirector_done_descr"
+msgstr ""
+
+#. Default: "This item has been send back to the director."
+msgid "backToProposedToDirector_done_descr"
+msgstr ""
+
+#. Default: "This item has been send back to the division head."
+msgid "backToProposedToDivisionHead_done_descr"
+msgstr ""
+
+#. Default: "This item has been send back to the office manager."
+msgid "backToProposedToOfficeManager_done_descr"
+msgstr ""
+
+#. Default: "This item has been send back to the service head."
+msgid "backToProposedToServiceHead_done_descr"
+msgstr ""
+
+msgid "backToItemCreated_done_descr"
+msgstr ""

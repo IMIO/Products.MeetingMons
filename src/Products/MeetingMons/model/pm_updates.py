@@ -121,7 +121,6 @@ def update_item_schema(baseSchema):
                 i18n_domain='PloneMeeting',
             ),
         ),
-
     ),)
 
     baseSchema['category'].widget.label_method = "getLabelCategory"

@@ -53,3 +53,44 @@ msgstr "Le point a été accepté provisoirement."
 #. Default: "Decisions have been published and are now visible to relevant proposing groups."
 msgid "publish_decisions_done_descr"
 msgstr "Les décisions ont été publiées et sont maintenant visibles par les personnes pouvant voir le point."
+
+
+############################################
+### Spécific translation of this profile ###
+############################################
+
+
+#. Default: "proposeToServiceHead_done_descr"
+msgid "proposeToServiceHead_done_descr"
+msgstr "Le point a été envoyé au N+1"
+
+#. Default: "proposeToOfficeManager_done_descr"
+msgid "proposeToOfficeManager_done_descr"
+msgstr "Le point a été envoyé au N+2."
+
+#. Default: "proposeToDivisionHead_done_descr"
+msgid "proposeToDivisionHead_done_descr"
+msgstr "Le point a été envoyé au N+3."
+
+#. Default: "proposeToDirector_done_descr"
+msgid "proposeToDirector_done_descr"
+msgstr "Le point a été envoyé au N+4."
+
+#. Default: "This item has been send back to the director."
+msgid "backToProposedToDirector_done_descr"
+msgstr "Le point a été renvoyé au N+4."
+
+#. Default: "This item has been send back to the division head."
+msgid "backToProposedToDivisionHead_done_descr"
+msgstr "Le point a été renvoyé au N+3."
+
+#. Default: "This item has been send back to the office manager."
+msgid "backToProposedToOfficeManager_done_descr"
+msgstr "Le point a été renvoyé au N+2."
+
+#. Default: "This item has been send back to the service head."
+msgid "backToProposedToServiceHead_done_descr"
+msgstr "Le point a été renvoyé au N+1."
+
+msgid "backToItemCreated_done_descr"
+msgstr "Le point est revenu dans l'état initial de sa création. Lorsque vous ou la personne pouvant corriger le point aura terminé, elle devra le proposer à nouveau."

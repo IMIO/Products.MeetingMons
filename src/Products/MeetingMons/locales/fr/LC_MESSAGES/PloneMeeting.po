@@ -127,3 +127,75 @@ msgstr "Points proposés"
 #. Default: "Validated items"
 msgid "searchvalidateditems"
 msgstr "Points validés"
+
+
+############################################
+### Spécific translation of this profile ###
+############################################
+
+
+### Item fields ###
+
+#. Default: "Item Motivation Description"
+msgid "item_motivation_descr"
+msgstr "Motivation présente dans la délibé mais pas dans le pv..."
+
+#. Default: "Description"
+msgid "projectOfDecision_label"
+msgstr "Exposé"
+
+#. Default: "Decision"
+msgid "decision"
+msgstr "Extrait du Procès-verbal"
+
+### Item transitions ###
+
+#. Default: "ValidateByBudget"
+msgid "MeetingMons_label_validateByBudget"
+msgstr "Validé par le référent budgétaire"
+
+#. Default: "Validate By Budget Impact Reviwer"
+msgid "MeetingMons_descr_validateByBudget"
+msgstr "Ce dossier pourra être présenté par l'agent au N+1."
+
+### portlet ###
+
+#. Default: "Decisions"
+msgid "decisions"
+msgstr "Procès-verbaux"
+
+### config ###
+
+#. Default: "Initialize the item decision when deciding meeting"
+msgid "MeetingCommunes_label_initItemDecisionIfEmptyOnDecide"
+msgstr "Initialiser le champ décision des points lorsque la séance passe 'En rédaction du PV'?"
+
+#. Default: "Default value for the item decision field"
+msgid "default_meetingitem_decision"
+msgstr "Définissez ici le texte prédéfini qui sera présent dans le champ 'Extrait du Procès-verbal' chaque fois qu'un utilisateur crée un nouveau point."
+
+### Suffixes ###
+
+#. Default: "budget impact reviewers"
+msgid "budgetimpactreviewers"
+msgstr "Correspondants Financier"
+
+#. Default: "extraordinary budget"
+msgid "extraordinarybudget"
+msgstr "Correspondants Budget Extraordinaire"
+
+#. Default: "service heads"
+msgid "serviceheads"
+msgstr "N+1"
+
+#. Default: "office managers"
+msgid "officemanagers"
+msgstr "N+2"
+
+#. Default: "division heads"
+msgid "divisionheads"
+msgstr "N+3"
+
+#. Default: "directors"
+msgid "directors"
+msgstr "N+4"
