@@ -46,36 +46,8 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
         """Use that hook that is called just after the profile has been reinstalled by
            PloneMeeting, this way, we may launch some steps before PloneMeeting ones.
            Here we will update used workflows before letting PM do his job."""
-        logger.info('Replacing old no more existing workflows...')
+        logger.info('after_reinstall ...')
         PMMigrate_To_4_0._after_reinstall(self)
-        for cfg in self.tool.objectValues('MeetingConfig'):
-            # MeetingItem workflow
-            if cfg.getItemWorkflow() == 'meetingitemcollege_workflow':
-                cfg.setItemWorkflow('meetingitemcommunes_workflow')
-                cfg._v_oldItemWorkflow = 'meetingitemcollege_workflow'
-                wfAdaptations = list(cfg.getWorkflowAdaptations())
-                if 'no_publication' not in wfAdaptations:
-                    wfAdaptations.append('no_publication')
-                if 'no_global_observation' not in wfAdaptations:
-                    wfAdaptations.append('no_global_observation')
-                cfg.setWorkflowAdaptations(wfAdaptations)
-            if cfg.getItemWorkflow() == 'meetingitemcouncil_workflow':
-                cfg.setItemWorkflow('meetingitemcommunes_workflow')
-                cfg._v_oldItemWorkflow = 'meetingitemcouncil_workflow'
-            # Meeting workflow
-            if cfg.getMeetingWorkflow() == 'meetingcollege_workflow':
-                cfg.setMeetingWorkflow('MeetingMons_workflow')
-                cfg._v_oldMeetingWorkflow = 'meetingcollege_workflow'
-            if cfg.getMeetingWorkflow() == 'meetingcouncil_workflow':
-                cfg.setMeetingWorkflow('MeetingMons_workflow')
-                cfg._v_oldMeetingWorkflow = 'meetingcouncil_workflow'
-        # delete old unused workflows, aka every workflows containing 'college' or 'council'
-        wfTool = api.portal.get_tool('portal_workflow')
-        self.wfs_to_delete = [wfId for wfId in wfTool.listWorkflows()
-                              if wfId.endswith(('meetingitemcollege_workflow',
-                                                'meetingitemcouncil_workflow',
-                                                'meetingcollege_workflow',
-                                                'meetingcouncil_workflow'))]
         logger.info('Done.')
 
     def _addSampleAnnexTypeForMeetings(self):
