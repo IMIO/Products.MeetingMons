@@ -154,7 +154,7 @@ msgstr "Extrait du Procès-verbal"
 msgid "MeetingMons_label_validateByBudget"
 msgstr "Validé par le référent budgétaire"
 
-#. Default: "Validate By Budget Impact Reviwer"
+#. Default: "Validate By Budget Impact Reviewer"
 msgid "MeetingMons_descr_validateByBudget"
 msgstr "Ce dossier pourra être présenté par l'agent au N+1."
 
@@ -199,3 +199,23 @@ msgstr "N+3"
 #. Default: "directors"
 msgid "directors"
 msgstr "N+4"
+
+### searches ###
+
+msgid "searchbudgetimpactreviewersitems"
+msgstr "Budget Ordinaire"
+
+msgid "searchextraordinarybudgetsitems"
+msgstr "Budget Extraordinaire"
+
+msgid "searchserviceheaditems"
+msgstr "Proposé au N+1"
+
+msgid "searchofficemanageritems"
+msgstr "Proposé au N+2"
+
+msgid "searchdivisionheaditems"
+msgstr "Proposé au N+3"
+
+msgid "searchdirectoritems"
+msgstr "Points à valider"

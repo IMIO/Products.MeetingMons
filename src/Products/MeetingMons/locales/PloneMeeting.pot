@@ -191,3 +191,24 @@ msgstr ""
 #. Default: "directors"
 msgid "directors"
 msgstr ""
+
+
+### searches ###
+
+msgid "searchbudgetimpactreviewersitems"
+msgstr ""
+
+msgid "searchextraordinarybudgetsitems"
+msgstr ""
+
+msgid "searchserviceheaditems"
+msgstr ""
+
+msgid "searchofficemanageritems"
+msgstr ""
+
+msgid "searchdivisionheaditems"
+msgstr ""
+
+msgid "searchdirectoritems"
+msgstr ""
