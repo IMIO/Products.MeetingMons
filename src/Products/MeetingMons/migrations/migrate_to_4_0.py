@@ -57,7 +57,7 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
         for cfg in self.tool.objectValues('MeetingConfig'):
             if not cfg.annexes_types.meeting_annexes.objectIds():
                 source = self.ps.getProfileInfo(
-                    self.profile_name)['path'].replace('/default', '/examples_fr')
+                    self.profile_name)['path'].replace('/default', '/mons')
                 cfg.addAnnexType(annexeSeance, source)
         logger.info('Done.')
 
