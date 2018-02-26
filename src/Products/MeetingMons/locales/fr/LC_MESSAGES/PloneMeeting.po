@@ -148,6 +148,10 @@ msgstr "Exposé"
 msgid "decision"
 msgstr "Extrait du Procès-verbal"
 
+#. Default: "Item is signed ?"
+msgid "PloneMeeting_label_itemIsSigned"
+msgstr "Point traité ?"
+
 ### Item transitions ###
 
 #. Default: "ValidateByBudget"
@@ -173,6 +177,25 @@ msgstr "Initialiser le champ décision des points lorsque la séance passe 'En r
 #. Default: "Default value for the item decision field"
 msgid "default_meetingitem_decision"
 msgstr "Définissez ici le texte prédéfini qui sera présent dans le champ 'Extrait du Procès-verbal' chaque fois qu'un utilisateur crée un nouveau point."
+
+msgid "MeetingMons_label_defaultMeetingItemDecision"
+msgstr "Valeur par défaut du champ 'Délibération/Extrait du Procès-verbal'
+
+#. Default: "The item is not treated."
+msgid "item_is_signed_no"
+msgstr "Le point n'est pas traité."
+
+#. Default: "The item is not treated. Click on the image to apply treatment."
+msgid "item_is_signed_no_edit"
+msgstr "Le point n'est pas traité, cliquez sur l'image pour signaler que le point est traité."
+
+#. Default: "The item is treated."
+msgid "item_is_signed_yes"
+msgstr "Le point est traité."
+
+#. Default: "The item is treated. Click on the image to remove treatment."
+msgid "item_is_signed_yes_edit"
+msgstr "Le point est traité, cliquez sur l'image pour signaler que le traitement n'est pas fait."
 
 ### Suffixes ###
 

@@ -69,6 +69,74 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             wfTool.manage_delObjects(self.wfs_to_delete)
         logger.info('Done.')
 
+    def _updateConfig(self):
+        logger.info('Updating config ...')
+        for cfg in self.tool.objectValues('MeetingConfig'):
+            wfAdaptations = list(cfg.getWfAdaptations())
+            wfAdaptations.append('postpone_next_meeting')
+            cfg.setWfAdaptations(tuple(wfAdaptations))
+
+            itemAttributes = ['budgetInfos', 'motivation', 'observations', 'toDiscuss', 'itemAssembly', 'privacy']
+
+            itemColumns = ['Creator', 'CreationDate', 'ModificationDate', 'review_state', 'getCategory',
+                           'proposing_group_acronym', 'advices', 'toDiscuss', 'linkedMeetingDate', 'getPreferredMeetingDate']
+
+            meetingItemColumn = ['item_reference', 'Creator', 'ModificationDate', 'review_state', 'getCategory',
+                                 'proposing_group_acronym', 'advices', 'toDiscuss', 'actions']
+
+            itemColumnsFilters= ['c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c13', 'c14', 'c15', 'c16', 'c19']
+
+            meetingItemFilter = ['c4', 'c5', 'c6', 'c7', 'c8', 'c11', 'c13', 'c14', 'c16', 'c19']
+
+            if cfg.getId() == 'meeting-config-college':
+                itemAttributes.remove('privacy')
+                itemColumnsFilters.remove('c19')
+            elif cfg.getId() == 'meeting-config-council':
+                itemAttributes.remove('toDiscuss')
+                itemColumns.remove('toDiscuss')
+                meetingItemColumn.remove('toDiscuss')
+                itemColumnsFilters.remove('c16')
+            else:
+                itemAttributes.remove('toDiscuss')
+                itemAttributes.remove('privacy')
+
+                meetingItemColumn.remove('toDiscuss')
+                meetingItemColumn.remove('getCategory')
+                itemColumns.remove('toDiscuss')
+                itemColumns.remove('getCategory')
+
+                itemColumnsFilters.remove('c5')
+                itemColumnsFilters.remove('c19')
+                meetingItemFilter.remove('c5')
+                meetingItemFilter.remove('c19')
+
+                if cfg.getId() == 'meeting-config-cas':
+                    itemColumnsFilters.remove('c16')
+                elif cfg.getId() == 'meeting-config-bp':
+                    pass
+
+            # item
+            cfg.setUsedItemAttributes(tuple(itemAttributes))
+
+            # meeting
+            cfg.setUsedMeetingAttributes(('startDate', 'endDate', 'signatures', 'assembly', 'assemblyExcused',
+                                          'assemblyAbsents', 'place', 'observations',))
+            # dashboard list items
+            cfg.setItemColumns(tuple(itemColumns))
+            cfg.setDashboardItemsListingsFilters(tuple(itemColumnsFilters))
+            cfg.setMaxShownListings('20')
+
+            # dashboard list available items for meeting
+            cfg.setAvailableItemsListVisibleColumns(tuple(itemColumns))
+
+            cfg.setDashboardMeetingAvailableItemsFilters(tuple(itemColumnsFilters))
+            cfg.setMaxShownAvailableItems('40')
+
+            # dashboard list presented items in meeting
+            cfg.setItemsListVisibleColumns(tuple(meetingItemColumn))
+            cfg.setDashboardMeetingLinkedItemsFilters(tuple(meetingItemFilter))
+            cfg.setMaxShownMeetingItems('60')
+
     def run(self, step=None):
         # change self.profile_name that is reinstalled at the beginning of the PM migration
         self.profile_name = u'profile-Products.MeetingMons:default'
@@ -80,6 +148,7 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             # now MeetingMons specific steps
             logger.info('Migrating to MeetingMons 4.0...')
             self._cleanCDLD()
+            self._updateConfig()
             self._migrateItemPositiveDecidedStates()
             self._addSampleAnnexTypeForMeetings()
             self._deleteUselessWorkflows()
