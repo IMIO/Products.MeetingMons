@@ -61,7 +61,7 @@ from plone.memoize import ram
 from zope.i18n import translate
 from zope.interface import implements
 
-MeetingConfig.wfAdaptations = ['return_to_proposing_group', 'hide_decisions_when_under_writing']
+MeetingConfig.wfAdaptations = ('return_to_proposing_group', 'hide_decisions_when_under_writing', 'postpone_next_meeting',)
 
 # states taken into account by the 'no_global_observation' wfAdaptation
 noGlobalObsStates = ('itempublished', 'itemfrozen', 'accepted', 'refused',

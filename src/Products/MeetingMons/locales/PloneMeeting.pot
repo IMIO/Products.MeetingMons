@@ -149,6 +149,10 @@ msgstr ""
 msgid "MeetingMons_descr_validateByBudget"
 msgstr ""
 
+#. Default: "Item is signed ?"
+msgid "PloneMeeting_label_itemIsSigned"
+msgstr "Point traité ?"
+
 ### portlet ###
 
 #. Default: "Decisions"
@@ -163,6 +167,25 @@ msgstr ""
 
 #. Default: "Default value for the item decision field"
 msgid "default_meetingitem_decision"
+msgstr ""
+
+msgid "MeetingMons_label_defaultMeetingItemDecision"
+msgstr ""
+
+#. Default: "The item is not treated."
+msgid "item_is_signed_no"
+msgstr ""
+
+#. Default: "The item is not treated. Click on the image to apply treatment."
+msgid "item_is_signed_no_edit"
+msgstr ""
+
+#. Default: "The item is treated."
+msgid "item_is_signed_yes"
+msgstr ""
+
+#. Default: "The item is treated. Click on the image to remove treatment."
+msgid "item_is_signed_yes_edit"
 msgstr ""
 
 ### Suffixes ###
