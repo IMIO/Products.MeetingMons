@@ -179,7 +179,7 @@ msgid "default_meetingitem_decision"
 msgstr "Définissez ici le texte prédéfini qui sera présent dans le champ 'Extrait du Procès-verbal' chaque fois qu'un utilisateur crée un nouveau point."
 
 msgid "MeetingMons_label_defaultMeetingItemDecision"
-msgstr "Valeur par défaut du champ 'Délibération/Extrait du Procès-verbal'
+msgstr "Valeur par défaut du champ 'Délibération/Extrait du Procès-verbal'"
 
 #. Default: "The item is not treated."
 msgid "item_is_signed_no"
