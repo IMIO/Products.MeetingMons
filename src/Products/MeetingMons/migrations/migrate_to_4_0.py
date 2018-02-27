@@ -72,9 +72,9 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
     def _updateConfig(self):
         logger.info('Updating config ...')
         for cfg in self.tool.objectValues('MeetingConfig'):
-            wfAdaptations = list(cfg.getWfAdaptations())
+            wfAdaptations = list(cfg.getWorkflowAdaptations())
             wfAdaptations.append('postpone_next_meeting')
-            cfg.setWfAdaptations(tuple(wfAdaptations))
+            cfg.setWorkflowAdaptations(tuple(wfAdaptations))
 
             itemAttributes = ['budgetInfos', 'motivation', 'observations', 'toDiscuss', 'itemAssembly', 'privacy']
 
@@ -147,11 +147,14 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
         if step == 3:
             # now MeetingMons specific steps
             logger.info('Migrating to MeetingMons 4.0...')
-            self._cleanCDLD()
             self._updateConfig()
+            self._cleanCDLD()
             self._migrateItemPositiveDecidedStates()
             self._addSampleAnnexTypeForMeetings()
             self._deleteUselessWorkflows()
+
+        if step == 5:
+            self._updateConfig()
 
 
 # The migration function -------------------------------------------------------
@@ -190,7 +193,8 @@ def migrate_step2(context):
 
 
 def migrate_step3(context):
-    '''This migration function:
+    '''
+       This migration function:
 
        1) Execute step3 of Products.PloneMeeting migration profile.
        2) Clean CDLD attributes;
@@ -200,4 +204,9 @@ def migrate_step3(context):
     '''
     migrator = Migrate_To_4_0(context)
     migrator.run(step=3)
+    migrator.finish()
+
+def migrate_step5_customs(context):
+    migrator = Migrate_To_4_0(context)
+    migrator.run(step=5)
     migrator.finish()
