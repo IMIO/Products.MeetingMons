@@ -78,8 +78,9 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
 
         for cfg in self.tool.objectValues('MeetingConfig'):
             wfAdaptations = list(cfg.getWorkflowAdaptations())
-            wfAdaptations.append('postpone_next_meeting')
-            cfg.setWorkflowAdaptations(tuple(wfAdaptations))
+            if not 'postpone_next_meeting' in wfAdaptations:
+                wfAdaptations.append('postpone_next_meeting')
+                cfg.setWorkflowAdaptations(tuple(wfAdaptations))
 
             itemAttributes = ['budgetInfos', 'motivation', 'observations', 'toDiscuss', 'itemAssembly', 'privacy']
 
