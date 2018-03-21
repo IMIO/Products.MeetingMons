@@ -35,8 +35,7 @@ class testWFAdaptations(MeetingMonsTestCase, pmtwfa):
         '''Test what are the available wfAdaptations.'''
         # we removed the 'archiving' and 'creator_initiated_decisions' wfAdaptations
         self.assertEquals(sorted(self.meetingConfig.listWorkflowAdaptations().keys()),
-                          ['hide_decisions_when_under_writing',
-                           'return_to_proposing_group'])
+                          ['hide_decisions_when_under_writing', 'postpone_next_meeting', 'return_to_proposing_group'])
 
     def test_pm_Validate_workflowAdaptations_added_no_publication(self):
         '''See doc in PloneMeeting/tests/testWFAdaptations.py'''
@@ -133,6 +132,7 @@ class testWFAdaptations(MeetingMonsTestCase, pmtwfa):
         for permission in returned_to_proposing_group_state_permissions:
             self.assertEquals(returned_to_proposing_group_state_permissions[permission],
                               RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS[self.meetingConfig.getItemWorkflow()][permission])
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite

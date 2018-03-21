@@ -71,6 +71,11 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
 
     def _updateConfig(self):
         logger.info('Updating config ...')
+
+        # remove custom buggy skin
+        if hasattr(self.portal.portal_skins.custom, 'imioapps_properties'):
+            self.portal.portal_skins.custom.manage_delObjects(ids=['imioapps_properties'])
+
         for cfg in self.tool.objectValues('MeetingConfig'):
             wfAdaptations = list(cfg.getWorkflowAdaptations())
             wfAdaptations.append('postpone_next_meeting')
@@ -147,7 +152,6 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
         if step == 3:
             # now MeetingMons specific steps
             logger.info('Migrating to MeetingMons 4.0...')
-            self._updateConfig()
             self._cleanCDLD()
             self._migrateItemPositiveDecidedStates()
             self._addSampleAnnexTypeForMeetings()
@@ -205,6 +209,7 @@ def migrate_step3(context):
     migrator = Migrate_To_4_0(context)
     migrator.run(step=3)
     migrator.finish()
+
 
 def migrate_step5_customs(context):
     migrator = Migrate_To_4_0(context)
