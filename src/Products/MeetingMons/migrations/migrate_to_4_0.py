@@ -86,6 +86,10 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             itemColumns = ['Creator', 'CreationDate', 'ModificationDate', 'review_state', 'getCategory',
                            'proposing_group_acronym', 'advices', 'toDiscuss', 'linkedMeetingDate', 'getPreferredMeetingDate']
 
+            availableItemColumns = ['Creator', 'CreationDate', 'ModificationDate', 'getCategory',
+                           'proposing_group_acronym', 'advices', 'toDiscuss',
+                           'getPreferredMeetingDate']
+
             meetingItemColumn = ['item_reference', 'Creator', 'ModificationDate', 'review_state', 'getCategory',
                                  'proposing_group_acronym', 'advices', 'toDiscuss', 'actions']
 
@@ -99,6 +103,7 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             elif cfg.getId() == 'meeting-config-council':
                 itemAttributes.remove('toDiscuss')
                 itemColumns.remove('toDiscuss')
+                availableItemColumns.remove('toDiscuss')
                 meetingItemColumn.remove('toDiscuss')
                 itemColumnsFilters.remove('c16')
             else:
@@ -108,7 +113,9 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
                 meetingItemColumn.remove('toDiscuss')
                 meetingItemColumn.remove('getCategory')
                 itemColumns.remove('toDiscuss')
+                availableItemColumns.remove('toDiscuss')
                 itemColumns.remove('getCategory')
+                availableItemColumns.remove('getCategory')
 
                 itemColumnsFilters.remove('c5')
                 itemColumnsFilters.remove('c19')
@@ -132,7 +139,7 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             cfg.setMaxShownListings('20')
 
             # dashboard list available items for meeting
-            cfg.setAvailableItemsListVisibleColumns(tuple(itemColumns))
+            cfg.setAvailableItemsListVisibleColumns(tuple(availableItemColumns))
 
             cfg.setDashboardMeetingAvailableItemsFilters(tuple(itemColumnsFilters))
             cfg.setMaxShownAvailableItems('40')
