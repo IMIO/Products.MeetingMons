@@ -149,6 +149,8 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             cfg.setDashboardMeetingLinkedItemsFilters(tuple(meetingItemFilter))
             cfg.setMaxShownMeetingItems('60')
 
+            cfg.at_post_edit_script()
+
     def run(self, step=None):
         # change self.profile_name that is reinstalled at the beginning of the PM migration
         self.profile_name = u'profile-Products.MeetingMons:default'
