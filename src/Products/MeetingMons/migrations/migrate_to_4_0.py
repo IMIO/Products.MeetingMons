@@ -73,7 +73,7 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
         logger.info('Updating config ...')
 
         # remove custom buggy skin
-        if hasattr(self.portal.portal_skins.custom, 'imioapps_properties'):
+        if 'imioapps_properties' in  self.portal.portal_skins.custom.objectIds():
             self.portal.portal_skins.custom.manage_delObjects(ids=['imioapps_properties'])
 
         for cfg in self.tool.objectValues('MeetingConfig'):
