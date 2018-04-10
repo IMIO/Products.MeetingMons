@@ -137,8 +137,6 @@ class testCustomWorkflows(MeetingMonsTestCase):
             read_permissions.append(View)
             read_permissions.append(AccessContentsInformation)
             for read_permission in read_permissions:
-                if not self.hasPermission(read_permission, item):
-                    import ipdb; ipdb.set_trace()
                 self.assertTrue(self.hasPermission(read_permission, item))
             self.changeUser(original_user_id)
 

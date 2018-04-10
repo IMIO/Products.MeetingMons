@@ -130,21 +130,6 @@ def reorderSkinsLayers(context, site):
     logStep("reorderSkinsLayers", context)
     site.portal_setup.runImportStepFromProfile(u'profile-Products.MeetingMons:default', 'skins')
 
-def addAldermanGroup(context):
-    """
-      Add a Plone group configured to receive MeetingAlderman
-      These users can modify Motivation and Decision field's items
-      This group recieved the MeetingAldermanRôle
-    """
-    if isNotMeetingMonsProfile(context):
-        return
-    logStep("addAldermanGroup", context)
-    portal = context.getSite()
-    groupId = "meetingalderman"
-    if not groupId in portal.portal_groups.listGroupIds():
-        portal.portal_groups.addGroup(groupId, title=portal.utranslate("aldermanGroupTitle", domain='PloneMeeting'))
-        portal.portal_groups.setRolesForGroup(groupId, ('MeetingObserverGlobal', 'MeetingPowerObserver',
-                                                        'MeetingAlderman'))
 
 def finalizeExampleInstance(context):
     """
