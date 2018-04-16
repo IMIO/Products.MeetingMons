@@ -89,14 +89,18 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
         self.changeUser('pmManager')
         managerAnnex = self.addAnnex(item1)
+        self.addAnnex(item1, relatedTo='item_decision')
         self.portal.restrictedTraverse('@@delete_givenuid')(managerAnnex.UID())
         self.do(item1, 'present')
+        self.addAnnex(item1, relatedTo='item_decision')
         # Now reviewers can't add annexes anymore
         self.changeUser('pmReviewer1')
         self.assertRaises(Unauthorized, self.addAnnex, item2)
+        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         # meeting is frozen
         self.changeUser('pmManager')
         self.do(meeting, 'freeze')
+        self.addAnnex(item1, relatedTo='item_decision')
         # pmReviewer2 validates item2
         self.changeUser('pmReviewer2')
         self.do(item2, 'validate')
@@ -116,7 +120,18 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         item2.setDecision(self.decisionText)
         self.addAnnex(item2, relatedTo='item_decision')
         self.do(meeting, 'decide')
+        self.addAnnex(item1, relatedTo='item_decision')
         self.do(item1, 'accept')
+        self.changeUser('pmCreator1')
+        self.addAnnex(item1, relatedTo='item_decision')
+        self.changeUser('pmServiceHead1')
+        self.addAnnex(item1, relatedTo='item_decision')
+        self.changeUser('pmOfficeManager1')
+        self.addAnnex(item1, relatedTo='item_decision')
+        self.changeUser('pmDivisionHead1')
+        self.addAnnex(item1, relatedTo='item_decision')
+        self.changeUser('pmDirector1')
+        self.addAnnex(item1, relatedTo='item_decision')
 
         # pmCreator2/pmReviewer2 are not able to see item1
         self.changeUser('pmCreator2')
@@ -129,6 +144,7 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         self.assertEquals(self.transitions(meeting), ['backToFrozen', 'close'])
         self.changeUser('pmManager')
         self.do(meeting, 'close')
+        self.addAnnex(item1, relatedTo='item_decision')
 
     def _testWholeDecisionProcessCouncil(self):
         """
