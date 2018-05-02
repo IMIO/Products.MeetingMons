@@ -662,17 +662,6 @@ class CustomMeetingItem(MeetingItem):
         '''
         return ['validateByBudget']
 
-    def getCreatorAndValidator(self):
-        res = {'creator': self.context.portal_membership.getMemberInfo(str(self.context.Creator()))['fullname'],
-               'validator': ''}
-        if self.context.queryState() not in ('itemcreated', 'proposed'):
-            events = self.context.getHistory()['events']
-            for event in events[::-1]:  # parcours inverse
-                if event['action'] == 'validate':
-                    res['validator'] = self.context.portal_membership.getMemberInfo(event['actor'])['fullname']
-                    break
-        return res
-
     def showDuplicateItemAction(self):
         '''Condition for displaying the 'duplicate' action in the interface.
            Returns True if the user can duplicate the item.'''
