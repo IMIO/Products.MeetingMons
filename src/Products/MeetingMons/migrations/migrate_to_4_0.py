@@ -73,18 +73,23 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
         logger.info('Updating config ...')
 
         # remove custom buggy skin
-        if hasattr(self.portal.portal_skins.custom, 'imioapps_properties'):
+        if 'imioapps_properties' in  self.portal.portal_skins.custom.objectIds():
             self.portal.portal_skins.custom.manage_delObjects(ids=['imioapps_properties'])
 
         for cfg in self.tool.objectValues('MeetingConfig'):
             wfAdaptations = list(cfg.getWorkflowAdaptations())
-            wfAdaptations.append('postpone_next_meeting')
-            cfg.setWorkflowAdaptations(tuple(wfAdaptations))
+            if not 'postpone_next_meeting' in wfAdaptations:
+                wfAdaptations.append('postpone_next_meeting')
+                cfg.setWorkflowAdaptations(tuple(wfAdaptations))
 
             itemAttributes = ['budgetInfos', 'motivation', 'observations', 'toDiscuss', 'itemAssembly', 'privacy']
 
             itemColumns = ['Creator', 'CreationDate', 'ModificationDate', 'review_state', 'getCategory',
                            'proposing_group_acronym', 'advices', 'toDiscuss', 'linkedMeetingDate', 'getPreferredMeetingDate']
+
+            availableItemColumns = ['Creator', 'CreationDate', 'ModificationDate', 'getCategory',
+                           'proposing_group_acronym', 'advices', 'toDiscuss',
+                           'getPreferredMeetingDate']
 
             meetingItemColumn = ['item_reference', 'Creator', 'ModificationDate', 'review_state', 'getCategory',
                                  'proposing_group_acronym', 'advices', 'toDiscuss', 'actions']
@@ -99,6 +104,7 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             elif cfg.getId() == 'meeting-config-council':
                 itemAttributes.remove('toDiscuss')
                 itemColumns.remove('toDiscuss')
+                availableItemColumns.remove('toDiscuss')
                 meetingItemColumn.remove('toDiscuss')
                 itemColumnsFilters.remove('c16')
             else:
@@ -108,7 +114,9 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
                 meetingItemColumn.remove('toDiscuss')
                 meetingItemColumn.remove('getCategory')
                 itemColumns.remove('toDiscuss')
+                availableItemColumns.remove('toDiscuss')
                 itemColumns.remove('getCategory')
+                availableItemColumns.remove('getCategory')
 
                 itemColumnsFilters.remove('c5')
                 itemColumnsFilters.remove('c19')
@@ -132,7 +140,7 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             cfg.setMaxShownListings('20')
 
             # dashboard list available items for meeting
-            cfg.setAvailableItemsListVisibleColumns(tuple(itemColumns))
+            cfg.setAvailableItemsListVisibleColumns(tuple(availableItemColumns))
 
             cfg.setDashboardMeetingAvailableItemsFilters(tuple(itemColumnsFilters))
             cfg.setMaxShownAvailableItems('40')
@@ -141,6 +149,8 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             cfg.setItemsListVisibleColumns(tuple(meetingItemColumn))
             cfg.setDashboardMeetingLinkedItemsFilters(tuple(meetingItemFilter))
             cfg.setMaxShownMeetingItems('60')
+
+            cfg.at_post_edit_script()
 
     def run(self, step=None):
         # change self.profile_name that is reinstalled at the beginning of the PM migration

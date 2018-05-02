@@ -6,17 +6,17 @@
 #
 # GNU General Public License (GPL)
 #
-
-from plone import api
-from Products.CMFPlone.utils import safe_unicode
 from Products.MeetingMons.config import FINANCE_ADVICE_LEGAL_TEXT
 from Products.MeetingMons.config import FINANCE_ADVICE_LEGAL_TEXT_NOT_GIVEN
 from Products.MeetingMons.config import FINANCE_ADVICE_LEGAL_TEXT_PRE
 from Products.PloneMeeting.browser.views import FolderDocumentGenerationHelperView
 from Products.PloneMeeting.browser.views import ItemDocumentGenerationHelperView
 from Products.PloneMeeting.browser.views import MeetingDocumentGenerationHelperView
-from Products.PloneMeeting.utils import get_annexes
 from Products.PloneMeeting.utils import getLastEvent
+from Products.PloneMeeting.utils import get_annexes
+
+from Products.CMFPlone.utils import safe_unicode
+from plone import api
 
 
 def formatedAssembly(assembly, focus):
@@ -32,7 +32,7 @@ def formatedAssembly(assembly, focus):
         cpt = 1
         my_line = ''
         for line in lines:
-            if((line.find('Excus') >= 0 or line.find('Absent') >= 0) and focus == 'present') or \
+            if ((line.find('Excus') >= 0 or line.find('Absent') >= 0) and focus == 'present') or \
                     (line.find('Absent') >= 0 and focus == 'excuse'):
                 is_finish = True
                 break
@@ -68,14 +68,14 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
         cfg = tool.getMeetingConfig(self.context)
         financialAdvice = cfg.adapted().getUsedFinanceGroupIds()[0]
         adviceData = self.context.getAdviceDataFor(self.context.context, financialAdvice)
-        res['comment'] = 'comment' in adviceData\
-            and adviceData['comment'] or ''
-        advice_id = 'advice_id' in adviceData\
-            and adviceData['advice_id'] or ''
+        res['comment'] = 'comment' in adviceData \
+                         and adviceData['comment'] or ''
+        advice_id = 'advice_id' in adviceData \
+                    and adviceData['advice_id'] or ''
         signature_event = advice_id and getLastEvent(getattr(self.context, advice_id), 'signFinancialAdvice') or ''
         res['out_of_financial_dpt'] = 'time' in signature_event and signature_event['time'] or ''
-        res['out_of_financial_dpt_localized'] = res['out_of_financial_dpt']\
-            and res['out_of_financial_dpt'].strftime('%d/%m/%Y') or ''
+        res['out_of_financial_dpt_localized'] = res['out_of_financial_dpt'] \
+                                                and res['out_of_financial_dpt'].strftime('%d/%m/%Y') or ''
         # "positive_with_remarks_finance" will be printed "positive_finance"
         if adviceData['type'] == 'positive_with_remarks_finance':
             type_translated = self.translate(msgid='positive_finance',
@@ -83,10 +83,10 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
         else:
             type_translated = adviceData['type_translated'].encode('utf-8')
         res['advice_type'] = '<p><u>Type d\'avis:</u>  %s</p>' % type_translated
-        res['delay_started_on_localized'] = 'delay_started_on_localized' in adviceData['delay_infos']\
-            and adviceData['delay_infos']['delay_started_on_localized'] or ''
-        res['delay_started_on'] = 'delay_started_on' in adviceData\
-            and adviceData['delay_started_on'] or ''
+        res['delay_started_on_localized'] = 'delay_started_on_localized' in adviceData['delay_infos'] \
+                                            and adviceData['delay_infos']['delay_started_on_localized'] or ''
+        res['delay_started_on'] = 'delay_started_on' in adviceData \
+                                  and adviceData['delay_started_on'] or ''
         return res
 
     def getLegalTextForFDAdvice(self, isMeeting=False):
@@ -117,9 +117,9 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
             res = FINANCE_ADVICE_LEGAL_TEXT_PRE.format(delayStartedOnLocalized)
 
         if not hidden and \
-           adviceGivenOnLocalized and \
-           (adviceType in (u'positive_finance', u'positive_with_remarks_finance',
-                           u'negative_finance', u'cautious_finance')):
+                adviceGivenOnLocalized and \
+                (adviceType in (u'positive_finance', u'positive_with_remarks_finance',
+                                u'negative_finance', u'cautious_finance')):
             if adviceType in (u'positive_finance', u'positive_with_remarks_finance'):
                 adviceTypeFr = 'favorable'
             elif adviceType == u'negative_finance':
@@ -127,13 +127,13 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
             else:
                 # u'cautious_finance'
                 adviceTypeFr = 'réservé'
-            #if it's a meetingItem, return the legal bullshit.
+            # if it's a meetingItem, return the legal bullshit.
             if not isMeeting:
                 res = res + FINANCE_ADVICE_LEGAL_TEXT.format(
                     adviceTypeFr,
                     outOfFinancialdptLocalized
                 )
-            #if it's a meeting, returns only the type and date of the advice.
+            # if it's a meeting, returns only the type and date of the advice.
             else:
                 res = "<p>Avis {0} du Directeur Financier du {1}</p>".format(
                     adviceTypeFr, outOfFinancialdptLocalized)
@@ -238,7 +238,8 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
                             continue
 
                         # Change data if advice is hidden
-                        if 'hidden_during_redaction' in advice and advice['hidden_during_redaction'] and not show_hidden:
+                        if 'hidden_during_redaction' in advice and advice[
+                            'hidden_during_redaction'] and not show_hidden:
                             message = self.translate('hidden_during_redaction', domain='PloneMeeting')
                             advice['type_translated'] = message
                             advice['type'] = 'hidden_during_redaction'
@@ -327,8 +328,23 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
 
     def print_creator_name(self):
         return (self.real_context.portal_membership.getMemberInfo(str(self.real_context.Creator())) \
-               and self.real_context.portal_membership.getMemberInfo(str(self.real_context.Creator()))['fullname']) \
+                and self.real_context.portal_membership.getMemberInfo(str(self.real_context.Creator()))['fullname']) \
                or str(self.real_context.Creator())
+
+    def print_validator_name(self):
+        res = ''
+        if self.real_context.queryState() in ('validated',) or self.real_context.hasMeeting():
+            event = getLastEvent(self.real_context, 'validate')
+            if event:
+                validator_id = str(event['actor'])
+                res = (self.real_context.portal_membership.getMemberInfo(validator_id) \
+                                    and self.real_context.portal_membership.getMemberInfo(validator_id)['fullname']) \
+                                   or validator_id
+        return res
+
+    def get_creator_and_validator(self):
+        res = {'creator': self.print_creator_name(), 'validator': self.print_validator_name()}
+        return res
 
 
 class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView):
