@@ -445,14 +445,14 @@ class CustomMeeting(Meeting):
             items = res
         return res
 
-    def getPrintableItemsByCategoryAndProposingGroup(self, itemUids=[], listTypes=['normal'], privacy='*'):
+    def getPrintableItemsByCategoryAndProposingGroup(self, itemUids=[], listTypes=['normal'], toDiscuss='both', privacy='*'):
         '''Use getPrintableItemsByCategory method and add sub list for each new proposing group.
            Category
                 Proposing group
                     Item1, item2, ... itemX
         '''
         res = []
-        items_by_cat = self.getPrintableItemsByCategory(itemUids=itemUids, listTypes=listTypes, privacy=privacy)
+        items_by_cat = self.getPrintableItemsByCategory(itemUids=itemUids, listTypes=listTypes, toDiscuss=toDiscuss, privacy=privacy)
         for sublist in items_by_cat:
             #new cat
             previous_proposing_group = '--------'
