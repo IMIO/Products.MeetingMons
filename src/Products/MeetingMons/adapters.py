@@ -23,12 +23,6 @@
 
 from collections import OrderedDict
 
-from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
-from Products.Archetypes.atapi import DisplayList
-from Products.CMFCore.permissions import ReviewPortalContent
-from Products.CMFCore.utils import _checkPermission
-from Products.CMFCore.utils import getToolByName
 from Products.MeetingMons import logger
 from Products.MeetingMons.config import FINANCE_ADVICES_COLLECTION_ID
 from Products.MeetingMons.config import FINANCE_GROUP_SUFFIXES
@@ -54,6 +48,14 @@ from Products.PloneMeeting.interfaces import IMeetingItemCustom
 from Products.PloneMeeting.interfaces import IToolPloneMeetingCustom
 from Products.PloneMeeting.model import adaptations
 from Products.PloneMeeting.model.adaptations import WF_APPLIED
+
+from AccessControl import ClassSecurityInfo
+from DateTime import DateTime
+from Globals import InitializeClass
+from Products.Archetypes.atapi import DisplayList
+from Products.CMFCore.permissions import ReviewPortalContent
+from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.utils import getToolByName
 from appy.gen import No
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 from plone import api
@@ -61,7 +63,8 @@ from plone.memoize import ram
 from zope.i18n import translate
 from zope.interface import implements
 
-MeetingConfig.wfAdaptations = ('return_to_proposing_group', 'hide_decisions_when_under_writing', 'postpone_next_meeting',)
+MeetingConfig.wfAdaptations = (
+'return_to_proposing_group', 'hide_decisions_when_under_writing', 'postpone_next_meeting',)
 
 # states taken into account by the 'no_global_observation' wfAdaptation
 noGlobalObsStates = ('itempublished', 'itemfrozen', 'accepted', 'refused',
@@ -73,7 +76,8 @@ adaptations.RETURN_TO_PROPOSING_GROUP_FROM_ITEM_STATES = ('presented', 'itemfroz
 adaptations.WF_NOT_CREATOR_EDITS_UNLESS_CLOSED = ('delayed', 'refused', 'accepted',
                                                   'pre_accepted', 'accepted_but_modified')
 
-RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE = {'meetingitemcollegemons_workflow': 'meetingitemcollegemons_workflow.itemcreated'}
+RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE = {
+    'meetingitemcollegemons_workflow': 'meetingitemcollegemons_workflow.itemcreated'}
 adaptations.RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE = RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE
 
 RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = {'meetingitemcollegemons_workflow':
@@ -132,7 +136,7 @@ RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = {'meetingitemcollegemons_workflow
             ('Manager', 'MeetingManager',),
         # MeetingManagers edit permissions
         'Delete objects':
-            ('Manager', 'MeetingManager', ),
+            ('Manager', 'MeetingManager',),
         'PloneMeeting: Write item observations':
             ('Manager', 'MeetingManager',),
         'PloneMeeting: Write item MeetingManager reserved fields':
@@ -445,33 +449,35 @@ class CustomMeeting(Meeting):
             items = res
         return res
 
-    def getPrintableItemsByCategoryAndProposingGroup(self, itemUids=[], listTypes=['normal'], toDiscuss='both', privacy='*'):
+    def getPrintableItemsByCategoryAndProposingGroup(self, itemUids=[], listTypes=['normal'], toDiscuss='both',
+                                                     privacy='*'):
         '''Use getPrintableItemsByCategory method and add sub list for each new proposing group.
            Category
                 Proposing group
                     Item1, item2, ... itemX
         '''
         res = []
-        items_by_cat = self.getPrintableItemsByCategory(itemUids=itemUids, listTypes=listTypes, toDiscuss=toDiscuss, privacy=privacy)
+        items_by_cat = self.getPrintableItemsByCategory(itemUids=itemUids, listTypes=listTypes, toDiscuss=toDiscuss,
+                                                        privacy=privacy)
         for sublist in items_by_cat:
-            #new cat
+            # new cat
             previous_proposing_group = '--------'
             cat_list = [sublist[0]]
             item_list = []
             for item in sublist[1:]:
-                #first element, we must add proposing group in item_list
+                # first element, we must add proposing group in item_list
                 if previous_proposing_group == '--------':
                     item_list.append(item.getProposingGroup(theObject=True).Title())
                 if previous_proposing_group != item.getProposingGroup() and previous_proposing_group != '--------':
-                    #it's new proposing group and not the first
-                    #add new item list : (proposingGroup, item1, item2, ..., itemX) in category list
+                    # it's new proposing group and not the first
+                    # add new item list : (proposingGroup, item1, item2, ..., itemX) in category list
                     cat_list.append(item_list)
-                    #and reinitialise item_list
+                    # and reinitialise item_list
                     item_list = [item.getProposingGroup(theObject=True).Title()]
-                #add item in list
+                # add item in list
                 item_list.append(item)
                 previous_proposing_group = item.getProposingGroup()
-            #if not already add (ie. if only one category, or empty category at the end)
+            # if not already add (ie. if only one category, or empty category at the end)
             if item_list not in cat_list:
                 cat_list.append(item_list)
             res.append(cat_list)
@@ -673,9 +679,11 @@ class CustomMeetingItem(MeetingItem):
         # The user will duplicate the item in his own folder.
         tool = getToolByName(self, 'portal_plonemeeting')
         cfg = tool.getMeetingConfig(self)
-        if not cfg.getEnableItemDuplication() or self.isDefinedInTool() or not tool.userIsAmong(['creators']) or not self.adapted().isPrivacyViewable() or self.queryState() == 'delayed':
+        if not cfg.getEnableItemDuplication() or self.isDefinedInTool() or not tool.userIsAmong(
+                ['creators']) or not self.adapted().isPrivacyViewable() or self.queryState() == 'delayed':
             return False
         return True
+
     MeetingItem.showDuplicateItemAction = showDuplicateItemAction
 
     def getFinanceAdviceId(self):
@@ -1005,6 +1013,22 @@ class CustomMeetingConfig(MeetingConfig):
                      'roles_bypassing_talcondition': ['Manager', ]
                  }
                  ),
+                # Items in state under 'validated' and not modified since 60 days
+                ('searchblockeditems', {
+                    'subFolderId': 'searches_items',
+                    'active': True,
+                    'query':
+                        [
+                            {'i': 'CompoundCriterion',
+                             'o': 'plone.app.querystring.operation.compound.is',
+                             'v': 'blocked-items'},
+                        ],
+                    'sort_on': u'modified',
+                    'sort_reversed': False,
+                    'showNumberOfItems': True,
+                    'tal_condition': '',
+                    'roles_bypassing_talcondition': ['Manager', ]
+                }),
             ]
         )
         infos.update(extra_infos)
@@ -1723,3 +1747,30 @@ class ItemsWithAdviceProposedToFinancialManagerAdapter(CompoundCriterionBaseAdap
 
     # we may not ram.cache methods in same file with same name...
     query = query_itemswithadviceproposedtofinancialmanager
+
+
+class BlockedItemsAdapter(CompoundCriterionBaseAdapter):
+
+    def blockeditems_cachekey(method, self):
+        '''cachekey method for every CompoundCriterion adapters.'''
+        return str(self.request._debug)
+
+    @property
+    @ram.cache(blockeditems_cachekey)
+    def query_blockeditems(self):
+        '''Queries all items for which there is an advice in state 'proposed_to_financial_manager'.'''
+        reference = DateTime() - 60
+
+        return {'portal_type': {'query': self.cfg.getItemTypeName()},
+                # before reference
+                'modified': {'query': reference, 'range': 'max'},
+                'review_state': {'query': ['itemcreated',
+                                           'proposed_to_budgetimpact_reviewer',
+                                           'proposed_to_extraordinarybudget',
+                                           'proposed_to_servicehead',
+                                           'proposed_to_officemanager',
+                                           'proposed_to_divisionhead',
+                                           'proposed_to_director']}}
+
+    # we may not ram.cache methods in same file with same name...
+    query = query_blockeditems
