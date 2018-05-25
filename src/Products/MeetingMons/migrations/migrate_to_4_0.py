@@ -152,6 +152,19 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
 
             cfg.at_post_edit_script()
 
+            wfTool = api.portal.get_tool('portal_workflow')
+            folder = cfg.searches.searches_items
+            collections = (folder.searchitemstoprevalidate,
+                           folder.searchvalidableitems,
+                           folder.searchitemstocorrect,
+                           folder.searchcorrecteditems,
+                           folder.searchitemstocorrecttovalidateoffeveryreviewergroups,
+                           folder.searchitemstocorrecttovalidate)
+
+            for dasboard_collection in collections:
+                if wfTool.getInfoFor(dasboard_collection, 'review_state') == 'active':
+                    wfTool.doActionFor(dasboard_collection, 'deactivate')
+
     def run(self, step=None):
         # change self.profile_name that is reinstalled at the beginning of the PM migration
         self.profile_name = u'profile-Products.MeetingMons:default'

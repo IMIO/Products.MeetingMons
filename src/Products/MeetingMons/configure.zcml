@@ -50,4 +50,9 @@
            factory="Products.MeetingMons.adapters.CustomToolPloneMeeting"
            provides="Products.PloneMeeting.interfaces.IToolPloneMeetingCustom"/>
 
+  <adapter for="*"
+           factory="Products.MeetingMons.adapters.BlockedItemsAdapter"
+           provides="collective.compoundcriterion.interfaces.ICompoundCriterionFilter"
+           name="blocked-items" />
+
 </configure>
