@@ -129,6 +129,7 @@ def update_item_schema(baseSchema):
     baseSchema['description'].widget.label = "projectOfDecision"
     baseSchema['description'].widget.label_msgid = "projectOfDecision_label"
     baseSchema['motivation'].widget.description_msgid = "item_motivation_descr"
+    baseSchema['observations'].write_permission = "Modify portal content"
 
     completeItemSchema = baseSchema + specificSchema.copy()
     return completeItemSchema
