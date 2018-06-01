@@ -172,3 +172,53 @@ class testCustomWorkflows(MeetingMonsTestCase):
         _checkObserverMayView(item)
         self.do(meeting, 'close')
         _checkObserverMayView(item)
+
+    def test_pm_observationsIsEditableByMembers(self):
+        self.meetingConfig.setUsedItemAttributes(self.meetingConfig.getUsedItemAttributes() + ('observations',))
+
+        self.changeUser('pmCreator1')
+        item = self.create('MeetingItem')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(item, 'proposeToBudgetImpactReviewer')
+        self.changeUser('pmManager')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(item, 'proposeToExtraordinaryBudget')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(item, 'validateByExtraordinaryBudget')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(item, 'proposeToServiceHead')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(item, 'proposeToOfficeManager')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(item, 'proposeToDivisionHead')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(item, 'proposeToDirector')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(item, 'validate')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        meeting = self.create('Meeting', date=DateTime('2017/03/27'))
+
+        self.do(item, 'present')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(meeting, 'freeze')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(meeting, 'decide')
+        self.assertTrue(item.mayQuickEdit("observations"))
+
+        self.do(item, 'accept')
+        self.assertFalse(item.mayQuickEdit("observations"))
+
+        self.do(meeting, 'close')
+        self.assertFalse(item.mayQuickEdit("observations"))
+
