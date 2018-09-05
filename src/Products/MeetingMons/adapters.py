@@ -1311,12 +1311,14 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemWorkflowConditions):
                                 context=self.context.REQUEST))
         user = self.context.portal_membership.getAuthenticatedMember()
         # first of all, the use must have the 'Review portal content permission'
-        if _checkPermission(ReviewPortalContent, self.context):
+        if _checkPermission(ReviewPortalContent, self.context) and \
+                (user.has_role('MeetingReviewer', self.context) or self.context.portal_plonemeeting.isManager(self.context)):
             res = True
             # if the current item state is 'itemcreated', only the MeetingManager can validate
             if self.context.queryState() in ('itemcreated',) and \
                     not self.context.portal_plonemeeting.isManager(self.context):
                 res = False
+
         return res
 
     security.declarePublic('mayWaitAdvices')
