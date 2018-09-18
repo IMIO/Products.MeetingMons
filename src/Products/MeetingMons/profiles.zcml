@@ -59,6 +59,14 @@
       handler="Products.MeetingMons.migrations.migrate_to_4_0.migrate_step5_customs"
       profile="Products.MeetingMons:default" />
 
+  <genericsetup:upgradeStep
+      title="Go to MeetingMons 4.0 (Step remove cdldProposingGroup)"
+      description=""
+      source="*"
+      destination="4.0"
+      handler="Products.MeetingMons.migrations.migrate_to_4_0.migrate_step6_customs"
+      profile="Products.MeetingMons:default" />
+
   <!-- ##/code-section profiles.zcml-bottom -->
 
 </configure>
