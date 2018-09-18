@@ -183,6 +183,11 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
         if step == 5:
             self._updateConfig()
 
+        if step == 6:
+            for cfg in self.tool.objectValues('MeetingConfig'):
+                if hasattr(cfg, 'cdldProposingGroup'):
+                    delattr(cfg, 'cdldProposingGroup')
+
 
 # The migration function -------------------------------------------------------
 def migrate(context):
@@ -228,6 +233,7 @@ def migrate_step3(context):
        3) Add an annex type for Meetings;
        4) Remove useless workflows;
        5) Migrate positive decided states.
+       6) Remove cdldProposingGroup
     '''
     migrator = Migrate_To_4_0(context)
     migrator.run(step=3)
@@ -237,4 +243,10 @@ def migrate_step3(context):
 def migrate_step5_customs(context):
     migrator = Migrate_To_4_0(context)
     migrator.run(step=5)
+    migrator.finish()
+
+
+def migrate_step6_customs(context):
+    migrator = Migrate_To_4_0(context)
+    migrator.run(step=6)
     migrator.finish()
