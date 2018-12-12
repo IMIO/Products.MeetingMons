@@ -52,13 +52,13 @@ class testSearches(MeetingMonsTestCase, pmts):
         cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstocorrect')
 
         self.assertEquals(adapter.query, {
-                          'portal_type': {'query': itemTypeName},
-                          'reviewProcessInfo': {'query': ['developers__reviewprocess__itemcreated',
-                                                          'developers__reviewprocess__proposed_to_servicehead',
-                                                          'developers__reviewprocess__proposed_to_officemanager',
-                                                          'developers__reviewprocess__proposed_to_divisionhead',
-                                                          'developers__reviewprocess__proposed_to_director']},
-                          'toCorrect': {'query': True}})
+            'portal_type': {'query': itemTypeName},
+            'reviewProcessInfo': {'query': ['developers__reviewprocess__itemcreated',
+                                            'developers__reviewprocess__proposed_to_servicehead',
+                                            'developers__reviewprocess__proposed_to_officemanager',
+                                            'developers__reviewprocess__proposed_to_divisionhead',
+                                            'developers__reviewprocess__proposed_to_director']},
+            'toCorrect': {'query': True}})
 
         collection = cfg.searches.searches_items.searchitemstocorrect
         # it returns only items the current user is able to correct
@@ -74,13 +74,13 @@ class testSearches(MeetingMonsTestCase, pmts):
         self.assertEquals(vendorsItem.getProposingGroup(), 'vendors')
         cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstocorrect')
         self.failIf(collection.getQuery())
-        
+
         self.changeUser('pmManager')
         self.presentItem(vendorsItem)
-        
+
         cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstocorrect')
         self.failIf(collection.getQuery())
-        
+
         self.do(vendorsItem, 'backToValidated')
         self.changeUser('pmCreator2')
         cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstocorrect')
@@ -206,7 +206,6 @@ class testSearches(MeetingMonsTestCase, pmts):
         res = collection.getQuery()
         self.assertEqual(len(res), 1)
         self.assertEqual(res[-1].UID, new_item.UID())
-
 
 
 def test_suite():
