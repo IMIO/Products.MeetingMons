@@ -235,3 +235,7 @@ msgstr ""
 
 msgid "searchdirectoritems"
 msgstr ""
+
+### prettylink ###
+msgid "icon_help_corrected"
+msgstr ""

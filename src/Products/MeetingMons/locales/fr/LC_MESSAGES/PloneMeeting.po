@@ -242,3 +242,8 @@ msgstr "Proposé au N+3"
 
 msgid "searchdirectoritems"
 msgstr "Points à valider"
+
+### prettylink ###
+
+msgid "icon_help_corrected"
+msgstr "Point corrigé par le service"
