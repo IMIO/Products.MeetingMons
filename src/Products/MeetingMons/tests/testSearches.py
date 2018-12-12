@@ -35,7 +35,7 @@ from zope.component import getAdapter
 class testSearches(MeetingMonsTestCase, pmts):
     """Test searches."""
 
-    def test_pm_SearchItemsToCorrectMons(self):
+    def test_pm_SearchItemsToCorrect(self):
         '''Test the 'items-to-correct' CompoundCriterion adapter.  This should return
            a list of items in state 'returned_to_proposing_group' the current user is able to edit.'''
         # specify that copyGroups can see the item when it is proposed
