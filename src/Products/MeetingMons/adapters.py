@@ -40,7 +40,8 @@ from Products.PloneMeeting.MeetingItem import MeetingItem
 from Products.PloneMeeting.MeetingItem import MeetingItemWorkflowActions
 from Products.PloneMeeting.MeetingItem import MeetingItemWorkflowConditions
 from Products.PloneMeeting.ToolPloneMeeting import ToolPloneMeeting
-from Products.PloneMeeting.adapters import CompoundCriterionBaseAdapter
+from Products.PloneMeeting.adapters import CompoundCriterionBaseAdapter, ItemPrettyLinkAdapter, \
+    BaseItemsToCorrectAdapter, FIND_NOTHING_QUERY
 from Products.PloneMeeting.interfaces import IMeetingConfigCustom
 from Products.PloneMeeting.interfaces import IMeetingCustom
 from Products.PloneMeeting.interfaces import IMeetingGroupCustom
@@ -53,7 +54,7 @@ from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 from Globals import InitializeClass
 from Products.Archetypes.atapi import DisplayList
-from Products.CMFCore.permissions import ReviewPortalContent
+from Products.CMFCore.permissions import ReviewPortalContent, ModifyPortalContent
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.utils import getToolByName
 from appy.gen import No
@@ -847,6 +848,37 @@ class CustomMeetingConfig(MeetingConfig):
         itemType = cfg.getItemTypeName()
         extra_infos = OrderedDict(
             [
+                ('searchitemstocorrect', {
+                    'subFolderId': 'searches_items',
+                    'active': True,
+                    'query':
+                        [
+                            {'i': 'CompoundCriterion',
+                             'o': 'plone.app.querystring.operation.compound.is',
+                             'v': 'items-to-correct-mons'},
+                        ],
+                    'sort_on': u'modified',
+                    'sort_reversed': True,
+                    'showNumberOfItems': True,
+                    'tal_condition': "python: tool.userIsAmong(['creators', 'serviceheads', 'officemanagers', 'divisionheads', 'reviewers'])",
+                    'roles_bypassing_talcondition': ['Manager', ]
+                }),
+                # Corrected items
+                ('searchcorrecteditems', {
+                    'subFolderId': 'searches_items',
+                    'active': True,
+                    'query':
+                        [
+                            {'i': 'CompoundCriterion',
+                             'o': 'plone.app.querystring.operation.compound.is',
+                             'v': 'corrected-items-mons'},
+                        ],
+                    'sort_on': u'modified',
+                    'sort_reversed': True,
+                    'showNumberOfItems': True,
+                    'tal_condition': "python: tool.isManager(here)",
+                    'roles_bypassing_talcondition': ['Manager', ]
+                }),
                 # Items in state 'proposed_to_budgetimpact_reviewer'
                 ('searchbudgetimpactreviewersitems',
                  {
@@ -1776,3 +1808,108 @@ class BlockedItemsAdapter(CompoundCriterionBaseAdapter):
 
     # we may not ram.cache methods in same file with same name...
     query = query_blockeditems
+
+
+class MMItemPrettyLinkAdapter(ItemPrettyLinkAdapter):
+    """
+      Override to take into account MeetingMons use cases...
+    """
+
+    def _leadingIcons(self):
+        """
+          Manage icons to display before the icons managed by PrettyLink._icons.
+        """
+        # Default PM item icons
+        icons = super(MMItemPrettyLinkAdapter, self)._leadingIcons()
+
+        if self.context.isDefinedInTool():
+            return icons
+
+        from Products.MeetingMons.indexes import toCorrect
+        if toCorrect(self.context)():
+            icons.append(('return_to_proposing_group.png',
+                          translate('icon_help_returned_to_proposing_group',
+                                    domain="PloneMeeting",
+                                    context=self.request)))
+
+        from Products.MeetingMons.indexes import corrected
+        if corrected(self.context)():
+            icons.append(('validate.png',
+                          translate('icon_help_corrected',
+                                    domain="PloneMeeting",
+                                    context=self.request)))
+        return icons
+
+
+class MMBaseItemsToCorrectAdapter(BaseItemsToCorrectAdapter):
+
+    def _query(self, review_states):
+
+        # for every review_states check what roles are able to edit
+        # so we will get groups suffixes linked to these roles and find relevant groups
+        wfTool = api.portal.get_tool('portal_workflow')
+        itemWF = wfTool.getWorkflowsFor(self.cfg.getItemTypeName())[0]
+        reviewProcessInfos = []
+        for review_state in review_states:
+            if review_state in itemWF.states:
+                roles = itemWF.states[review_state].permission_roles[ModifyPortalContent]
+                from Products.PloneMeeting.config import MEETINGROLES
+                suffixes = [suffix for suffix, role in MEETINGROLES.items() if role in roles]
+                userGroupIds = [mGroup.getId() for mGroup in self.tool.getGroupsForUser(suffixes=suffixes)]
+                if userGroupIds:
+                    for userGroupId in userGroupIds:
+                        reviewProcessInfos.append('%s__reviewprocess__%s' % (userGroupId, review_state))
+        if not reviewProcessInfos:
+            return FIND_NOTHING_QUERY
+        # Create query parameters
+        return {'portal_type': {'query': self.cfg.getItemTypeName()},
+                'toCorrect': {'query': True},
+                'reviewProcessInfo': {'query': reviewProcessInfos}, }
+
+
+class MMBaseCorrectedItemsAdapter(CompoundCriterionBaseAdapter):
+
+    def _query(self):
+        # for every review_states check what roles are able to edit
+        # so we will get groups suffixes linked to these roles and find relevant groups
+        wfTool = api.portal.get_tool('portal_workflow')
+        itemWF = wfTool.getWorkflowsFor(self.cfg.getItemTypeName())[0]
+        # Create query parameters
+        return {'portal_type': {'query': self.cfg.getItemTypeName()},
+                'corrected': {'query': True}}
+
+
+class MMItemsToCorrectAdapter(MMBaseItemsToCorrectAdapter):
+
+    def itemstocorrect_cachekey(method, self):
+        '''cachekey method for every CompoundCriterion adapters.'''
+        return str(self.request._debug)
+
+    @property
+    @ram.cache(itemstocorrect_cachekey)
+    def query_itemstocorrect(self):
+        '''Queries all items that current user may correct.'''
+        return self._query(review_states=('itemcreated',
+                                          'proposed_to_servicehead',
+                                          'proposed_to_officemanager',
+                                          'proposed_to_divisionhead',
+                                          'proposed_to_director'))
+
+    # we may not ram.cache methods in same file with same name...
+    query = query_itemstocorrect
+
+
+class MMCorrectedItemsAdapter(MMBaseCorrectedItemsAdapter):
+
+    def correcteditems_cachekey(method, self):
+        '''cachekey method for every CompoundCriterion adapters.'''
+        return str(self.request._debug)
+
+    @property
+    @ram.cache(correcteditems_cachekey)
+    def query_correcteditems(self):
+        '''Queries all items that current user may correct.'''
+        return self._query()
+
+    # we may not ram.cache methods in same file with same name...
+    query = query_correcteditems

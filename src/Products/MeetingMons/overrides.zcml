@@ -18,7 +18,10 @@
         permission="zope2.View"
         name="document_generation_helper_view"
      />
-
+    <!-- IPrettyLink for MeetingItem -->
+    <adapter for="Products.PloneMeeting.interfaces.IMeetingItem"
+             factory=".adapters.MMItemPrettyLinkAdapter"
+             provides="imio.prettylink.interfaces.IPrettyLink" />
     <!-- collective.documentgenerator helper view for Folder -->
     <browser:page
         for="Products.ATContentTypes.interfaces.folder.IATBTreeFolder"
