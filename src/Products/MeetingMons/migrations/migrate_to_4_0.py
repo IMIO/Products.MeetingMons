@@ -168,6 +168,28 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
                 if wfTool.getInfoFor(dasboard_collection, 'review_state') == 'active':
                     wfTool.doActionFor(dasboard_collection, 'deactivate')
 
+    def _addCorretedIndexes(self):
+        logger.info('Adding new Indexes ...')
+
+        addOrUpdateIndexes(self.portal, {'toCorrect': ('BooleanIndex', {})})
+        addOrUpdateIndexes(self.portal, {'corrected': ('BooleanIndex', {})})
+        logger.info('Done.')
+        brains = self.portal.portal_catalog(meta_type='MeetingItem',
+                                            review_state=('itemCreated',
+                                                          'proposed_to_divisionhead',
+                                                          'proposed_to_officemanager',
+                                                          'proposed_to_servicehead'))
+        logger.info('Reindexing %d Items ...' % len(brains))
+        for brain in brains:
+            brain.getObject().reindexObject()
+        logger.info('Done.')
+
+    def _addSearches(self):
+        logger.info('Adding new DashoardCollections...')
+        for cfg in self.tool.objectValues('MeetingConfig'):
+            cfg.createSearches(cfg._searchesInfo())
+        logger.info('Done.')
+
     def run(self, step=None):
         # change self.profile_name that is reinstalled at the beginning of the PM migration
         self.profile_name = u'profile-Products.MeetingMons:default'
@@ -193,21 +215,9 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
 
         if step == 7:
             # add the toCorrect index and missing searches
-            site = self.portal
-            addOrUpdateIndexes(site, {'toCorrect': ('BooleanIndex', {})})
-            addOrUpdateIndexes(site, {'corrected': ('BooleanIndex', {})})
-            brains = self.portal.portal_catalog(meta_type='MeetingItem',
-                                                review_state=('itemCreated',
-                                                              'proposed_to_divisionhead',
-                                                              'proposed_to_officemanager',
-                                                              'proposed_to_servicehead'))
-            for brain in brains:
-                brain.getObject().reindexObject()
+            self._addCorretedIndexes()
 
-            for cfg in self.tool.objectValues('MeetingConfig'):
-                cfg.createSearches(cfg._searchesInfo())
-
-
+            self._addSearches()
 
 
 # The migration function -------------------------------------------------------
