@@ -192,10 +192,22 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
                     delattr(cfg, 'cdldProposingGroup')
 
         if step == 7:
-            # add the toCorrect index
+            # add the toCorrect index and missing searches
             site = self.portal
             addOrUpdateIndexes(site, {'toCorrect': ('BooleanIndex', {})})
             addOrUpdateIndexes(site, {'corrected': ('BooleanIndex', {})})
+            brains = self.portal.portal_catalog(meta_type='Meeting',
+                                                review_state=('itemCreated',
+                                                              'proposed_to_divisionhead',
+                                                              'proposed_to_officemanager',
+                                                              'proposed_to_servicehead'))
+            for brain in brains:
+                brain.getObject().reindexObject()
+
+            for cfg in self.tool.objectValues('MeetingConfig'):
+                cfg.createSearches(cfg._searchesInfo())
+
+
 
 
 # The migration function -------------------------------------------------------
