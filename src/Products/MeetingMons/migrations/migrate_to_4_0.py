@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import logging
+
+from imio.helpers.catalog import addOrUpdateIndexes
+
 logger = logging.getLogger('MeetingMons')
 
 from plone import api
@@ -11,7 +14,6 @@ from Products.PloneMeeting.migrations.migrate_to_4_0 import Migrate_To_4_0 as PM
 
 # The migration class ----------------------------------------------------------
 class Migrate_To_4_0(PMMigrate_To_4_0):
-
     wfs_to_delete = []
 
     def _cleanCDLD(self):
@@ -38,8 +40,8 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
            to display the 'sent from' leading icon on items sent from another MeetingConfig."""
         logger.info('Defining values for MeetingConfig.itemAutoSentToOtherMCStates...')
         for cfg in self.tool.objectValues('MeetingConfig'):
-            cfg.setItemAutoSentToOtherMCStates(('accepted', 'accepted_but_modified', ))
-            cfg.setItemPositiveDecidedStates(('accepted', 'accepted_but_modified', ))
+            cfg.setItemAutoSentToOtherMCStates(('accepted', 'accepted_but_modified',))
+            cfg.setItemPositiveDecidedStates(('accepted', 'accepted_but_modified',))
         logger.info('Done.')
 
     def _after_reinstall(self):
@@ -73,7 +75,7 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
         logger.info('Updating config ...')
 
         # remove custom buggy skin
-        if 'imioapps_properties' in  self.portal.portal_skins.custom.objectIds():
+        if 'imioapps_properties' in self.portal.portal_skins.custom.objectIds():
             self.portal.portal_skins.custom.manage_delObjects(ids=['imioapps_properties'])
 
         for cfg in self.tool.objectValues('MeetingConfig'):
@@ -85,16 +87,17 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             itemAttributes = ['budgetInfos', 'motivation', 'observations', 'toDiscuss', 'itemAssembly', 'privacy']
 
             itemColumns = ['Creator', 'CreationDate', 'ModificationDate', 'review_state', 'getCategory',
-                           'proposing_group_acronym', 'advices', 'toDiscuss', 'linkedMeetingDate', 'getPreferredMeetingDate']
+                           'proposing_group_acronym', 'advices', 'toDiscuss', 'linkedMeetingDate',
+                           'getPreferredMeetingDate']
 
             availableItemColumns = ['Creator', 'CreationDate', 'ModificationDate', 'getCategory',
-                           'proposing_group_acronym', 'advices', 'toDiscuss',
-                           'getPreferredMeetingDate']
+                                    'proposing_group_acronym', 'advices', 'toDiscuss',
+                                    'getPreferredMeetingDate']
 
             meetingItemColumn = ['item_reference', 'Creator', 'ModificationDate', 'review_state', 'getCategory',
                                  'proposing_group_acronym', 'advices', 'toDiscuss', 'actions']
 
-            itemColumnsFilters= ['c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c13', 'c14', 'c15', 'c16', 'c19']
+            itemColumnsFilters = ['c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c13', 'c14', 'c15', 'c16', 'c19']
 
             meetingItemFilter = ['c4', 'c5', 'c6', 'c7', 'c8', 'c11', 'c13', 'c14', 'c16', 'c19']
 
@@ -188,6 +191,24 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
                 if hasattr(cfg, 'cdldProposingGroup'):
                     delattr(cfg, 'cdldProposingGroup')
 
+        if step == 7:
+            # add the toCorrect index and missing searches
+            site = self.portal
+            addOrUpdateIndexes(site, {'toCorrect': ('BooleanIndex', {})})
+            addOrUpdateIndexes(site, {'corrected': ('BooleanIndex', {})})
+            brains = self.portal.portal_catalog(meta_type='Meeting',
+                                                review_state=('itemCreated',
+                                                              'proposed_to_divisionhead',
+                                                              'proposed_to_officemanager',
+                                                              'proposed_to_servicehead'))
+            for brain in brains:
+                brain.getObject().reindexObject()
+
+            for cfg in self.tool.objectValues('MeetingConfig'):
+                cfg.createSearches(cfg._searchesInfo())
+
+
+
 
 # The migration function -------------------------------------------------------
 def migrate(context):
@@ -249,4 +270,10 @@ def migrate_step5_customs(context):
 def migrate_step6_customs(context):
     migrator = Migrate_To_4_0(context)
     migrator.run(step=6)
+    migrator.finish()
+
+
+def migrate_step7_customs(context):
+    migrator = Migrate_To_4_0(context)
+    migrator.run(step=7)
     migrator.finish()

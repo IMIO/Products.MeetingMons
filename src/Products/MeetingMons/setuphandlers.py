@@ -8,6 +8,7 @@
 #
 # GNU General Public License (GPL)
 #
+from imio.helpers.catalog import addOrUpdateIndexes
 
 __author__ = """Gauthier Bastien <g.bastien@imio.be>, Stephan Geulette <s.geulette@imio.be>"""
 __docformat__ = 'plaintext'
@@ -46,6 +47,8 @@ def postInstall(context):
     reinstallPloneMeeting(context, site)
     showHomeTab(context, site)
     reorderSkinsLayers(context, site)
+    addOrUpdateIndexes(site, {'toCorrect': ('BooleanIndex', {})})
+    addOrUpdateIndexes(site, {'corrected': ('BooleanIndex', {})})
 
 
 def logStep(method, context):
