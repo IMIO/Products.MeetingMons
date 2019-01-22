@@ -179,9 +179,6 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
                                                           'proposed_to_divisionhead',
                                                           'proposed_to_officemanager',
                                                           'proposed_to_servicehead'))
-        logger.info('Reindexing %d Items ...' % len(brains))
-        for brain in brains:
-            brain.getObject().reindexObject()
         logger.info('Done.')
 
     def _addSearches(self):
