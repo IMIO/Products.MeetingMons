@@ -196,7 +196,7 @@ class Migrate_To_4_0(PMMigrate_To_4_0):
             site = self.portal
             addOrUpdateIndexes(site, {'toCorrect': ('BooleanIndex', {})})
             addOrUpdateIndexes(site, {'corrected': ('BooleanIndex', {})})
-            brains = self.portal.portal_catalog(meta_type='Meeting',
+            brains = self.portal.portal_catalog(meta_type='MeetingItem',
                                                 review_state=('itemCreated',
                                                               'proposed_to_divisionhead',
                                                               'proposed_to_officemanager',
