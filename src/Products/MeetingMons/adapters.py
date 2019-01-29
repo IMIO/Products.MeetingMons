@@ -1941,9 +1941,9 @@ class MMItemsInCorrectionAdapter(MMBaseItemsInCorrectionAdapter):
 
     @property
     @ram.cache(itemstincorrection_cachekey)
-    def query_itemstocorrect(self):
+    def query_itemsincorrection(self):
         '''Queries all items that current user may correct.'''
         return self._query()
 
     # we may not ram.cache methods in same file with same name...
-    query = query_itemstocorrect
+    query = query_itemsincorrection
