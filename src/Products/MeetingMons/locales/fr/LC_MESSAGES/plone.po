@@ -9,6 +9,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: plone\n"
 "Language-code: fr\n"
@@ -320,6 +322,22 @@ msgstr "Séance du Conseil de l'Action Sociale"
 msgid "Meetingcomitee"
 msgstr "Séance du Comité de Concertation"
 
+#. Default: "send back"
+msgid "backToItemBudgetImpactReviewers"
+msgstr "Renvoyer au référent budgétaire"
+
+#. Default: "send back"
+msgid "backToItemCreated"
+msgstr "Renvoyer a l'agent"
+
+#. Default: "send back"
+msgid "backToProposedToDirector"
+msgstr "Renvoyer au N+4"
+
+#. Default: "send back"
+msgid "backToProposedToDivisionHead"
+msgstr "Renvoyer au N+3"
+
 #. Default: "Send back to 'financial controller'"
 msgid "backToProposedToFinancialController"
 msgstr "Renvoyer au contrôleur financier"
@@ -335,6 +353,14 @@ msgstr "Renvoyer au Directeur financier"
 #. Default: "Send back to 'financial reviewer'"
 msgid "backToProposedToFinancialReviewer"
 msgstr "Renvoyer au validateur financier"
+
+#. Default: "send back"
+msgid "backToProposedToOfficeManager"
+msgstr "Renvoyer au N+2"
+
+#. Default: "send back"
+msgid "backToProposedToServiceHead"
+msgstr "Renvoyer au N+1"
 
 #. Default: "Create an item CoGest from an item College"
 msgid "create_to_cogest_from_meeting-config-college"
@@ -392,6 +418,19 @@ msgstr "Gelée"
 msgid "itemfrozen"
 msgstr "Gelé"
 
+### Item transitions ###
+msgid "proposeToBudgetImpactReviewer"
+msgstr "Proposer au correspondant financier"
+
+msgid "proposeToDirector"
+msgstr "Proposer au N+4"
+
+msgid "proposeToDivisionHead"
+msgstr "Proposer au N+3"
+
+msgid "proposeToExtraordinaryBudget"
+msgstr "Proposer au correspond du budget extraordinaire"
+
 #. Default: "Propose to financial controller"
 msgid "proposeToFinancialController"
 msgstr "Proposer au contrôleur financier"
@@ -407,6 +446,32 @@ msgstr "Proposer au Directeur financier"
 #. Default: "Propose to financial reviewer"
 msgid "proposeToFinancialReviewer"
 msgstr "Proposer au validateur financier"
+
+msgid "proposeToOfficeManager"
+msgstr "Proposer au N+2"
+
+msgid "proposeToServiceHead"
+msgstr "Proposer au N+1"
+
+############################################
+### Spécific translation of this profile ###
+############################################
+### Item states ###
+#. Default: "Proposed to budget impact reviewer"
+msgid "proposed_to_budgetimpact_reviewer"
+msgstr "Proposé au correspondant financier"
+
+#. Default: "Proposed to director"
+msgid "proposed_to_director"
+msgstr "Proposé au N+4"
+
+#. Default: "Proposed to division head"
+msgid "proposed_to_divisionhead"
+msgstr "Proposé au N+3"
+
+#. Default: "Proposed to extraordinary budget impact reviewer"
+msgid "proposed_to_extraordinarybudget"
+msgstr "Proposé au budget extraordinaire"
 
 #. Default: "Proposed to financial controller"
 msgid "proposed_to_financial_controller"
@@ -424,88 +489,20 @@ msgstr "Proposé au Directeur financier"
 msgid "proposed_to_financial_reviewer"
 msgstr "Proposé au validateur financier"
 
-#. Default: "Sign financial advice"
-msgid "signFinancialAdvice"
-msgstr "Signer l'avis finances"
-
-
-############################################
-### Spécific translation of this profile ###
-############################################
-
-### Item states ###
-
-#. Default: "Proposed to budget impact reviewer"
-msgid "proposed_to_budgetimpact_reviewer"
-msgstr "Proposé au correspondant financier"
-
-#. Default: "Proposed to extraordinary budget impact reviewer"
-msgid "proposed_to_extraordinarybudget"
-msgstr "Proposé au budget extraordinaire"
+#. Default: "Proposed to office manager"
+msgid "proposed_to_officemanager"
+msgstr "Proposé au N+2"
 
 #. Default: "Proposed to service head"
 msgid "proposed_to_servicehead"
 msgstr "Proposé au N+1"
 
-#. Default: "Proposed to office manager"
-msgid "proposed_to_officemanager"
-msgstr "Proposé au N+2"
-
-#. Default: "Proposed to division head"
-msgid "proposed_to_divisionhead"
-msgstr "Proposé au N+3"
-
-#. Default: "Proposed to director"
-msgid "proposed_to_director"
-msgstr "Proposé au N+4"
-
-
-### Item transitions ###
-
-msgid "proposeToBudgetImpactReviewer"
-msgstr "Proposer au correspondant financier"
+#. Default: "Sign financial advice"
+msgid "signFinancialAdvice"
+msgstr "Signer l'avis finances"
 
 msgid "validateByBudgetImpactReviewer"
 msgstr "Valider les infos budgétaires"
 
-msgid "proposeToExtraordinaryBudget"
-msgstr "Proposer au correspond du budget extraordinaire"
-
 msgid "validateByExtraordinaryBudget"
 msgstr "Valider le budget extraordinaire"
-
-msgid "proposeToServiceHead"
-msgstr "Proposer au N+1"
-
-msgid "proposeToOfficeManager"
-msgstr "Proposer au N+2"
-
-msgid "proposeToDivisionHead"
-msgstr "Proposer au N+3"
-
-msgid "proposeToDirector"
-msgstr "Proposer au N+4"
-
-#. Default: "send back"
-msgid "backToProposedToDirector"
-msgstr "Renvoyer au N+4"
-
-#. Default: "send back"
-msgid "backToProposedToDivisionHead"
-msgstr "Renvoyer au N+3"
-
-#. Default: "send back"
-msgid "backToProposedToOfficeManager"
-msgstr "Renvoyer au N+2"
-
-#. Default: "send back"
-msgid "backToProposedToServiceHead"
-msgstr "Renvoyer au N+1"
-
-#. Default: "send back"
-msgid "backToItemBudgetImpactReviewers"
-msgstr "Renvoyer au référent budgétaire"
-
-#. Default: "send back"
-msgid "backToItemCreated"
-msgstr "Renvoyer a l'agent"
