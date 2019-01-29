@@ -236,6 +236,10 @@ msgstr ""
 msgid "searchdirectoritems"
 msgstr ""
 
+#. Default: "Items in correction"
+msgid "searchitemsincorrection"
+msgstr ""
+
 ### prettylink ###
 msgid "icon_help_corrected"
 msgstr ""

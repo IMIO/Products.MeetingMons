@@ -879,6 +879,22 @@ class CustomMeetingConfig(MeetingConfig):
                     'tal_condition': "python: tool.isManager(here)",
                     'roles_bypassing_talcondition': ['Manager', ]
                 }),
+                # Items in correction
+                ('searchitemsincorrection', {
+                    'subFolderId': 'searches_items',
+                    'active': True,
+                    'query':
+                        [
+                            {'i': 'CompoundCriterion',
+                             'o': 'plone.app.querystring.operation.compound.is',
+                             'v': 'items-in-correction-mons'},
+                        ],
+                    'sort_on': u'modified',
+                    'sort_reversed': True,
+                    'showNumberOfItems': True,
+                    'tal_condition': "python: tool.isManager(here)",
+                    'roles_bypassing_talcondition': ['Manager', ]
+                }),
                 # Items in state 'proposed_to_budgetimpact_reviewer'
                 ('searchbudgetimpactreviewersitems',
                  {
@@ -1870,13 +1886,16 @@ class MMBaseItemsToCorrectAdapter(BaseItemsToCorrectAdapter):
 class MMBaseCorrectedItemsAdapter(CompoundCriterionBaseAdapter):
 
     def _query(self):
-        # for every review_states check what roles are able to edit
-        # so we will get groups suffixes linked to these roles and find relevant groups
-        wfTool = api.portal.get_tool('portal_workflow')
-        itemWF = wfTool.getWorkflowsFor(self.cfg.getItemTypeName())[0]
         # Create query parameters
         return {'portal_type': {'query': self.cfg.getItemTypeName()},
                 'corrected': {'query': True}}
+
+
+class MMBaseItemsInCorrectionAdapter(BaseItemsToCorrectAdapter):
+
+    def _query(self):
+        return {'portal_type': {'query': self.cfg.getItemTypeName()},
+                'toCorrect': {'query': True}}
 
 
 class MMItemsToCorrectAdapter(MMBaseItemsToCorrectAdapter):
@@ -1913,3 +1932,18 @@ class MMCorrectedItemsAdapter(MMBaseCorrectedItemsAdapter):
 
     # we may not ram.cache methods in same file with same name...
     query = query_correcteditems
+
+class MMItemsInCorrectionAdapter(MMBaseItemsInCorrectionAdapter):
+
+    def itemstincorrection_cachekey(method, self):
+        '''cachekey method for every CompoundCriterion adapters.'''
+        return str(self.request._debug)
+
+    @property
+    @ram.cache(itemstincorrection_cachekey)
+    def query_itemsincorrection(self):
+        '''Queries all items that current user may correct.'''
+        return self._query()
+
+    # we may not ram.cache methods in same file with same name...
+    query = query_itemsincorrection
