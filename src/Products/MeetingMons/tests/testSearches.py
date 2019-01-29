@@ -207,6 +207,93 @@ class testSearches(MeetingMonsTestCase, pmts):
         self.assertEqual(len(res), 1)
         self.assertEqual(res[-1].UID, new_item.UID())
 
+    def test_pm_SearchItemsInCorrection(self):
+        '''Test the 'items-in-correction-mons' CompoundCriterion adapter.  This should return
+           a list of items in state 'returned_to_proposing_group' user even if the current is enable to edit.'''
+        # specify that copyGroups can see the item when it is proposed
+        cfg = self.meetingConfig
+
+        itemTypeName = cfg.getItemTypeName()
+        self.changeUser('siteadmin')
+        # first test the generated query
+        adapter = getAdapter(cfg, ICompoundCriterionFilter, name='items-in-correction-mons')
+        self.assertEquals(adapter.query, {'portal_type': {'query': itemTypeName}, 'toCorrect': {'query': True}})
+
+        self.changeUser('pmManager')
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+
+        self.assertEquals(adapter.query, {'portal_type': {'query': itemTypeName}, 'toCorrect': {'query': True}})
+
+        collection = cfg.searches.searches_items.searchitemsincorrection
+        # it returns only items the current user is able to correct
+        # create an item for developers and one for vendors and 'return' it to proposingGroup
+        self.create('Meeting', date=DateTime())
+        developersItem = self.create('MeetingItem')
+        self.assertEquals(developersItem.getProposingGroup(), 'developers')
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+        self.failIf(collection.getQuery())
+        self.presentItem(developersItem)
+        self.changeUser('pmCreator2')
+        vendorsItem = self.create('MeetingItem')
+        self.assertEquals(vendorsItem.getProposingGroup(), 'vendors')
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+        self.failIf(collection.getQuery())
+
+        self.changeUser('pmManager')
+        self.presentItem(vendorsItem)
+
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+        self.failIf(collection.getQuery())
+
+        self.do(vendorsItem, 'backToValidated')
+        self.changeUser('pmCreator2')
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+        self.failIf(collection.getQuery())
+
+        self.changeUser('pmManager')
+        self.do(developersItem, 'backToValidated')
+        self.changeUser('pmCreator1')
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+        self.failIf(collection.getQuery())
+
+        self.changeUser('pmManager')
+        self.do(vendorsItem, 'backToItemCreated')
+        self.changeUser('pmCreator2')
+        # pmManager may only edit developersItem
+        self.assertTrue(self.hasPermission(ModifyPortalContent, vendorsItem))
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+        res = collection.getQuery()
+        self.failUnless(len(res) == 1)
+        self.failUnless(res[0].UID == vendorsItem.UID())
+
+        self.changeUser('pmManager')
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+        self.failIf(collection.getQuery())
+
+        self.changeUser('pmReviewer2')
+        # pmManager may only edit developersItem
+        self.assertFalse(self.hasPermission(ModifyPortalContent, vendorsItem))
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+        res = collection.getQuery()
+        self.failUnless(len(res) == 1)
+        self.failUnless(res[0].UID == vendorsItem.UID())
+
+        self.changeUser('pmManager')
+        self.do(developersItem, 'backToItemCreated')
+        self.changeUser('pmCreator1')
+        # pmManager may only edit developersItem
+        self.assertTrue(self.hasPermission(ModifyPortalContent, developersItem))
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+        res = collection.getQuery()
+        self.failUnless(len(res) == 1)
+        self.failUnless(res[0].UID == developersItem.UID())
+
+        self.changeUser('pmManager')
+        cleanRamCacheFor('Products.MeetingMons.adapters.query_itemstincorrection')
+        res = collection.getQuery()
+        self.failUnless(len(res) == 1)
+        self.failUnless(res[0].UID == developersItem.UID())
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite

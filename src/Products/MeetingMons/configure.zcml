@@ -60,10 +60,15 @@
            provides="collective.compoundcriterion.interfaces.ICompoundCriterionFilter"
            name="items-to-correct-mons" />
 
-    <adapter for="*"
-           factory="Products.MeetingMons.adapters.MMCorrectedItemsAdapter"
-           provides="collective.compoundcriterion.interfaces.ICompoundCriterionFilter"
-           name="corrected-items-mons" />
+  <adapter for="*"
+         factory="Products.MeetingMons.adapters.MMCorrectedItemsAdapter"
+         provides="collective.compoundcriterion.interfaces.ICompoundCriterionFilter"
+         name="corrected-items-mons" />
+
+  <adapter for="*"
+         factory="Products.MeetingMons.adapters.MMItemsInCorrectionAdapter"
+         provides="collective.compoundcriterion.interfaces.ICompoundCriterionFilter"
+         name="items-in-correction-mons" />
 
    <!-- Indexes -->
   <adapter name="toCorrect" factory=".indexes.toCorrect" />
