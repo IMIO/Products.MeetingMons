@@ -3,7 +3,6 @@ from plone.testing import z2, zca
 from plone.app.testing import PloneWithPackageLayer
 from plone.app.testing import FunctionalTesting
 import Products.MeetingMons
-from plone.app.robotframework.testing import REMOTE_LIBRARY_BUNDLE_FIXTURE
 
 MC_ZCML = zca.ZCMLSandbox(filename="testing.zcml",
                           package=Products.MeetingMons,
@@ -36,12 +35,3 @@ MC_DEMO_TESTING_PROFILE = PloneWithPackageLayer(
                             'Products.PasswordStrength'),
     gs_profile_id='Products.MeetingMons:demo',
     name="MC_TESTING_PROFILE")
-
-MC_TESTING_ROBOT = FunctionalTesting(
-    bases=(
-        MC_DEMO_TESTING_PROFILE,
-        REMOTE_LIBRARY_BUNDLE_FIXTURE,
-        z2.ZSERVER_FIXTURE,
-    ),
-    name="MC_TESTING_ROBOT",
-)
