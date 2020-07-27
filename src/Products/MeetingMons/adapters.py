@@ -178,7 +178,7 @@ class CustomMeetingItem(MCMeetingItem):
 
     MeetingItem.getDefaultDecision = getDefaultDecision
 
-    def getExtraFieldsToCopyWhenCloning(self, cloned_to_same_mc):
+    def getExtraFieldsToCopyWhenCloning(self, cloned_to_same_mc, cloned_from_item_template):
         '''
           Keep some new fields when item is cloned (to another mc or from itemtemplate).
         '''
