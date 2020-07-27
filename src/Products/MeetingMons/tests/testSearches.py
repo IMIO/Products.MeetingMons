@@ -23,7 +23,7 @@
 #
 
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.PloneMeeting.tests.testSearches import testSearches as pmts
+from Products.MeetingCommunes.tests.testSearches import testSearches as mcts
 
 from DateTime import DateTime
 from Products.CMFCore.permissions import ModifyPortalContent
@@ -32,7 +32,7 @@ from imio.helpers.cache import cleanRamCacheFor
 from zope.component import getAdapter
 
 
-class testSearches(MeetingMonsTestCase, pmts):
+class testSearches(MeetingMonsTestCase, mcts):
     """Test searches."""
 
     def test_pm_SearchItemsToCorrect(self):

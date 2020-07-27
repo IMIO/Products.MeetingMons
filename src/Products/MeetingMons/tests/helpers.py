@@ -20,10 +20,11 @@
 # 02110-1301, USA.
 #
 
-from Products.PloneMeeting.tests.helpers import PloneMeetingTestingHelpers
+
+from Products.MeetingCommunes.tests.helpers import MeetingCommunesTestingHelpers
 
 
-class MeetingMonsTestingHelpers(PloneMeetingTestingHelpers):
+class MeetingMonsTestingHelpers(MeetingCommunesTestingHelpers):
     '''Stub class that provides some helper methods about testing.'''
 
     TRANSITIONS_FOR_PROPOSING_ITEM_FIRST_LEVEL_1 = TRANSITIONS_FOR_PROPOSING_ITEM_FIRST_LEVEL_2 = (

@@ -22,13 +22,12 @@
 # 02110-1301, USA.
 #
 
-from Products.PloneMeeting.tests.testWFAdaptations import testWFAdaptations as pmtwfa
+from Products.MeetingCommunes.tests.testWFAdaptations import testWFAdaptations as mctwfa
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 from Products.PloneMeeting.model.adaptations import RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS
 
 
-
-class testWFAdaptations(MeetingMonsTestCase, pmtwfa):
+class testWFAdaptations(MeetingMonsTestCase, mctwfa):
     '''See doc string in PloneMeeting.tests.testWFAdaptations.'''
 
     def test_pm_WFA_availableWFAdaptations(self):

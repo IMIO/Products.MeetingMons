@@ -22,15 +22,16 @@
 # 02110-1301, USA.
 #
 
-from Products.PloneMeeting.tests.testSetup import testSetup as pmts
+from Products.MeetingCommunes.tests.testSetup import testSetup as mcts
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 
 
-class testSetup(MeetingMonsTestCase, pmts):
+class testSetup(MeetingMonsTestCase, mcts):
     '''Tests the setup, especially registered profiles.'''
 
 
 def test_suite():
+    pass  # TODO REMOVE ME
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
     suite.addTest(makeSuite(testSetup, prefix='test_pm_'))

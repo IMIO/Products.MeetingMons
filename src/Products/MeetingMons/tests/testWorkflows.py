@@ -26,11 +26,11 @@ from AccessControl import Unauthorized
 from zope.annotation import IAnnotations
 from Products.CMFCore.permissions import View
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.PloneMeeting.tests.testWorkflows import testWorkflows as pmtw
+from Products.MeetingCommunes.tests.testWorkflows import testWorkflows as mctw
 from Products.PloneMeeting.utils import get_annexes
 
 
-class testWorkflows(MeetingMonsTestCase, pmtw):
+class testWorkflows(MeetingMonsTestCase, mctw):
     """Tests the default workflows implemented in MeetingMons."""
 
     def test_pm_CreateItem(self):
