@@ -1,7 +1,8 @@
+from imio.history.interfaces import IImioHistory
 from plone.indexer import indexer
 from Products.PloneMeeting.interfaces import IMeetingItem
-from Products.PloneMeeting.utils import getLastEvent
-from Products.PloneMeeting.utils import getHistory
+from imio.history.utils import getLastWFAction as getLastEvent
+from zope.component import getAdapter
 
 states_before_validated = ('itemcreated',
                            'proposed_to_servicehead',
@@ -27,7 +28,8 @@ def corrected(obj):
     """
     res = False
     if obj.queryState() == 'validated':
-        history = getHistory(obj, checkMayView=False, history_types=['workflow'])
+        adapter = getAdapter(obj, IImioHistory, 'workflow')
+        history = adapter.getHistory(obj, checkMayView=False, history_types=['workflow'])
         if history[-1]['action'] == 'validate':
             validation_count = 0
             i = 0

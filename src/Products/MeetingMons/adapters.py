@@ -41,12 +41,12 @@ from Products.MeetingCommunes.adapters import MeetingItemCommunesWorkflowConditi
 from Products.MeetingCommunes.adapters import MeetingCommunesWorkflowActions
 from Products.MeetingCommunes.adapters import MeetingCommunesWorkflowConditions
 
+from Products.PloneMeeting.MeetingConfig import MeetingConfig
 from Products.PloneMeeting.MeetingItem import MeetingItem
 from Products.PloneMeeting.adapters import CompoundCriterionBaseAdapter, ItemPrettyLinkAdapter, \
     BaseItemsToCorrectAdapter
 from Products.PloneMeeting.interfaces import IMeetingConfigCustom
 from Products.PloneMeeting.interfaces import IMeetingCustom
-from Products.PloneMeeting.interfaces import IMeetingGroupCustom
 from Products.PloneMeeting.interfaces import IMeetingItemCustom
 from Products.PloneMeeting.interfaces import IToolPloneMeetingCustom
 from Products.PloneMeeting.model import adaptations
@@ -54,8 +54,7 @@ from Products.PloneMeeting.model.adaptations import WF_APPLIED
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
-from Globals import InitializeClass
-from Products.Archetypes.atapi import DisplayList
+from AccessControl.class_init import InitializeClass
 from Products.CMFCore.permissions import ReviewPortalContent, ModifyPortalContent
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.utils import getToolByName

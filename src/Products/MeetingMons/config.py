@@ -34,13 +34,20 @@ MONSROLES['officemanagers'] = 'MeetingOfficeManager'
 MONSROLES['extraordinarybudget'] = 'MeetingExtraordinaryBudget'
 MONSROLES['divisionheads'] = 'MeetingDivisionHead'
 PMconfig.MEETINGROLES.update(MONSROLES)
-PMconfig.MEETING_GROUP_SUFFIXES = PMconfig.MEETINGROLES.keys()
 
 MONSMEETINGREVIEWERS = OrderedDict([('reviewers', 'proposed_to_director'),
                                     ('divisionheads', 'proposed_to_divisionhead'),
                                     ('officemanagers', 'proposed_to_officemanager'),
                                     ('serviceheads', 'proposed_to_servicehead'), ])
 PMconfig.MEETINGREVIEWERS = MONSMEETINGREVIEWERS
+
+PMconfig.EXTRA_GROUP_SUFFIXES = [
+    {"fct_title": u"divisionheads", "fct_id": u"divisionheads", "fct_orgs": []},
+    {"fct_title": u"officemanagers", "fct_id": u"officemanagers", "fct_orgs": []},
+    {"fct_title": u"serviceheads", "fct_id": u"serviceheads", "fct_orgs": []},
+    {"fct_title": u"extraordinarybudget", "fct_id": u"extraordinarybudget", "fct_orgs": []},
+    {"fct_title": u"budgetimpactreviewers", "fct_id": u"budgetimpactreviewers", "fct_orgs": []},
+]
 
 # Permissions
 DEFAULT_ADD_CONTENT_PERMISSION = "Add portal content"
