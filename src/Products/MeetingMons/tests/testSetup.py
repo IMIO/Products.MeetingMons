@@ -31,7 +31,7 @@ class testSetup(MeetingMonsTestCase, mcts):
 
 
 def test_suite():
-    pass  # TODO REMOVE ME
+    return # TODO REMOVE ME
 
     # from unittest import TestSuite, makeSuite
     # suite = TestSuite()

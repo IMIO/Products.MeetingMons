@@ -39,33 +39,38 @@ class testCustomMeetingItem(MeetingMonsTestCase):
            collection, this is used in the adapted method 'showFinanceAdviceTemplate'.'''
         cfg = self.meetingConfig
         collection = getattr(cfg.searches.searches_items, FINANCE_ADVICES_COLLECTION_ID)
+        # make sure collection is active
+        if not collection.enabled:
+            collection.enabled = True
+            collection.reindexObject(idxs=['enabled'])
+
         collection.setQuery([
             {'i': 'portal_type',
              'o': 'plone.app.querystring.operation.selection.is',
              'v': [cfg.getItemTypeName(), ]},
             {'i': 'indexAdvisers',
              'o': 'plone.app.querystring.operation.selection.is',
-             'v': ['delay_real_group_id__unique_id_001',
-                   'delay_real_group_id__unique_id_002']}
+             'v': ['delay_row_id__unique_id_001',
+                   'delay_row_id__unique_id_002']}
         ], )
         today = DateTime().strftime('%Y/%m/%d')
         cfg.setCustomAdvisers([
             {'row_id': 'unique_id_001',
-             'group': self.developers_uid,
+             'org': self.developers_uid,
              'for_item_created_from': today,
              'delay': '10',
              'delay_left_alert': '4',
              'delay_label': 'Finance advice 1',
              'is_linked_to_previous_row': '0'},
             {'row_id': 'unique_id_002',
-             'group': self.developers_uid,
+             'org': self.developers_uid,
              'for_item_created_from': today,
              'delay': '20',
              'delay_left_alert': '4',
              'delay_label': 'Finance advice 2',
              'is_linked_to_previous_row': '1'},
             {'row_id': 'unique_id_003',
-             'group': self.developers_uid,
+             'org': self.developers_uid,
              'for_item_created_from': today,
              'delay': '20',
              'delay_left_alert': '4',
@@ -83,7 +88,7 @@ class testCustomMeetingItem(MeetingMonsTestCase):
 
         # ask advice of another group
         item.setOptionalAdvisers((self.vendors_uid, ))
-        item.at_post_edit_script()
+        item._update_after_edit()
         # no usedFinanceGroupId
         self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(item), [])
         self.assertFalse(item.adapted().showFinanceAdviceTemplate())
@@ -91,20 +96,20 @@ class testCustomMeetingItem(MeetingMonsTestCase):
         # now ask advice of developers, considered as an non finance
         # advice as only customAdvisers are considered
         item.setOptionalAdvisers((self.developers_uid, ))
-        item.at_post_edit_script()
+        item._update_after_edit()
         self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(item), [])
         self.assertFalse(item.adapted().showFinanceAdviceTemplate())
 
         # right ask a custom advice that is not a finance advice this time
-        item.setOptionalAdvisers((self.developers_uid + '__rowid__unique_id_003', ))
-        item.at_post_edit_script()
+        item.setOptionalAdvisers(('{0}__rowid__unique_id_003'.format(self.developers_uid), ))
+        item._update_after_edit()
         self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(item), [])
         self.assertFalse(item.adapted().showFinanceAdviceTemplate())
 
         # finally ask a real finance advice, this time it will work
-        item.setOptionalAdvisers((self.developers_uid + '__rowid__unique_id_001', ))
-        item.at_post_edit_script()
-        self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(item), ['developers'])
+        item.setOptionalAdvisers(('{0}__rowid__unique_id_001'.format(self.developers_uid), ))
+        item._update_after_edit()
+        self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(item), [self.developers_uid])
         self.assertTrue(item.adapted().showFinanceAdviceTemplate())
 
         # if the collection does not exist, [] is returned
