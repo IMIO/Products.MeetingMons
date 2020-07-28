@@ -27,11 +27,25 @@ from Products.MeetingCommunes.tests.testMeetingConfig import testMeetingConfig a
 
 
 class testMeetingConfig(MeetingMonsTestCase, mctmc):
-    '''Tests the MeetingConfig class methods.'''
+    """Tests the MeetingConfig class methods."""
+
+    def _usersToRemoveFromGroupsForUpdatePersonalLabels(self):
+        """ """
+        return (
+            "pmServiceHead1",
+            "pmOfficeManager1",
+            "pmDivisionHead1",
+            "pmDirector1",
+        )
+
+    def test_pm_RemoveAnnexesPreviewsOnMeetingClosure(self):
+        """ Not used """
+        pass
 
 
 def test_suite():
     from unittest import TestSuite, makeSuite
+
     suite = TestSuite()
-    suite.addTest(makeSuite(testMeetingConfig, prefix='test_pm_'))
+    suite.addTest(makeSuite(testMeetingConfig, prefix="test_pm_"))
     return suite

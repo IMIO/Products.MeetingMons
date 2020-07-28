@@ -262,55 +262,6 @@ class CustomMeetingConfig(MCMeetingConfig):
     def __init__(self, item):
         self.context = item
 
-    security.declarePublic('getUsedFinanceGroupIds')
-
-    def getUsedFinanceGroupIds(self, item=None):
-        """Possible finance advisers group ids are defined on
-           the FINANCE_ADVICES_COLLECTION_ID collection."""
-        cfg = self.getSelf()
-        tool = api.portal.get_tool('portal_plonemeeting')
-        collection = getattr(cfg.searches.searches_items, FINANCE_ADVICES_COLLECTION_ID, None)
-        res = []
-        if not collection:
-            logger.warn(
-                "Method 'getUsedFinanceGroupIds' could not find the '{0}' collection!".format(
-                    FINANCE_ADVICES_COLLECTION_ID))
-            return res
-        # if collection is inactive, we just return an empty list
-        # for convenience, the collection is added to every MeetingConfig, even if not used
-        if not collection.active:
-            return res
-        # get the indexAdvisers value defined on the collection
-        # and find the relevant group, indexAdvisers form is :
-        # 'delay_real_group_id__2014-04-16.9996934488', 'real_group_id_directeur-financier'
-        # it is either a customAdviser row_id or a MeetingGroup id
-        values = [term['v'] for term in collection.getRawQuery()
-                  if term['i'] == 'indexAdvisers'][0]
-
-        for v in values:
-            rowIdOrGroupId = v.replace('delay_real_group_id__', '').replace('real_group_id__', '')
-            if hasattr(tool, rowIdOrGroupId):
-                groupId = rowIdOrGroupId
-                # append it only if not already into res and if
-                # we have no 'row_id' for this adviser in adviceIndex
-                if item and groupId not in res and \
-                        (groupId in item.adviceIndex and not item.adviceIndex[groupId]['row_id']):
-                    res.append(groupId)
-                elif not item:
-                    res.append(groupId)
-            else:
-                groupId = cfg._dataForCustomAdviserRowId(rowIdOrGroupId)['group']
-                # append it only if not already into res and if
-                # we have a 'row_id' for this adviser in adviceIndex
-                if item and groupId not in res and \
-                        (groupId in item.adviceIndex and
-                         item.adviceIndex[groupId]['row_id'] == rowIdOrGroupId):
-                    res.append(groupId)
-                elif not item:
-                    res.append(groupId)
-        # remove duplicates
-        return list(set(res))
-
     def _extraSearchesInfo(self, infos):
         """Add some specific searches."""
         cfg = self.getSelf()
