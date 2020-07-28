@@ -44,7 +44,7 @@ from Products.MeetingCommunes.adapters import MeetingCommunesWorkflowConditions
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
 from Products.PloneMeeting.MeetingItem import MeetingItem
 from Products.PloneMeeting.adapters import CompoundCriterionBaseAdapter, ItemPrettyLinkAdapter, \
-    BaseItemsToCorrectAdapter
+    BaseItemsToCorrectAdapter, _find_nothing_query
 from Products.PloneMeeting.interfaces import IMeetingConfigCustom
 from Products.PloneMeeting.interfaces import IMeetingCustom
 from Products.PloneMeeting.interfaces import IMeetingItemCustom
@@ -1392,7 +1392,7 @@ class MMBaseItemsToCorrectAdapter(BaseItemsToCorrectAdapter):
                     for userGroupId in userGroupIds:
                         reviewProcessInfos.append('%s__reviewprocess__%s' % (userGroupId, review_state))
         if not reviewProcessInfos:
-            return FIND_NOTHING_QUERY
+            return _find_nothing_query(self.cfg.getItemTypeName())
         # Create query parameters
         return {'portal_type': {'query': self.cfg.getItemTypeName()},
                 'toCorrect': {'query': True},
