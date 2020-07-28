@@ -31,7 +31,6 @@ class testMeeting(MeetingMonsTestCase, mctm):
         Tests the Meeting class methods.
     """
 
-
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()

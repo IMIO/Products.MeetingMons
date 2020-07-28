@@ -214,17 +214,6 @@ class CustomMeetingItem(MCMeetingItem):
         else:
             return None
 
-    def getEchevinsForProposingGroup(self):
-        '''Returns all echevins defined for the proposing group'''
-        res = []
-        tool = getToolByName(self.context, 'portal_plonemeeting')
-        # keep also inactive groups because this method is often used in the customAdviser
-        # TAL expression and a disabled MeetingGroup must still be taken into account
-        for group in tool.getMeetingGroups(onlyActive=False):
-            if self.context.getProposingGroup() in group.getEchevinServices():
-                res.append(group.getId())
-        return res
-
     def _initDecisionFieldIfEmpty(self):
         '''
           If decision field is empty, it will be initialized
@@ -289,8 +278,7 @@ class CustomMeetingConfig(MCMeetingConfig):
             return res
         # if collection is inactive, we just return an empty list
         # for convenience, the collection is added to every MeetingConfig, even if not used
-        wfTool = api.portal.get_tool('portal_workflow')
-        if wfTool.getInfoFor(collection, 'review_state') == 'inactive':
+        if not collection.active:
             return res
         # get the indexAdvisers value defined on the collection
         # and find the relevant group, indexAdvisers form is :
@@ -1381,13 +1369,14 @@ class MMBaseItemsToCorrectAdapter(BaseItemsToCorrectAdapter):
         # so we will get groups suffixes linked to these roles and find relevant groups
         wfTool = api.portal.get_tool('portal_workflow')
         itemWF = wfTool.getWorkflowsFor(self.cfg.getItemTypeName())[0]
+        userPloneGroups = self.tool.get_plone_groups_for_user()
         reviewProcessInfos = []
         for review_state in review_states:
             if review_state in itemWF.states:
                 roles = itemWF.states[review_state].permission_roles[ModifyPortalContent]
                 from Products.PloneMeeting.config import MEETINGROLES
                 suffixes = [suffix for suffix, role in MEETINGROLES.items() if role in roles]
-                userGroupIds = [mGroup.getId() for mGroup in self.tool.getGroupsForUser(suffixes=suffixes)]
+                userGroupIds = [mGroup for mGroup in userPloneGroups]
                 if userGroupIds:
                     for userGroupId in userGroupIds:
                         reviewProcessInfos.append('%s__reviewprocess__%s' % (userGroupId, review_state))

@@ -129,6 +129,7 @@ class testSearches(MeetingMonsTestCase, mcts):
         recurring_item = meeting.getItems()[0]
         cleanRamCacheFor('Products.MeetingMons.adapters.query_correcteditems')
         res = collection.getQuery()
+        import ipdb; ipdb.set_trace() # TODO : remove me
         self.failIf(res)
         self.do(recurring_item, 'backToValidated')
         cleanRamCacheFor('Products.MeetingMons.adapters.query_correcteditems')

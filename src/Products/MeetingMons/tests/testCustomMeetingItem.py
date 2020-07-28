@@ -32,33 +32,6 @@ class testCustomMeetingItem(MeetingMonsTestCase):
     """
         Tests the MeetingItem adapted methods
     """
-    def test_GetEchevinsForProposingGroup(self):
-        '''Check a meetingItem for developers group return an echevin (the Same group in our case)
-           and a meetingItem for vendors return no echevin.'''
-        # create an item for test
-        self.changeUser('pmManager')
-        meetingDate = DateTime('2008/06/12 08:00:00')
-        self.create('Meeting', date=meetingDate)
-        # create items
-        self.changeUser('pmCreator1')
-        i1 = self.create('MeetingItem')
-        i1.setProposingGroup('vendors')
-        # before present in meeting, certfiedSignatures must be empty
-        res = i1.adapted().getEchevinsForProposingGroup()
-        self.assertEquals(res, [])
-        self.changeUser('pmCreator1')
-        i2 = self.create('MeetingItem')
-        i2.setProposingGroup('developers')
-        # before present in meeting, certfiedSignatures must be empty
-        res = i2.adapted().getEchevinsForProposingGroup()
-        self.assertEquals(res, ['developers'])
-        # disabled MeetingGroup are still taken into account
-        self.changeUser('admin')
-        self.do(self.tool.developers, 'deactivate')
-        self.assertEquals(self.wfTool.getInfoFor(self.tool.developers, 'review_state'), 'inactive')
-        # getMeetingGroups called by getEchevinsForProposingGroup is memoized
-        self.cleanMemoize()
-        self.assertEquals(i2.adapted().getEchevinsForProposingGroup(), ['developers'])
 
     def test_GetUsedFinanceGroupIds(self):
         '''Test the custom MeetingItem.getUsedFinanceGroupIds method
@@ -78,21 +51,21 @@ class testCustomMeetingItem(MeetingMonsTestCase):
         today = DateTime().strftime('%Y/%m/%d')
         cfg.setCustomAdvisers([
             {'row_id': 'unique_id_001',
-             'group': 'developers',
+             'group': self.developers_uid,
              'for_item_created_from': today,
              'delay': '10',
              'delay_left_alert': '4',
              'delay_label': 'Finance advice 1',
              'is_linked_to_previous_row': '0'},
             {'row_id': 'unique_id_002',
-             'group': 'developers',
+             'group': self.developers_uid,
              'for_item_created_from': today,
              'delay': '20',
              'delay_left_alert': '4',
              'delay_label': 'Finance advice 2',
              'is_linked_to_previous_row': '1'},
             {'row_id': 'unique_id_003',
-             'group': 'developers',
+             'group': self.developers_uid,
              'for_item_created_from': today,
              'delay': '20',
              'delay_left_alert': '4',
@@ -103,13 +76,13 @@ class testCustomMeetingItem(MeetingMonsTestCase):
         self.changeUser('pmManager')
         item = self.create('MeetingItem')
         # there are financeGroupIds
-        self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(), ['developers'])
+        self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(), [self.developers_uid])
         # but not for item
         self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(item), [])
         self.assertFalse(item.adapted().showFinanceAdviceTemplate())
 
         # ask advice of another group
-        item.setOptionalAdvisers(('vendors', ))
+        item.setOptionalAdvisers((self.vendors_uid, ))
         item.at_post_edit_script()
         # no usedFinanceGroupId
         self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(item), [])
@@ -117,19 +90,19 @@ class testCustomMeetingItem(MeetingMonsTestCase):
 
         # now ask advice of developers, considered as an non finance
         # advice as only customAdvisers are considered
-        item.setOptionalAdvisers(('developers', ))
+        item.setOptionalAdvisers((self.developers_uid, ))
         item.at_post_edit_script()
         self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(item), [])
         self.assertFalse(item.adapted().showFinanceAdviceTemplate())
 
         # right ask a custom advice that is not a finance advice this time
-        item.setOptionalAdvisers(('developers__rowid__unique_id_003', ))
+        item.setOptionalAdvisers((self.developers_uid + '__rowid__unique_id_003', ))
         item.at_post_edit_script()
         self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(item), [])
         self.assertFalse(item.adapted().showFinanceAdviceTemplate())
 
         # finally ask a real finance advice, this time it will work
-        item.setOptionalAdvisers(('developers__rowid__unique_id_001', ))
+        item.setOptionalAdvisers((self.developers_uid + '__rowid__unique_id_001', ))
         item.at_post_edit_script()
         self.assertEquals(cfg.adapted().getUsedFinanceGroupIds(item), ['developers'])
         self.assertTrue(item.adapted().showFinanceAdviceTemplate())
@@ -145,21 +118,21 @@ class testCustomMeetingItem(MeetingMonsTestCase):
         # oneMonthAgo = DateTime() - 30
         self.meetingConfig.setCustomAdvisers([
             {'row_id': 'unique_id_001',
-             'group': 'developers',
+             'group': self.developers_uid,
              'for_item_created_from': today,
              'delay': '10',
              'delay_left_alert': '4',
              'delay_label': 'Finance advice < 20000 euros',
              'is_linked_to_previous_row': '0'},
             {'row_id': 'unique_id_002',
-             'group': 'developers',
+             'group': self.developers_uid,
              'for_item_created_from': today,
              'delay': '20',
              'delay_left_alert': '4',
              'delay_label': 'Finance advice > 20000 euros',
              'is_linked_to_previous_row': '1'},
             {'row_id': 'unique_id_003',
-             'group': 'developers',
+             'group': self.developers_uid,
              'for_item_created_from': today,
              'delay': '20',
              'delay_left_alert': '4',
@@ -175,21 +148,21 @@ class testCustomMeetingItem(MeetingMonsTestCase):
                                                                         rowIds=['unique_id_002']), False)
 
         # ask advice to another group
-        item.setOptionalAdvisers(('vendors', ))
+        item.setOptionalAdvisers((self.vendors_uid, ))
         item.at_post_edit_script()
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers'), False)
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers',
                                                                         rowIds=['unique_id_002']), False)
 
         # ask advice without delay
-        item.setOptionalAdvisers(('developers', ))
+        item.setOptionalAdvisers((self.developers_uid, ))
         item.at_post_edit_script()
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers'), False)
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers',
                                                                         rowIds=['unique_id_002']), False)
 
         # ask advice with delay but without the good RowId and not timed out
-        item.setOptionalAdvisers(('developers__rowid__unique_id_003', ))
+        item.setOptionalAdvisers((self.developers_uid + '__rowid__unique_id_003', ))
         item.at_post_edit_script()
         self.proposeItem(item)
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers'), False)
@@ -197,34 +170,34 @@ class testCustomMeetingItem(MeetingMonsTestCase):
                                                                         rowIds=['unique_id_002']), False)
 
         # ask advice with delay and good RowId but not timed out
-        item.setOptionalAdvisers(('developers__rowid__unique_id_002', ))
+        item.setOptionalAdvisers((self.developers_uid + '__rowid__unique_id_002', ))
         item.at_post_edit_script()
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers'), False)
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers',
                                                                         rowIds=['unique_id_002']), False)
 
         # ask advice with delay and time out but without the good RowId
-        item.setOptionalAdvisers(('developers__rowid__unique_id_001', ))
+        item.setOptionalAdvisers((self.developers_uid + '__rowid__unique_id_001', ))
         item.at_post_edit_script()
-        item.adviceIndex['developers']['delay_started_on'] = datetime(2016, 01, 01)
+        item.adviceIndex[self.developers_uid]['delay_started_on'] = datetime(2016, 01, 01)
         item.at_post_edit_script()
-        self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers'), True)
-        self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers',
+        self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId=self.developers_uid), True)
+        self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId=self.developers_uid,
                                                                         rowIds=['unique_id_002']), False)
 
         # ask advice with delay and time out but with a bunch of bad RowIds
-        item.setOptionalAdvisers(('developers__rowid__unique_id_002', ))
+        item.setOptionalAdvisers((self.developers_uid + '__rowid__unique_id_002', ))
         item.at_post_edit_script()
-        item.adviceIndex['developers']['delay_started_on'] = datetime(2016, 01, 01)
+        item.adviceIndex[self.developers_uid]['delay_started_on'] = datetime(2016, 01, 01)
         item.at_post_edit_script()
-        self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers'), True)
+        self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId=self.developers_uid), True)
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(
-            groupId='developers',
+            groupId=self.developers_uid,
             rowIds=['unique_id_001', 'unique_id_003']), False)
         # add the good row id in the list.
         self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(
-            groupId='developers',
+            groupId=self.developers_uid,
             rowIds=['unique_id_001', 'unique_id_002', 'unique_id_003']), True)
         # put the good row id alone in the list.
-        self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId='developers',
+        self.assertEquals(item.adapted().adviceDelayIsTimedOutWithRowId(groupId=self.developers_uid,
                                                                         rowIds=['unique_id_002']), True)
