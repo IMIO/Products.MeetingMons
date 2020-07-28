@@ -834,10 +834,10 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
           that is in the state 'itemcreated'
         """
         res = False
-        if not self.context.getCategory():
-            return No(translate('required_category_ko',
-                                domain="PloneMeeting",
-                                context=self.context.REQUEST))
+        # Check if there are category and groupsInCharge, if applicable
+        msg = self._check_required_data()
+        if msg is not None:
+            return msg
         user = self.context.portal_membership.getAuthenticatedMember()
         # first of all, the use must have the 'Review portal content permission'
         if _checkPermission(ReviewPortalContent, self.context) and \
@@ -867,11 +867,12 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         """
           Check that the user has the 'Review portal content'
         """
+        # Check if there are category and groupsInCharge, if applicable
+        msg = self._check_required_data()
+        if msg is not None:
+            return msg
+
         res = False
-        if not self.context.getCategory():
-            return No(translate('required_category_ko',
-                                domain="PloneMeeting",
-                                context=self.context.REQUEST))
         # if item have budget info, budget reviewer must validate it
         isValidateByBudget = not self.context.getBudgetRelated() or self.context.getValidateByBudget() or \
                              self.context.portal_plonemeeting.isManager(self.context)
@@ -885,6 +886,11 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         """
           Check that the user has the 'Review portal content'
         """
+        # Check if there are category and groupsInCharge, if applicable
+        msg = self._check_required_data()
+        if msg is not None:
+            return msg
+
         res = False
         if _checkPermission(ReviewPortalContent, self.context):
             res = True
@@ -896,6 +902,11 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         """
           Check that the user has the 'Review portal content'
         """
+        # Check if there are category and groupsInCharge, if applicable
+        msg = self._check_required_data()
+        if msg is not None:
+            return msg
+
         res = False
         if _checkPermission(ReviewPortalContent, self.context):
             res = True
@@ -907,6 +918,11 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         """
           Check that the user has the 'Review portal content'
         """
+        # Check if there are category and groupsInCharge, if applicable
+        msg = self._check_required_data()
+        if msg is not None:
+            return msg
+
         res = False
         if _checkPermission(ReviewPortalContent, self.context):
             res = True
@@ -932,6 +948,11 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         """
           Check that the user has the 'Review portal content'
         """
+        # Check if there are category and groupsInCharge, if applicable
+        msg = self._check_required_data()
+        if msg is not None:
+            return msg
+
         res = False
         if _checkPermission(ReviewPortalContent, self.context):
             res = True
@@ -943,6 +964,11 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         """
           Check that the user has the 'Review portal content'
         """
+        # Check if there are category and groupsInCharge, if applicable
+        msg = self._check_required_data()
+        if msg is not None:
+            return msg
+
         res = False
         if not self.context.getCategory():
             return No(translate('required_category_ko',
@@ -958,6 +984,11 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         """
           Check that the user has the 'Review portal content'
         """
+        # Check if there are category and groupsInCharge, if applicable
+        msg = self._check_required_data()
+        if msg is not None:
+            return msg
+
         res = False
         if _checkPermission(ReviewPortalContent, self.context):
             res = True
@@ -969,6 +1000,11 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         """
           Check that the user has the 'Review portal content'
         """
+        # Check if there are category and groupsInCharge, if applicable
+        msg = self._check_required_data()
+        if msg is not None:
+            return msg
+
         res = False
         if _checkPermission(ReviewPortalContent, self.context):
             res = True
