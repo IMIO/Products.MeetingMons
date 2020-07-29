@@ -29,6 +29,22 @@ from Products.MeetingCommunes.tests.testAnnexes import testAnnexes as mcta
 class testAnnexes(MeetingMonsTestCase, mcta):
     ''' '''
 
+    def test_pm_AnnexesConvertedIsPreviewable(self):
+        """Not applicable"""
+        pass
+
+    def test_pm_AnnexesConvertedIfAutoConvertIsEnabled(self):
+        """Not applicable"""
+        pass
+
+    def test_pm_AnnexesConvertedDependingOnAnnexToPrintMode(self):
+        """Not applicable"""
+        pass
+
+    def test_pm_AnnexOnlyConvertedAgainWhenNecessary(self):
+        """Not applicable"""
+        pass
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite

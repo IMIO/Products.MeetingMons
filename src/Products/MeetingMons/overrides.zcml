@@ -65,26 +65,6 @@
              factory="Products.MeetingMons.adapters.CustomToolPloneMeeting"
              provides="Products.PloneMeeting.interfaces.IToolPloneMeetingCustom"/>
 
-    <adapter for="*"
-             factory="Products.MeetingMons.adapters.BlockedItemsAdapter"
-             provides="collective.compoundcriterion.interfaces.ICompoundCriterionFilter"
-             name="blocked-items"/>
-
-    <adapter for="*"
-             factory="Products.MeetingMons.adapters.MMItemsToCorrectAdapter"
-             provides="collective.compoundcriterion.interfaces.ICompoundCriterionFilter"
-             name="items-to-correct-mons"/>
-
-    <adapter for="*"
-             factory="Products.MeetingMons.adapters.MMCorrectedItemsAdapter"
-             provides="collective.compoundcriterion.interfaces.ICompoundCriterionFilter"
-             name="corrected-items-mons"/>
-
-    <adapter for="*"
-             factory="Products.MeetingMons.adapters.MMItemsInCorrectionAdapter"
-             provides="collective.compoundcriterion.interfaces.ICompoundCriterionFilter"
-             name="items-in-correction-mons"/>
-
     <!-- Indexes -->
     <adapter name="toCorrect" factory=".indexes.toCorrect"/>
     <adapter name="corrected" factory=".indexes.corrected"/>

@@ -11,7 +11,7 @@
   <include file="profiles.zcml" />
   <include package=".browser" />
   <include package="Products.CMFPlacefulWorkflow"/>
-
+  <include package="Products.MeetingCommunes"/>
   <include package="Products.PloneMeeting"/>
 
 </configure>
