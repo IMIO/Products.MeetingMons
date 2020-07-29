@@ -43,8 +43,7 @@ from Products.MeetingCommunes.adapters import MeetingCommunesWorkflowConditions
 
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
 from Products.PloneMeeting.MeetingItem import MeetingItem
-from Products.PloneMeeting.adapters import CompoundCriterionBaseAdapter, ItemPrettyLinkAdapter, \
-    BaseItemsToCorrectAdapter, _find_nothing_query
+from Products.PloneMeeting.adapters import CompoundCriterionBaseAdapter, ItemPrettyLinkAdapter
 from Products.PloneMeeting.interfaces import IMeetingConfigCustom
 from Products.PloneMeeting.interfaces import IMeetingCustom
 from Products.PloneMeeting.interfaces import IMeetingItemCustom
@@ -1296,17 +1295,42 @@ class MMItemPrettyLinkAdapter(ItemPrettyLinkAdapter):
         if self.context.isDefinedInTool():
             return icons
 
-        from Products.MeetingMons.indexes import toCorrect
-        if toCorrect(self.context)():
-            icons.append(('return_to_proposing_group.png',
-                          translate('icon_help_returned_to_proposing_group',
+        itemState = self.context.queryState()
+        # Add our icons for some review states
+        if itemState == 'proposed_to_budgetimpact_reviewer':
+            icons.append(('proposeToBudgetImpactReviewer.png',
+                          translate('icon_help_proposed',
                                     domain="PloneMeeting",
                                     context=self.request)))
 
-        from Products.MeetingMons.indexes import corrected
-        if corrected(self.context)():
-            icons.append(('validate.png',
-                          translate('icon_help_corrected',
+        if itemState == 'proposed_to_extraordinarybudget':
+            icons.append(('proposeToExtraordinaryBudget.png',
+                          translate('icon_help_proposed',
                                     domain="PloneMeeting",
                                     context=self.request)))
+
+        if itemState == 'proposed_to_servicehead':
+            icons.append(('proposeToServiceHead.png',
+                          translate('icon_help_proposed',
+                                    domain="PloneMeeting",
+                                    context=self.request)))
+
+        if itemState == 'proposed_to_officemanager':
+            icons.append(('proposeToOfficeManager.png',
+                          translate('icon_help_proposed',
+                                    domain="PloneMeeting",
+                                    context=self.request)))
+
+        if itemState == 'proposed_to_divisionhead':
+            icons.append(('proposeToDivisionHead.png',
+                          translate('icon_help_proposed',
+                                    domain="PloneMeeting",
+                                    context=self.request)))
+
+        if itemState == 'proposed_to_director':
+            icons.append(('proposeToDirector.png',
+                          translate('icon_help_proposed',
+                                    domain="PloneMeeting",
+                                    context=self.request)))
+
         return icons

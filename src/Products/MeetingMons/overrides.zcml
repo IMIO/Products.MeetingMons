@@ -64,8 +64,4 @@
     <adapter for="Products.PloneMeeting.interfaces.IToolPloneMeeting"
              factory="Products.MeetingMons.adapters.CustomToolPloneMeeting"
              provides="Products.PloneMeeting.interfaces.IToolPloneMeetingCustom"/>
-
-    <!-- Indexes -->
-    <adapter name="toCorrect" factory=".indexes.toCorrect"/>
-    <adapter name="corrected" factory=".indexes.corrected"/>
 </configure>
