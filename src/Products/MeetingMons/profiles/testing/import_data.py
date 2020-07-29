@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from copy import deepcopy
+
+from Products.PloneMeeting.config import MEETINGREVIEWERS
+from Products.PloneMeeting.profiles.testing import import_data as pm_import_data
 from Products.MeetingCommunes.profiles.testing import import_data as mc_import_data
 from Products.PloneMeeting.profiles import UserDescriptor
 
@@ -8,10 +11,6 @@ from Products.PloneMeeting.profiles import UserDescriptor
 data = deepcopy(mc_import_data.data)
 
 # Users and groups -------------------------------------------------------------
-
-pmManager = UserDescriptor(
-    "pmManager", [], email="pmmanager@plonemeeting.org", fullname="M. PMManager"
-)
 pmCreator1 = UserDescriptor(
     "pmCreator1", [], email="pmcreator1@plonemeeting.org", fullname="M. PMCreator One"
 )
@@ -27,28 +26,22 @@ pmObserver1 = UserDescriptor(
     email="pmobserver1@plonemeeting.org",
     fullname="M. PMObserver One",
 )
-pmReviewer1 = UserDescriptor("pmReviewer1", [])
 pmServiceHead1 = UserDescriptor("pmServiceHead1", [])
 pmOfficeManager1 = UserDescriptor("pmOfficeManager1", [])
 pmDivisionHead1 = UserDescriptor("pmDivisionHead1", [])
 pmDirector1 = UserDescriptor("pmDirector1", [])
-pmReviewerLevel1 = UserDescriptor(
-    "pmReviewerLevel1",
-    [],
-    email="pmreviewerlevel1@plonemeeting.org",
-    fullname="M. PMReviewer Level One",
-)
 pmCreator2 = UserDescriptor("pmCreator2", [])
-pmReviewer2 = UserDescriptor("pmReviewer2", [])
-pmReviewerLevel2 = UserDescriptor(
-    "pmReviewerLevel2",
-    [],
-    email="pmreviewerlevel2@plonemeeting.org",
-    fullname="M. PMReviewer Level Two",
-)
 pmAdviser1 = UserDescriptor("pmAdviser1", [])
 voter1 = UserDescriptor("voter1", [], fullname="M. Voter One")
 voter2 = UserDescriptor("voter2", [], fullname="M. Voter Two")
+
+
+# Inherited users
+pmReviewer1 = deepcopy(pm_import_data.pmReviewer1)
+pmReviewer2 = deepcopy(pm_import_data.pmReviewer2)
+pmReviewerLevel1 = deepcopy(pm_import_data.pmReviewerLevel1)
+pmReviewerLevel2 = deepcopy(pm_import_data.pmReviewerLevel2)
+pmManager = deepcopy(pm_import_data.pmManager)
 
 
 developers = data.orgs[0]
@@ -74,6 +67,16 @@ developers.extraordinarybudget.append(pmManager)
 
 setattr(developers, "signatures", "developers signatures")
 setattr(developers, "echevinServices", "developers")
+
+# put pmReviewerLevel1 in first level of reviewers from what is in MEETINGREVIEWERS
+getattr(developers, MEETINGREVIEWERS["meetingitemcollegemons_workflow"].keys()[-1]).append(
+    pmReviewerLevel1
+)
+# put pmReviewerLevel2 in second level of reviewers from what is in MEETINGREVIEWERS
+getattr(developers, MEETINGREVIEWERS["meetingitemcollegemons_workflow"].keys()[0]).append(
+    pmReviewerLevel2
+)
+
 
 vendors = data.orgs[1]
 vendors.creators.append(pmCreator2)
