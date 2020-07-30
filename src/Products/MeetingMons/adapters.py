@@ -267,53 +267,6 @@ class CustomMeetingConfig(MCMeetingConfig):
         itemType = cfg.getItemTypeName()
         extra_infos = OrderedDict(
             [
-                ('searchitemstocorrect', {
-                    'subFolderId': 'searches_items',
-                    'active': True,
-                    'query':
-                        [
-                            {'i': 'CompoundCriterion',
-                             'o': 'plone.app.querystring.operation.compound.is',
-                             'v': 'items-to-correct-mons'},
-                        ],
-                    'sort_on': u'modified',
-                    'sort_reversed': True,
-                    'showNumberOfItems': True,
-                    'tal_condition': "python: tool.userIsAmong(['creators', 'serviceheads', 'officemanagers', 'divisionheads', 'reviewers'])",
-                    'roles_bypassing_talcondition': ['Manager', ]
-                }),
-                # Corrected items
-                ('searchcorrecteditems', {
-                    'subFolderId': 'searches_items',
-                    'active': True,
-                    'query':
-                        [
-                            {'i': 'CompoundCriterion',
-                             'o': 'plone.app.querystring.operation.compound.is',
-                             'v': 'corrected-items-mons'},
-                        ],
-                    'sort_on': u'modified',
-                    'sort_reversed': True,
-                    'showNumberOfItems': True,
-                    'tal_condition': "python: tool.isManager(here)",
-                    'roles_bypassing_talcondition': ['Manager', ]
-                }),
-                # Items in correction
-                ('searchitemsincorrection', {
-                    'subFolderId': 'searches_items',
-                    'active': True,
-                    'query':
-                        [
-                            {'i': 'CompoundCriterion',
-                             'o': 'plone.app.querystring.operation.compound.is',
-                             'v': 'items-in-correction-mons'},
-                        ],
-                    'sort_on': u'modified',
-                    'sort_reversed': True,
-                    'showNumberOfItems': True,
-                    'tal_condition': "python: tool.isManager(here)",
-                    'roles_bypassing_talcondition': ['Manager', ]
-                }),
                 # Items in state 'proposed_to_budgetimpact_reviewer'
                 ('searchbudgetimpactreviewersitems',
                  {

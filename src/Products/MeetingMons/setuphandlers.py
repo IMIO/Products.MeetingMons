@@ -142,17 +142,14 @@ def finalizeExampleInstance(context):
     if not isMeetingMonsConfigureProfile(context):
         return
 
+    site = context.getSite()
+    tool = site.portal_plonemeeting
+
     # finalizeExampleInstance will behave differently if on
     # a Commune instance or CPAS instance
     specialUserId = 'bourgmestre'
-    meetingConfig1Id = 'meeting-config-college'
-    meetingConfig2Id = 'meeting-config-council'
-    if context.readDataFile("MeetingMons_cpas_marker.txt"):
-        specialUserId = 'president'
-        meetingConfig1Id = 'meeting-config-bp'
-        meetingConfig2Id = 'meeting-config-cas'
-
-    site = context.getSite()
+    meetingConfig1Id = tool.objectValues('MeetingConfig')[0].getId()
+    meetingConfig2Id = tool.objectValues('MeetingConfig')[1].getId()
 
     logStep("finalizeExampleInstance", context)
     # add the test users 'dfin' and 'bourgmestre' to every '_powerobservers' groups
@@ -175,22 +172,6 @@ def finalizeExampleInstance(context):
         if member:
             groupsTool.addPrincipalToGroup(memberId, '%s_budgetimpacteditors' % meetingConfig1Id)
             groupsTool.addPrincipalToGroup(memberId, '%s_budgetimpacteditors' % meetingConfig2Id)
-
-    # add some topics to the portlet_todo
-    mc_college_or_bp = getattr(site.portal_plonemeeting, meetingConfig1Id)
-    mc_college_or_bp.setToDoListSearches(
-        [getattr(mc_college_or_bp.searches.searches_items, 'searchdecideditems'),
-         getattr(mc_college_or_bp.searches.searches_items, 'searchallitemsincopy'),
-         getattr(mc_college_or_bp.searches.searches_items, 'searchitemstoadvicewithdelay'),
-         getattr(mc_college_or_bp.searches.searches_items, 'searchallitemstoadvice'),
-         ])
-
-    # add some topics to the portlet_todo
-    mc_council_or_cas = getattr(site.portal_plonemeeting, meetingConfig2Id)
-    mc_council_or_cas.setToDoListSearches(
-        [getattr(mc_council_or_cas.searches.searches_items, 'searchdecideditems'),
-         getattr(mc_council_or_cas.searches.searches_items, 'searchallitemsincopy'),
-         ])
 
     # finally, re-launch plonemeetingskin and MeetingMons skins step
     # because PM has been installed before the import_data profile and messed up skins layers

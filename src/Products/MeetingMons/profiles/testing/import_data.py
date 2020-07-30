@@ -93,13 +93,7 @@ collegeMeeting = deepcopy(mc_import_data.collegeMeeting)
 collegeMeeting.meetingManagers = [
     "pmManager",
 ]
-collegeMeeting.certifiedSignatures = []
 collegeMeeting.shortName = "College"
-collegeMeeting.usedItemAttributes = (
-    "toDiscuss",
-    "associatedGroups",
-    "itemIsSigned",
-)
 collegeMeeting.maxShownListings = "100"
 collegeMeeting.itemWorkflow = "meetingitemcollegemons_workflow"
 collegeMeeting.meetingWorkflow = "meetingcollegemons_workflow"
@@ -203,20 +197,6 @@ councilMeeting.onMeetingTransitionItemTransitionToTrigger = (
 councilMeeting.meetingTopicStates = ("created", "frozen")
 councilMeeting.decisionTopicStates = ("decided", "closed")
 councilMeeting.itemAdviceStates = ("validated",)
-councilMeeting.recordItemHistoryStates = []
-councilMeeting.maxShownMeetings = 5
-councilMeeting.maxDaysDecisions = 60
-councilMeeting.meetingAppDefaultView = "searchallitems"
-councilMeeting.usedItemAttributes = (
-    "toDiscuss",
-    "associatedGroups",
-    "itemIsSigned",
-)
-councilMeeting.insertingMethodsOnAddItem = (
-    {"insertingMethod": "on_categories", "reverse": "0"},
-)
-councilMeeting.useGroupsAsCategories = False
-councilMeeting.useAdvices = False
 councilMeeting.itemAdviceStates = [
     "proposed_to_director",
 ]

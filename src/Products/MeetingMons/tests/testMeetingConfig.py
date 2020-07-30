@@ -36,6 +36,7 @@ class testMeetingConfig(MeetingMonsTestCase, mctmc):
             "pmOfficeManager1",
             "pmDivisionHead1",
             "pmDirector1",
+            "pmReviewerLevel1"
         )
 
     def test_pm_RemoveAnnexesPreviewsOnMeetingClosure(self):
