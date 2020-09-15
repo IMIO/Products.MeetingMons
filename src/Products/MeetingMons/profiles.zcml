@@ -26,16 +26,12 @@
    directory="profiles/mons"
    for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 <!--
-=======
-
->>>>>>> 6b861f712bffad2ffc0df478a6ac6619a6e540b4
   <genericsetup:upgradeStep
    title="Go to MeetingMons 4.1"
    description=""
    source="4.0"
    destination="4.1"
    handler="Products.MeetingMons.migrations.migrate_to_4_1.migrate"
-<<<<<<< HEAD
    profile="Products.MeetingMons:default" /> -->
 
 </configure>
