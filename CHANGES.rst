@@ -7,7 +7,10 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.1.0.2 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Fixed tests from testSetup.
+  [aduchene]
+- Fixed some display issues.
+  [aduchene]
 
 
 4.1.0.1 (2020-09-18)
