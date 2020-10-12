@@ -58,7 +58,6 @@ def logStep(method, context):
 
 def isMeetingMonsConfigureProfile(context):
     return context.readDataFile("MeetingMons_Mons_marker.txt") or \
-        context.readDataFile("MeetingMons_cpas_marker.txt") or \
         context.readDataFile("MeetingMons_testing_marker.txt")
 
 

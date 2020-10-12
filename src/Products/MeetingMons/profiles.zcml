@@ -23,13 +23,12 @@
    title="PloneMeeting / Mons with french examples"
    description="PloneMeeting for Mons College and Council (Belgium)"
    provides="Products.GenericSetup.interfaces.EXTENSION"
-   directory="profiles/mons"
    for="Products.CMFPlone.interfaces.IPloneSiteRoot"/>
 
   <genericsetup:upgradeStep
    title="Go to MeetingMons 4.1"
    description=""
-   source="4.0"
+   source="*"
    destination="4.1"
    handler="Products.MeetingMons.migrations.migrate_to_4_1.migrate"
    profile="Products.MeetingMons:default" />
