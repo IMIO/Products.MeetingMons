@@ -36,56 +36,6 @@ voter1 = UserDescriptor("voter1", [], fullname="M. Voter One")
 voter2 = UserDescriptor("voter2", [], fullname="M. Voter Two")
 
 
-# Inherited users
-pmReviewer1 = deepcopy(pm_import_data.pmReviewer1)
-pmReviewer2 = deepcopy(pm_import_data.pmReviewer2)
-pmReviewerLevel1 = deepcopy(pm_import_data.pmReviewerLevel1)
-pmReviewerLevel2 = deepcopy(pm_import_data.pmReviewerLevel2)
-pmManager = deepcopy(pm_import_data.pmManager)
-
-
-developers = data.orgs[0]
-developers.creators.append(pmCreator1)
-developers.creators.append(pmCreator1b)
-developers.creators.append(pmManager)
-developers.observers.append(pmObserver1)
-developers.observers.append(pmReviewer1)
-developers.observers.append(pmManager)
-developers.advisers.append(pmAdviser1)
-developers.advisers.append(pmManager)
-developers.serviceheads.append(pmServiceHead1)
-developers.serviceheads.append(pmManager)
-developers.officemanagers.append(pmOfficeManager1)
-developers.officemanagers.append(pmManager)
-developers.divisionheads.append(pmDivisionHead1)
-developers.divisionheads.append(pmManager)
-developers.reviewers.append(pmDirector1)
-developers.reviewers.append(pmReviewer1)
-developers.reviewers.append(pmManager)
-developers.budgetimpactreviewers.append(pmManager)
-developers.extraordinarybudget.append(pmManager)
-
-setattr(developers, "signatures", "developers signatures")
-setattr(developers, "echevinServices", "developers")
-
-# put pmReviewerLevel1 in first level of reviewers from what is in MEETINGREVIEWERS
-getattr(developers, MEETINGREVIEWERS["meetingitemcollegemons_workflow"].keys()[-1]).append(
-    pmReviewerLevel1
-)
-# put pmReviewerLevel2 in second level of reviewers from what is in MEETINGREVIEWERS
-getattr(developers, MEETINGREVIEWERS["meetingitemcollegemons_workflow"].keys()[0]).append(
-    pmReviewerLevel2
-)
-
-
-vendors = data.orgs[1]
-vendors.creators.append(pmCreator2)
-vendors.reviewers.append(pmReviewer2)
-vendors.observers.append(pmReviewer2)
-vendors.advisers.append(pmReviewer2)
-vendors.advisers.append(pmManager)
-setattr(vendors, "signatures", "")
-
 # Meeting configurations -------------------------------------------------------
 # Meeting configurations -------------------------------------------------------
 # college
@@ -147,11 +97,6 @@ collegeMeeting.insertingMethodsOnAddItem = (
 collegeMeeting.useGroupsAsCategories = True
 collegeMeeting.meetingPowerObserversStates = ("frozen", "decided", "closed")
 collegeMeeting.useCopies = True
-collegeMeeting.selectableCopyGroups = [
-    developers.getIdSuffixed("reviewers"),
-    vendors.getIdSuffixed("reviewers"),
-]
-
 
 # Conseil communal
 councilMeeting = deepcopy(mc_import_data.councilMeeting)
