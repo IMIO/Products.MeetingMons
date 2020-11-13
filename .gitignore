@@ -20,3 +20,4 @@ versions-picked.cfg
 .idea/
 *.pyc
 *.mo
+dist

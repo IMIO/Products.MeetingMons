@@ -7,7 +7,8 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed meetingitem_view.pt
+  [aduchene]
 
 
 4.1.0.2 (2020-10-12)
