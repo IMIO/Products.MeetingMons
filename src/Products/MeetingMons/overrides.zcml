@@ -1,32 +1,67 @@
 <configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:plone="http://namespaces.plone.org/plone">
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:browser="http://namespaces.zope.org/browser"
+        xmlns:plone="http://namespaces.plone.org/plone">
 
     <!-- collective.documentgenerator helper view for MeetingItem -->
     <browser:page
-        for="Products.PloneMeeting.interfaces.IMeetingItem"
-        class=".browser.overrides.MCItemDocumentGenerationHelperView"
-        permission="zope2.View"
-        name="document_generation_helper_view"
-     />
+            for="Products.PloneMeeting.interfaces.IMeetingItem"
+            class=".browser.overrides.MCItemDocumentGenerationHelperView"
+            permission="zope2.View"
+            name="document_generation_helper_view"
+    />
 
     <!-- collective.documentgenerator helper view for Meeting -->
     <browser:page
-        for="Products.PloneMeeting.interfaces.IMeeting"
-        class=".browser.overrides.MCMeetingDocumentGenerationHelperView"
-        permission="zope2.View"
-        name="document_generation_helper_view"
-     />
+            for="Products.PloneMeeting.interfaces.IMeeting"
+            class=".browser.overrides.MCMeetingDocumentGenerationHelperView"
+            permission="zope2.View"
+            name="document_generation_helper_view"
+    />
+
     <!-- IPrettyLink for MeetingItem -->
     <adapter for="Products.PloneMeeting.interfaces.IMeetingItem"
              factory=".adapters.MMItemPrettyLinkAdapter"
-             provides="imio.prettylink.interfaces.IPrettyLink" />
+             provides="imio.prettylink.interfaces.IPrettyLink"/>
+
     <!-- collective.documentgenerator helper view for Folder -->
     <browser:page
-        for="Products.ATContentTypes.interfaces.folder.IATBTreeFolder"
-        class=".browser.overrides.MCFolderDocumentGenerationHelperView"
-        permission="zope2.View"
-        name="document_generation_helper_view"
+            for="Products.ATContentTypes.interfaces.folder.IATBTreeFolder"
+            class=".browser.overrides.MCFolderDocumentGenerationHelperView"
+            permission="zope2.View"
+            name="document_generation_helper_view"
     />
+
+    <!-- WF actions and conditions for Meeting and MeetingItem -->
+    <adapter for="Products.PloneMeeting.interfaces.IMeetingItem"
+             factory="Products.MeetingMons.adapters.MeetingItemCollegeMonsWorkflowActions"
+             provides="Products.MeetingMons.interfaces.IMeetingItemCollegeMonsWorkflowActions"/>
+
+    <adapter for="Products.PloneMeeting.interfaces.IMeetingItem"
+             factory="Products.MeetingMons.adapters.MeetingItemCollegeMonsWorkflowConditions"
+             provides="Products.MeetingMons.interfaces.IMeetingItemCollegeMonsWorkflowConditions"/>
+
+    <adapter for="Products.PloneMeeting.interfaces.IMeeting"
+             factory="Products.MeetingMons.adapters.MeetingCollegeMonsWorkflowActions"
+             provides="Products.MeetingMons.interfaces.IMeetingCollegeMonsWorkflowActions"/>
+
+    <adapter for="Products.PloneMeeting.interfaces.IMeeting"
+             factory="Products.MeetingMons.adapters.MeetingCollegeMonsWorkflowConditions"
+             provides="Products.MeetingMons.interfaces.IMeetingCollegeMonsWorkflowConditions"/>
+
+    <adapter for="Products.PloneMeeting.interfaces.IMeetingItem"
+             factory="Products.MeetingMons.adapters.CustomMeetingItem"
+             provides="Products.PloneMeeting.interfaces.IMeetingItemCustom"/>
+
+    <adapter for="Products.PloneMeeting.interfaces.IMeeting"
+             factory="Products.MeetingMons.adapters.CustomMeeting"
+             provides="Products.PloneMeeting.interfaces.IMeetingCustom"/>
+
+    <adapter for="Products.PloneMeeting.interfaces.IMeetingConfig"
+             factory="Products.MeetingMons.adapters.CustomMeetingConfig"
+             provides="Products.PloneMeeting.interfaces.IMeetingConfigCustom"/>
+
+    <adapter for="Products.PloneMeeting.interfaces.IToolPloneMeeting"
+             factory="Products.MeetingMons.adapters.CustomToolPloneMeeting"
+             provides="Products.PloneMeeting.interfaces.IToolPloneMeetingCustom"/>
 </configure>

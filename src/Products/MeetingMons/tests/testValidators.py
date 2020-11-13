@@ -23,10 +23,10 @@
 #
 
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.PloneMeeting.tests.testValidators import testValidators as pmtv
+from Products.MeetingCommunes.tests.testValidators import testValidators as mctv
 
 
-class testValidators(MeetingMonsTestCase, pmtv):
+class testValidators(MeetingMonsTestCase, mctv):
     """
         Tests the validators.
     """

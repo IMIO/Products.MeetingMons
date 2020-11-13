@@ -23,10 +23,10 @@
 #
 
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.PloneMeeting.tests.testColumns import testColumns as pmtc
+from Products.MeetingCommunes.tests.testColumns import testColumns as mctc
 
 
-class testColumns(MeetingMonsTestCase, pmtc):
+class testColumns(MeetingMonsTestCase, mctc):
     ''' '''
 
 

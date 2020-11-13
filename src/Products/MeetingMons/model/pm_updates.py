@@ -8,31 +8,6 @@ from Products.PloneMeeting.MeetingConfig import MeetingConfig
 from Products.PloneMeeting.MeetingItem import MeetingItem
 
 
-def update_group_schema(baseSchema):
-    specificSchema = Schema((
-
-        # field used to define list of services for echevin for a MeetingGroup
-        LinesField(
-            name='echevinServices',
-            widget=MultiSelectionWidget(
-                size=10,
-                label='EchevinServices',
-                label_msgid='MeetingMons_label_echevinServices',
-                description='Leave empty if he is not an echevin',
-                description_msgid='MeetingMons_descr_echevinServices',
-                format="checkbox",
-                i18n_domain='PloneMeeting',
-            ),
-            enforceVocabulary=True,
-            multiValued=1,
-            vocabulary='listEchevinServices',
-        ),
-    ),)
-
-    completeSchema = baseSchema + specificSchema.copy()
-    return completeSchema
-MeetingGroup.schema = update_group_schema(MeetingGroup.schema)
-
 
 def update_config_schema(baseSchema):
     specificSchema = Schema((

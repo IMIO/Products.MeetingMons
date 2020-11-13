@@ -11,7 +11,7 @@ from collections import OrderedDict
 from Products.PloneMeeting.browser.views import FolderDocumentGenerationHelperView
 from Products.PloneMeeting.browser.views import ItemDocumentGenerationHelperView
 from Products.PloneMeeting.browser.views import MeetingDocumentGenerationHelperView
-from Products.PloneMeeting.utils import getLastEvent
+from imio.history.utils import getLastWFAction as getLastEvent
 from Products.PloneMeeting.utils import get_annexes
 
 from Products.CMFPlone.utils import safe_unicode

@@ -23,14 +23,13 @@
 #
 
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.PloneMeeting.tests.testMeeting import testMeeting as pmtm
+from Products.MeetingCommunes.tests.testMeeting import testMeeting as mctm
 
 
-class testMeeting(MeetingMonsTestCase, pmtm):
+class testMeeting(MeetingMonsTestCase, mctm):
     """
         Tests the Meeting class methods.
     """
-
 
 def test_suite():
     from unittest import TestSuite, makeSuite

@@ -26,30 +26,12 @@ from AccessControl import Unauthorized
 from zope.annotation import IAnnotations
 from Products.CMFCore.permissions import View
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.PloneMeeting.tests.testWorkflows import testWorkflows as pmtw
+from Products.MeetingCommunes.tests.testWorkflows import testWorkflows as mctw
 from Products.PloneMeeting.utils import get_annexes
 
 
-class testWorkflows(MeetingMonsTestCase, pmtw):
+class testWorkflows(MeetingMonsTestCase, mctw):
     """Tests the default workflows implemented in MeetingMons."""
-
-    def test_pm_CreateItem(self):
-        '''Run the test_pm_CreateItem from PloneMeeting.'''
-        # we do the test for the college config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-college')
-        super(testWorkflows, self).test_pm_CreateItem()
-        # we do the test for the council config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-council')
-        super(testWorkflows, self).test_pm_CreateItem()
-
-    def test_pm_RemoveObjects(self):
-        '''Run the test_pm_RemoveObjects from PloneMeeting.'''
-        # we do the test for the college config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-college')
-        super(testWorkflows, self).test_pm_RemoveObjects()
-        # we do the test for the council config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-council')
-        super(testWorkflows, self).test_pm_RemoveObjects()
 
     def test_pm_WholeDecisionProcess(self):
         """
@@ -227,7 +209,6 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
         self.assertEquals(duplicatedItem.getPredecessor().UID(), item1.UID())
         # when duplicated on delay, annexes are kept
         self.assertEquals(len(get_annexes(duplicatedItem, portal_types=('annex', ))), 1)
-        self.assertEquals(len(get_annexes(duplicatedItem, portal_types=('annexDecision', ))), 3)
         self.addAnnex(item2, relatedTo='item_decision')
         self.failIf(len(self.transitions(meeting)) != 2)
         # When a meeting is closed, items without a decision are automatically 'accepted'
@@ -252,67 +233,6 @@ class testWorkflows(MeetingMonsTestCase, pmtw):
           Pass this test...
         """
         pass
-
-    def test_pm_RecurringItems(self):
-        """
-            Tests the recurring items system.
-        """
-        # we do the test for the college config
-        self.meetingConfig = getattr(self.tool, 'meeting-config-college')
-        # super(testWorkflows, self).test_pm_RecurringItems() workflow is different
-        self._checkRecurringItemsCollege()
-        # we do the test for the council config
-        # no recurring items defined...
-        self.meetingConfig = getattr(self.tool, 'meeting-config-council')
-        meeting = self.create('Meeting', date='2007/12/11 09:00:00')
-        self.assertEquals(len(meeting.getItems()), 0)
-
-    def _checkRecurringItemsCollege(self):
-        '''Tests the recurring items system.'''
-        # First, define recurring items in the meeting config
-        self.changeUser('admin')
-        # 2 recurring items already exist in the college config, add one supplementary for _init_
-        self.create('MeetingItemRecurring', title='Rec item 1',
-                    proposingGroup='developers',
-                    meetingTransitionInsertingMe='_init_')
-        # add 3 other recurring items that will be inserted at other moments in the WF
-        # backToCreated is not in MeetingItem.meetingTransitionsAcceptingRecurringItems
-        # so it will not be added...
-        self.create('MeetingItemRecurring', title='Rec item 2',
-                    proposingGroup='developers',
-                    meetingTransitionInsertingMe='backToCreated')
-        self.create('MeetingItemRecurring', title='Rec item 3',
-                    proposingGroup='developers',
-                    meetingTransitionInsertingMe='freeze')
-        self.create('MeetingItemRecurring', title='Rec item 4',
-                    proposingGroup='developers',
-                    meetingTransitionInsertingMe='decide')
-        self.changeUser('pmManager')
-        # create a meeting without supplementary items, only the recurring items
-        meeting = self._createMeetingWithItems(withItems=False)
-        # The recurring items must have as owner the meeting creator
-        for item in meeting.getItems():
-            self.assertEquals(item.getOwner().getId(), 'pmManager')
-        # The meeting must contain recurring items : 2 defined and one added here above
-        self.failUnless(len(meeting.getItems()) == 3)
-        self.failIf(meeting.getItems(listTypes=['late']))
-        # After freeze, the meeting must have one recurring item more
-        self.freezeMeeting(meeting)
-        self.failUnless(len(meeting.getItems()) == 4)
-        self.failUnless(len(meeting.getItems(listTypes=['late'])) == 1)
-        # Back to created: rec item 2 is not inserted because
-        # only some transitions can add a recurring item (see MeetingItem).
-        self.backToState(meeting, 'created')
-        self.failUnless(len(meeting.getItems()) == 4)
-        self.failUnless(len(meeting.getItems(listTypes=['late'])) == 1)
-        # Recurring items can be added twice...
-        self.freezeMeeting(meeting)
-        self.failUnless(len(meeting.getItems()) == 5)
-        self.failUnless(len(meeting.getItems(listTypes=['late'])) == 2)
-        # Decide the meeting, a third late item is added
-        self.decideMeeting(meeting)
-        self.failUnless(len(meeting.getItems()) == 6)
-        self.failUnless(len(meeting.getItems(listTypes=['late'])) == 3)
 
     def test_pm_RemoveContainer(self):
         '''Run the test_pm_RemoveContainer from PloneMeeting.'''

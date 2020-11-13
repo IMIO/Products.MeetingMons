@@ -23,11 +23,16 @@
 #
 
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.PloneMeeting.tests.testToolPloneMeeting import testToolPloneMeeting as pmtt
+from Products.MeetingCommunes.tests.testToolPloneMeeting import testToolPloneMeeting as mctt
 
 
-class testToolPloneMeeting(MeetingMonsTestCase, pmtt):
+class testToolPloneMeeting(MeetingMonsTestCase, mctt):
     '''Tests the ToolPloneMeeting class methods.'''
+
+    def test_pm_RemoveAnnexesPreviews(self):
+        """Not applicable"""
+        pass
+
 
 
 def test_suite():

@@ -20,13 +20,14 @@
 # 02110-1301, USA.
 #
 
-from Products.PloneMeeting.tests.PloneMeetingTestCase import PloneMeetingTestCase
 
-from Products.MeetingMons.testing import MC_TESTING_PROFILE_FUNCTIONAL
+from Products.MeetingCommunes.tests.MeetingCommunesTestCase import MeetingCommunesTestCase
+
+from Products.MeetingMons.testing import MM_TESTING_PROFILE_FUNCTIONAL
 from Products.MeetingMons.tests.helpers import MeetingMonsTestingHelpers
 
 
-class MeetingMonsTestCase(PloneMeetingTestCase, MeetingMonsTestingHelpers):
+class MeetingMonsTestCase(MeetingCommunesTestCase, MeetingMonsTestingHelpers):
     """Base class for defining MeetingMons test cases."""
 
     # Some default content
@@ -37,9 +38,9 @@ class MeetingMonsTestCase(PloneMeetingTestCase, MeetingMonsTestingHelpers):
     # attribute to take these files into account
     # subproductIgnoredTestFiles = ['testPerformances.py', ]
 
-    layer = MC_TESTING_PROFILE_FUNCTIONAL
+    layer = MM_TESTING_PROFILE_FUNCTIONAL
 
     def setUp(self):
-        PloneMeetingTestCase.setUp(self)
+        MeetingCommunesTestCase.setUp(self)
         self.meetingConfig = getattr(self.tool, 'meeting-config-college')
         self.meetingConfig2 = getattr(self.tool, 'meeting-config-council')

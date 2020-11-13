@@ -23,11 +23,27 @@
 #
 
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.PloneMeeting.tests.testAnnexes import testAnnexes as pmta
+from Products.MeetingCommunes.tests.testAnnexes import testAnnexes as mcta
 
 
-class testAnnexes(MeetingMonsTestCase, pmta):
+class testAnnexes(MeetingMonsTestCase, mcta):
     ''' '''
+
+    def test_pm_AnnexesConvertedIsPreviewable(self):
+        """Not applicable"""
+        pass
+
+    def test_pm_AnnexesConvertedIfAutoConvertIsEnabled(self):
+        """Not applicable"""
+        pass
+
+    def test_pm_AnnexesConvertedDependingOnAnnexToPrintMode(self):
+        """Not applicable"""
+        pass
+
+    def test_pm_AnnexOnlyConvertedAgainWhenNecessary(self):
+        """Not applicable"""
+        pass
 
 
 def test_suite():
