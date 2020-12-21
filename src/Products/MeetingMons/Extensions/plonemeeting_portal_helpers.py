@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from collections import OrderedDict
 
 from Products.ZCatalog.ProgressHandler import ZLogHandler
 from collective.contact.plonegroup.config import ORGANIZATIONS_REGISTRY
@@ -16,8 +17,6 @@ def migrate_field(meeting_config_id="meeting-config-college"):
 
 logger = logging.getLogger('MeetingMons')
 
-
-# The migration class ----------------------------------------------------------
 class MigrateCategoriesToGroupsInCharge:
 
     def __init__(self, meeting_config_id):
@@ -76,3 +75,51 @@ class MigrateCategoriesToGroupsInCharge:
 
     def run(self):
         self._migrate_categories_to_groups_in_charge_field()
+
+
+def add_portal_categories(meeting_config_id="meeting-config-council"):
+    CATEGORIES = OrderedDict([
+        ("administration", "Administration générale"),
+        ("immo", "Affaires immobilières"),
+        ("espaces-publics", "Aménagement des espaces publics"),
+        ("batiments-communaux", "Bâtiments communaux"),
+        ("animaux", "Bien-être animal"),
+        ("communication", "Communication & Relations extérieures"),
+        ("cultes", "Cultes"),
+        ("culture", "Culture & Folklore"),
+        ("economie", "Développement économique & commercial"),
+        ("enseignement", "Enseignement"),
+        ("population", "État civil & Population"),
+        ("finances", "Finances"),
+        ("informatique", "Informatique"),
+        ("interculturalite", "Interculturalité & Égalité"),
+        ("jeunesse", "Jeunesse"),
+        ("logement", "Logement & Énergie"),
+        ("mobilite", "Mobilité"),
+        ("quartier", "Participation relation avec les quartiers"),
+        ("patrimoine", "Patrimoine"),
+        ("enfance", "Petite enfance"),
+        ("politique", "Politique générale"),
+        ("environnement", "Propreté & Environnement"),
+        ("sante", "Santé"),
+        ("securite", "Sécurité & Prévention"),
+        ("social", "Services sociaux"),
+        ("sport", "Sport"),
+        ("tourisme", "Tourisme"),
+        ("urbanisme", "Urbanisme & Aménagement du territoire"),
+        ("police", "Zone de police")
+    ])
+    logger.info("Adding global categories...")
+    catalog = api.portal.get_tool('portal_catalog')
+    cfg = catalog(portal_type="MeetingConfig", id=meeting_config_id)[0].getObject()
+    categories = cfg.categories
+    for cat_id, cat_title in CATEGORIES.items():
+        if cat_id not in categories:
+            data = {
+                'id': cat_id,
+                'title': cat_title,
+            }
+            api.content.create(container=categories, type='meetingcategory', **data)
+
+
+
