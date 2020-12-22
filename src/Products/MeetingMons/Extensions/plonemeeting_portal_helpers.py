@@ -33,7 +33,7 @@ class MigrateCategoriesToGroupsInCharge:
         categories = cfg.categories
         for cat_id, category in categories.contentItems():
 
-            if cat_id not in own_org:
+            if cat_id not in own_org.objectIds():
                 data = {
                     'id': cat_id,
                     'title': category.Title(),
@@ -114,7 +114,7 @@ def add_portal_categories(meeting_config_id="meeting-config-council"):
     cfg = catalog(portal_type="MeetingConfig", id=meeting_config_id)[0].getObject()
     categories = cfg.categories
     for cat_id, cat_title in CATEGORIES.items():
-        if cat_id not in categories:
+        if cat_id not in categories.objectIds():
             data = {
                 'id': cat_id,
                 'title': cat_title,
