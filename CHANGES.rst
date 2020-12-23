@@ -7,8 +7,8 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Added external methods to ease configuration to use plonemeeting.portal.
+  [aduchene]
 
 4.1.1 (2020-11-13)
 ------------------
