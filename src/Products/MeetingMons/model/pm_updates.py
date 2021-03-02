@@ -11,36 +11,6 @@ from Products.PloneMeeting.MeetingItem import MeetingItem
 
 def update_config_schema(baseSchema):
     specificSchema = Schema((
-        TextField(
-            name='defaultMeetingItemDecision',
-            widget=RichWidget(
-                label='DefaultMeetingItemDecision',
-                label_msgid='MeetingMons_label_defaultMeetingItemDecision',
-                description='DefaultMeetingItemDecision',
-                description_msgid='default_meetingitem_decision',
-                i18n_domain='PloneMeeting',
-            ),
-            default_content_type="text/html",
-            allowable_content_types=('text/html',),
-            default_output_type="text/html",
-            write_permission=WriteRiskyConfig,
-        ),
-
-        TextField(
-            name='defaultMeetingItemDetailledDescription',
-            widget=RichWidget(
-                label='DefaultMeetingItemDetailledDescription',
-                label_msgid='MeetingMons_label_defaultMeetingItemDetailledDescription',
-                description='DefaultMeetingItemDetailledDescription',
-                description_msgid='default_meetingitem_detailledDescription',
-                i18n_domain='PloneMeeting',
-            ),
-            default_content_type="text/html",
-            allowable_content_types=('text/html',),
-            default_output_type="text/html",
-            write_permission=WriteRiskyConfig,
-        ),
-
         BooleanField(
             name='initItemDecisionIfEmptyOnDecide',
             default=True,
@@ -55,8 +25,6 @@ def update_config_schema(baseSchema):
     ),)
 
     completeConfigSchema = baseSchema + specificSchema.copy()
-    completeConfigSchema.moveField('defaultMeetingItemDecision', after='budgetDefault')
-    completeConfigSchema.moveField('defaultMeetingItemDetailledDescription', after='defaultMeetingItemDecision')
     return completeConfigSchema
 MeetingConfig.schema = update_config_schema(MeetingConfig.schema)
 
@@ -81,9 +49,6 @@ def update_item_schema(baseSchema):
         ),
     ),)
 
-    baseSchema['category'].widget.label_method = "getLabelCategory"
-    baseSchema['decision'].default_method = 'getDefaultDecision'
-    baseSchema['decision'].widget.label_method = 'getLabelDecision'
     baseSchema['description'].widget.label = "projectOfDecision"
     baseSchema['description'].widget.label_msgid = "projectOfDecision_label"
     baseSchema['motivation'].widget.description_msgid = "item_motivation_descr"

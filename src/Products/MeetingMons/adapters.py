@@ -168,87 +168,11 @@ class CustomMeetingItem(MCMeetingItem):
     def __init__(self, item):
         self.context = item
 
-    security.declarePublic('getDefaultDecision')
-
-    def getDefaultDecision(self):
-        '''Returns the default item decision content from the MeetingConfig.'''
-        mc = self.portal_plonemeeting.getMeetingConfig(self)
-        return mc.getDefaultMeetingItemDecision()
-
-    MeetingItem.getDefaultDecision = getDefaultDecision
-
     def getExtraFieldsToCopyWhenCloning(self, cloned_to_same_mc, cloned_from_item_template):
         '''
           Keep some new fields when item is cloned (to another mc or from itemtemplate).
         '''
         return ['validateByBudget']
-
-    def showDuplicateItemAction(self):
-        '''Condition for displaying the 'duplicate' action in the interface.
-           Returns True if the user can duplicate the item.'''
-        # Conditions for being able to see the "duplicate an item" action:
-        # - the user is not Plone-disk-aware;
-        # - the user is creator in some group;
-        # - the user must be able to see the item if it is private.
-        # - the item isn't delayed
-        # The user will duplicate the item in his own folder.
-        tool = getToolByName(self, 'portal_plonemeeting')
-        cfg = tool.getMeetingConfig(self)
-        if not cfg.getEnableItemDuplication() or self.isDefinedInTool() or not tool.userIsAmong(
-                ['creators']) or not self.adapted().isPrivacyViewable() or self.queryState() == 'delayed':
-            return False
-        return True
-
-    MeetingItem.showDuplicateItemAction = showDuplicateItemAction
-
-    def getFinanceAdviceId(self):
-        """ """
-        tool = api.portal.get_tool('portal_plonemeeting')
-        cfg = tool.getMeetingConfig(self.context)
-        usedFinanceGroupIds = cfg.adapted().getUsedFinanceGroupIds(self.context)
-        adviserIds = self.context.adviceIndex.keys()
-        financeAdvisersIds = set(usedFinanceGroupIds).intersection(set(adviserIds))
-        if financeAdvisersIds:
-            return list(financeAdvisersIds)[0]
-        else:
-            return None
-
-    def _initDecisionFieldIfEmpty(self):
-        '''
-          If decision field is empty, it will be initialized
-          with data coming from title and description.
-        '''
-        # set keepWithNext to False as it will add a 'class' and so
-        # xhtmlContentIsEmpty will never consider it empty...
-        if xhtmlContentIsEmpty(self.getDecision(keepWithNext=False)):
-            self.setDecision("<p>%s</p>%s" % (self.Title(),
-                                              self.Description()))
-            self.reindexObject()
-
-    MeetingItem._initDecisionFieldIfEmpty = _initDecisionFieldIfEmpty
-
-    def adviceDelayIsTimedOutWithRowId(self, groupId, rowIds=[]):
-        ''' Check if advice with delay from a certain p_groupId and with
-            a row_id contained in p_rowIds is timed out.
-        '''
-        self = self.getSelf()
-        if self.getAdviceDataFor(self) and groupId in self.getAdviceDataFor(self):
-            adviceRowId = self.getAdviceDataFor(self, groupId)['row_id']
-        else:
-            return False
-
-        if not rowIds or adviceRowId in rowIds:
-            return self._adviceDelayIsTimedOut(groupId)
-        else:
-            return False
-
-    def showFinanceAdviceTemplate(self):
-        """ """
-        item = self.getSelf()
-        tool = api.portal.get_tool('portal_plonemeeting')
-        cfg = tool.getMeetingConfig(item)
-        return bool(set(cfg.adapted().getUsedFinanceGroupIds(item)).
-                    intersection(set(item.adviceIndex.keys())))
 
 
 class CustomMeetingConfig(MCMeetingConfig):
@@ -428,27 +352,10 @@ class CustomMeetingConfig(MCMeetingConfig):
                      'sort_reversed': True,
                      'showNumberOfItems': False,
                      'tal_condition':
-                         "python: '%s_budgetimpacteditors' % cfg.getId() in member.getGroups() or "
-                         "tool.isManager(here)",
+                         "python: tool.userIsAmong(['budgetimpacteditors']) or tool.isManager(here)",
                      'roles_bypassing_talcondition': ['Manager', ]
                  }
                  ),
-                # Items in state under 'validated' and not modified since 60 days
-                ('searchblockeditems', {
-                    'subFolderId': 'searches_items',
-                    'active': True,
-                    'query':
-                        [
-                            {'i': 'CompoundCriterion',
-                             'o': 'plone.app.querystring.operation.compound.is',
-                             'v': 'blocked-items'},
-                        ],
-                    'sort_on': u'modified',
-                    'sort_reversed': False,
-                    'showNumberOfItems': True,
-                    'tal_condition': '',
-                    'roles_bypassing_talcondition': ['Manager', ]
-                }),
             ]
         )
         infos.update(extra_infos)
@@ -457,125 +364,7 @@ class CustomMeetingConfig(MCMeetingConfig):
         if cfg.getId() not in ('meeting-config-college', 'meeting-config-bp'):
             infos[FINANCE_ADVICES_COLLECTION_ID]['active'] = False
 
-        # add some specific searches while using 'meetingadvicefinances'
-        typesTool = api.portal.get_tool('portal_types')
-        if 'meetingadvicefinances' in typesTool and cfg.getUseAdvices():
-            financesadvice_infos = OrderedDict(
-                [
-                    # Items in state 'proposed_to_finance' for which
-                    # completeness is not 'completeness_complete'
-                    ('searchitemstocontrolcompletenessof',
-                     {
-                         'subFolderId': 'searches_items',
-                         'active': True,
-                         'query':
-                             [
-                                 {'i': 'CompoundCriterion',
-                                  'o': 'plone.app.querystring.operation.compound.is',
-                                  'v': 'items-to-control-completeness-of'},
-                             ],
-                         'sort_on': u'created',
-                         'sort_reversed': True,
-                         'tal_condition': "python: (here.REQUEST.get('fromPortletTodo', False) and "
-                                          "tool.userIsAmong(['financialcontrollers'])) "
-                                          "or (not here.REQUEST.get('fromPortletTodo', False) and "
-                                          "tool.adapted().isFinancialUser())",
-                         'roles_bypassing_talcondition': ['Manager', ]
-                     }
-                     ),
-                    # Items having advice in state 'proposed_to_financial_controller'
-                    ('searchadviceproposedtocontroller',
-                     {
-                         'subFolderId': 'searches_items',
-                         'active': True,
-                         'query':
-                             [
-                                 {'i': 'CompoundCriterion',
-                                  'o': 'plone.app.querystring.operation.compound.is',
-                                  'v': 'items-with-advice-proposed-to-financial-controller'},
-                             ],
-                         'sort_on': u'created',
-                         'sort_reversed': True,
-                         'tal_condition': "python: (here.REQUEST.get('fromPortletTodo', False) and "
-                                          "tool.userIsAmong(['financialcontrollers'])) "
-                                          "or (not here.REQUEST.get('fromPortletTodo', False) and "
-                                          "tool.adapted().isFinancialUser())",
-                         'roles_bypassing_talcondition': ['Manager', ]
-                     }
-                     ),
-                    # Items having advice in state 'proposed_to_financial_editor'
-                    ('searchadviceproposedtoeditor',
-                     {
-                         'subFolderId': 'searches_items',
-                         'active': True,
-                         'query':
-                             [
-                                 {'i': 'CompoundCriterion',
-                                  'o': 'plone.app.querystring.operation.compound.is',
-                                  'v': 'items-with-advice-proposed-to-financial-editor'},
-                             ],
-                         'sort_on': u'created',
-                         'sort_reversed': True,
-                         'tal_condition': "python: (here.REQUEST.get('fromPortletTodo', False) and "
-                                          "tool.userIsAmong(['financialeditors'])) "
-                                          "or (not here.REQUEST.get('fromPortletTodo', False) and "
-                                          "tool.adapted().isFinancialUser())",
-                         'roles_bypassing_talcondition': ['Manager', ]
-                     }
-                     ),
-                    # Items having advice in state 'proposed_to_financial_reviewer'
-                    ('searchadviceproposedtoreviewer',
-                     {
-                         'subFolderId': 'searches_items',
-                         'active': True,
-                         'query':
-                             [
-                                 {'i': 'CompoundCriterion',
-                                  'o': 'plone.app.querystring.operation.compound.is',
-                                  'v': 'items-with-advice-proposed-to-financial-reviewer'},
-                             ],
-                         'sort_on': u'created',
-                         'sort_reversed': True,
-                         'tal_condition': "python: (here.REQUEST.get('fromPortletTodo', False) and "
-                                          "tool.userIsAmong(['financialreviewers'])) "
-                                          "or (not here.REQUEST.get('fromPortletTodo', False) and "
-                                          "tool.adapted().isFinancialUser())",
-                         'roles_bypassing_talcondition': ['Manager', ]
-                     }
-                     ),
-                    # Items having advice in state 'proposed_to_financial_manager'
-                    ('searchadviceproposedtomanager',
-                     {
-                         'subFolderId': 'searches_items',
-                         'active': True,
-                         'query':
-                             [
-                                 {'i': 'CompoundCriterion',
-                                  'o': 'plone.app.querystring.operation.compound.is',
-                                  'v': 'items-with-advice-proposed-to-financial-manager'},
-                             ],
-                         'sort_on': u'created',
-                         'sort_reversed': True,
-                         'tal_condition': "python: (here.REQUEST.get('fromPortletTodo', False) and "
-                                          "tool.userIsAmong(['financialmanagers'])) "
-                                          "or (not here.REQUEST.get('fromPortletTodo', False) and "
-                                          "tool.adapted().isFinancialUser())",
-                         'roles_bypassing_talcondition': ['Manager', ]
-                     }
-                     ),
-                ]
-            )
-            infos.update(financesadvice_infos)
         return infos
-
-    def extraAdviceTypes(self):
-        '''See doc in interfaces.py.'''
-        typesTool = api.portal.get_tool('portal_types')
-        if 'meetingadvicefinances' in typesTool:
-            return ['positive_finance', 'positive_with_remarks_finance',
-                    'cautious_finance', 'negative_finance', 'not_given_finance',
-                    'not_required_finance']
-        return []
 
 
 class MeetingCollegeMonsWorkflowActions(MeetingCommunesWorkflowActions):
@@ -601,12 +390,6 @@ class MeetingCollegeMonsWorkflowActions(MeetingCommunesWorkflowActions):
                 # initialize it the decision field
                 item._initDecisionFieldIfEmpty()
 
-    security.declarePrivate('doBackToPublished')
-
-    def doBackToPublished(self, stateChange):
-        '''We do not impact items while going back from decided.'''
-        pass
-
 
 class MeetingCollegeMonsWorkflowConditions(MeetingCommunesWorkflowConditions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
@@ -615,22 +398,6 @@ class MeetingCollegeMonsWorkflowConditions(MeetingCommunesWorkflowConditions):
     implements(IMeetingCollegeMonsWorkflowConditions)
     security = ClassSecurityInfo()
 
-    security.declarePublic('mayCorrect')
-
-    def mayDecide(self, destinationState=None):
-        '''Override to avoid call to _decisionsWereConfirmed.'''
-        if not _checkPermission(ReviewPortalContent, self.context):
-            return
-        return True
-
-    security.declarePublic('mayDecide')
-
-    def mayDecide(self):
-        res = False
-        if _checkPermission(ReviewPortalContent, self.context):
-            res = True
-        return res
-
 
 class MeetingItemCollegeMonsWorkflowActions(MeetingItemCommunesWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
@@ -638,16 +405,6 @@ class MeetingItemCollegeMonsWorkflowActions(MeetingItemCommunesWorkflowActions):
 
     implements(IMeetingItemCollegeMonsWorkflowActions)
     security = ClassSecurityInfo()
-
-    security.declarePrivate('doAccept_but_modify')
-
-    def doAccept_but_modify(self, stateChange):
-        pass
-
-    security.declarePrivate('doPre_accept')
-
-    def doPre_accept(self, stateChange):
-        pass
 
     security.declarePrivate('doProposeToServiceHead')
 
@@ -704,17 +461,6 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
 
     def __init__(self, item):
         self.context = item  # Implements IMeetingItem
-
-    security.declarePublic('mayDecide')
-
-    def mayDecide(self):
-        '''We may decide an item if the linked meeting is in relevant state.'''
-        res = False
-        meeting = self.context.getMeeting()
-        if _checkPermission(ReviewPortalContent, self.context) and \
-                meeting and meeting.adapted().isDecided():
-            res = True
-        return res
 
     security.declarePublic('mayValidate')
 
@@ -912,22 +658,6 @@ class CustomToolPloneMeeting(MCToolPloneMeeting):
     def __init__(self, item):
         self.context = item
 
-    def isFinancialUser_cachekey(method, self, brain=False):
-        '''cachekey method for self.isFinancialUser.'''
-        return str(self.context.REQUEST._debug), self.context.REQUEST['AUTHENTICATED_USER']
-
-    security.declarePublic('isFinancialUser')
-
-    @ram.cache(isFinancialUser_cachekey)
-    def isFinancialUser(self):
-        '''Is current user a financial user, so in groups FINANCE_GROUP_SUFFIXES.'''
-        member = api.user.get_current()
-        for groupId in member.getGroups():
-            for suffix in FINANCE_GROUP_SUFFIXES:
-                if groupId.endswith('_%s' % suffix):
-                    return True
-        return False
-
     def performCustomWFAdaptations(self, meetingConfig, wfAdaptation, logger, itemWorkflow, meetingWorkflow):
         """ """
         if wfAdaptation == 'no_publication':
@@ -971,82 +701,6 @@ class CustomToolPloneMeeting(MCToolPloneMeeting):
             return True
         return False
 
-    security.declarePublic('getSpecificAssemblyFor')
-
-    def getSpecificAssemblyFor(self, assembly, startTxt=''):
-        ''' Return the Assembly between two tag.
-            This method is used in templates.
-        '''
-        # Pierre Dupont - Bourgmestre,
-        # Charles Exemple - 1er Echevin,
-        # Echevin Un, Echevin Deux excusé, Echevin Trois - Echevins,
-        # Jacqueline Exemple, Responsable du CPAS
-        # Absentes:
-        # Mademoiselle x
-        # Excusés:
-        # Monsieur Y, Madame Z
-        res = []
-        tmp = ['<p class="mltAssembly">']
-        splitted_assembly = assembly.replace('<p>', '').replace('</p>', '').split('<br />')
-        start_text = startTxt == ''
-        for assembly_line in splitted_assembly:
-            assembly_line = assembly_line.strip()
-            # check if this line correspond to startTxt (in this cas, we can begin treatment)
-            if not start_text:
-                start_text = assembly_line.startswith(startTxt)
-                if start_text:
-                    # when starting treatment, add tag (not use if startTxt=='')
-                    res.append(assembly_line)
-                continue
-            # check if we must stop treatment...
-            if assembly_line.endswith(':'):
-                break
-            lines = assembly_line.split(',')
-            cpt = 1
-            my_line = ''
-            for line in lines:
-                if cpt == len(lines):
-                    my_line = "%s%s<br />" % (my_line, line)
-                    tmp.append(my_line)
-                else:
-                    my_line = "%s%s," % (my_line, line)
-                cpt = cpt + 1
-        if len(tmp) > 1:
-            tmp[-1] = tmp[-1].replace('<br />', '')
-            tmp.append('</p>')
-        else:
-            return ''
-        res.append(''.join(tmp))
-        return res
-
-    def initializeProposingGroupWithGroupInCharge(self):
-        """Initialize every items of MeetingConfig for which
-           'proposingGroupWithGroupInCharge' is in usedItemAttributes."""
-        tool = self.getSelf()
-        catalog = api.portal.get_tool('portal_catalog')
-        logger.info('Initializing proposingGroupWithGroupInCharge...')
-        for cfg in tool.objectValues('MeetingConfig'):
-            if 'proposingGroupWithGroupInCharge' in cfg.getUsedItemAttributes():
-                brains = catalog(portal_type=cfg.getItemTypeName())
-                logger.info('Updating MeetingConfig {0}'.format(cfg.getId()))
-                len_brains = len(brains)
-                i = 1
-                for brain in brains:
-                    logger.info('Updating item {0}/{1}'.format(i, len_brains))
-                    i = i + 1
-                    item = brain.getObject()
-                    proposingGroup = item.getProposingGroup(theObject=True)
-                    groupsInCharge = proposingGroup.getGroupsInCharge()
-                    groupInCharge = groupsInCharge and groupsInCharge[0] or ''
-                    value = '{0}__groupincharge__{1}'.format(proposingGroup.getId(),
-                                                             groupInCharge)
-                    item.setProposingGroupWithGroupInCharge(value)
-                    if cfg.getItemGroupInChargeStates():
-                        item._updateGroupInChargeLocalRoles()
-                        item.reindexObjectSecurity()
-                    item.reindexObject(idxs=['getGroupInCharge'])
-        logger.info('Done.')
-
 
 # ------------------------------------------------------------------------------
 InitializeClass(CustomMeeting)
@@ -1057,180 +711,7 @@ InitializeClass(MeetingCollegeMonsWorkflowConditions)
 InitializeClass(MeetingItemCollegeMonsWorkflowActions)
 InitializeClass(MeetingItemCollegeMonsWorkflowConditions)
 InitializeClass(CustomToolPloneMeeting)
-
-
 # ------------------------------------------------------------------------------
-
-
-class ItemsToControlCompletenessOfAdapter(CompoundCriterionBaseAdapter):
-
-    def itemstocontrolcompletenessof_cachekey(method, self):
-        '''cachekey method for every CompoundCriterion adapters.'''
-        return str(self.request._debug)
-
-    @property
-    @ram.cache(itemstocontrolcompletenessof_cachekey)
-    def query_itemstocontrolcompletenessof(self):
-        '''Queries all items for which there is completeness to evaluate, so where completeness
-           is not 'completeness_complete'.'''
-        groupIds = []
-        member = api.user.get_current()
-        userGroups = member.getGroups()
-        tool = api.portal.get_tool('portal_plonemeeting')
-        cfg = tool.getMeetingConfig(self.context)
-        for financeGroup in cfg.adapted().getUsedFinanceGroupIds():
-            # only keep finance groupIds the current user is controller for
-            if '%s_financialcontrollers' % financeGroup in userGroups:
-                # advice not given yet
-                groupIds.append('delay__%s_advice_not_giveable' % financeGroup)
-                # advice was already given once and come back to the finance
-                groupIds.append('delay__%s_proposed_to_financial_controller' % financeGroup)
-        return {'portal_type': {'query': self.cfg.getItemTypeName()},
-                'getCompleteness': {'query': ('completeness_not_yet_evaluated',
-                                              'completeness_incomplete',
-                                              'completeness_evaluation_asked_again')},
-                'indexAdvisers': {'query': groupIds},
-                'review_state': {'query': FINANCE_WAITING_ADVICES_STATES}}
-
-    # we may not ram.cache methods in same file with same name...
-    query = query_itemstocontrolcompletenessof
-
-
-class ItemsWithAdviceProposedToFinancialControllerAdapter(CompoundCriterionBaseAdapter):
-
-    def itemswithadviceproposedtofinancialcontroller_cachekey(method, self):
-        '''cachekey method for every CompoundCriterion adapters.'''
-        return str(self.request._debug)
-
-    @property
-    @ram.cache(itemswithadviceproposedtofinancialcontroller_cachekey)
-    def query_itemswithadviceproposedtofinancialcontroller(self):
-        '''Queries all items for which there is an advice in state 'proposed_to_financial_controller'.
-           We only return items for which completeness has been evaluated to 'complete'.'''
-        groupIds = []
-        member = api.user.get_current()
-        userGroups = member.getGroups()
-        tool = api.portal.get_tool('portal_plonemeeting')
-        cfg = tool.getMeetingConfig(self.context)
-        for financeGroup in cfg.adapted().getUsedFinanceGroupIds():
-            # only keep finance groupIds the current user is controller for
-            if '%s_financialcontrollers' % financeGroup in userGroups:
-                groupIds.append('delay__%s_proposed_to_financial_controller' % financeGroup)
-        # Create query parameters
-        return {'portal_type': {'query': self.cfg.getItemTypeName()},
-                'getCompleteness': {'query': 'completeness_complete'},
-                'indexAdvisers': {'query': groupIds}}
-
-    # we may not ram.cache methods in same file with same name...
-    query = query_itemswithadviceproposedtofinancialcontroller
-
-
-class ItemsWithAdviceProposedToFinancialEditorAdapter(CompoundCriterionBaseAdapter):
-
-    def itemswithadviceproposedtofinancialeditor_cachekey(method, self):
-        '''cachekey method for every CompoundCriterion adapters.'''
-        return str(self.request._debug)
-
-    @property
-    @ram.cache(itemswithadviceproposedtofinancialeditor_cachekey)
-    def query_itemswithadviceproposedtofinancialeditor(self):
-        '''Queries all items for which there is an advice in state 'proposed_to_financial_editor'.
-           We only return items for which completeness has been evaluated to 'complete'.'''
-        groupIds = []
-        member = api.user.get_current()
-        userGroups = member.getGroups()
-        tool = api.portal.get_tool('portal_plonemeeting')
-        cfg = tool.getMeetingConfig(self.context)
-        for financeGroup in cfg.adapted().getUsedFinanceGroupIds():
-            # only keep finance groupIds the current user is controller for
-            if '%s_financialeditors' % financeGroup in userGroups:
-                groupIds.append('delay__%s_proposed_to_financial_editor' % financeGroup)
-        # Create query parameters
-        return {'portal_type': {'query': self.cfg.getItemTypeName()},
-                'getCompleteness': {'query': 'completeness_complete'},
-                'indexAdvisers': {'query': groupIds}}
-
-    # we may not ram.cache methods in same file with same name...
-    query = query_itemswithadviceproposedtofinancialeditor
-
-
-class ItemsWithAdviceProposedToFinancialReviewerAdapter(CompoundCriterionBaseAdapter):
-
-    def itemswithadviceproposedtofinancialreviewer_cachekey(method, self):
-        '''cachekey method for every CompoundCriterion adapters.'''
-        return str(self.request._debug)
-
-    @property
-    @ram.cache(itemswithadviceproposedtofinancialreviewer_cachekey)
-    def query_itemswithadviceproposedtofinancialreviewer(self):
-        '''Queries all items for which there is an advice in state 'proposed_to_financial_reviewer'.'''
-        groupIds = []
-        member = api.user.get_current()
-        userGroups = member.getGroups()
-        tool = api.portal.get_tool('portal_plonemeeting')
-        cfg = tool.getMeetingConfig(self.context)
-        for financeGroup in cfg.adapted().getUsedFinanceGroupIds():
-            # only keep finance groupIds the current user is reviewer for
-            if '%s_financialreviewers' % financeGroup in userGroups:
-                groupIds.append('delay__%s_proposed_to_financial_reviewer' % financeGroup)
-        return {'portal_type': {'query': self.cfg.getItemTypeName()},
-                'indexAdvisers': {'query': groupIds}}
-
-    # we may not ram.cache methods in same file with same name...
-    query = query_itemswithadviceproposedtofinancialreviewer
-
-
-class ItemsWithAdviceProposedToFinancialManagerAdapter(CompoundCriterionBaseAdapter):
-
-    def itemswithadviceproposedtofinancialmanager_cachekey(method, self):
-        '''cachekey method for every CompoundCriterion adapters.'''
-        return str(self.request._debug)
-
-    @property
-    @ram.cache(itemswithadviceproposedtofinancialmanager_cachekey)
-    def query_itemswithadviceproposedtofinancialmanager(self):
-        '''Queries all items for which there is an advice in state 'proposed_to_financial_manager'.'''
-        groupIds = []
-        member = api.user.get_current()
-        userGroups = member.getGroups()
-        tool = api.portal.get_tool('portal_plonemeeting')
-        cfg = tool.getMeetingConfig(self.context)
-        for financeGroup in cfg.adapted().getUsedFinanceGroupIds():
-            # only keep finance groupIds the current user is manager for
-            if '%s_financialmanagers' % financeGroup in userGroups:
-                groupIds.append('delay__%s_proposed_to_financial_manager' % financeGroup)
-        return {'portal_type': {'query': self.cfg.getItemTypeName()},
-                'indexAdvisers': {'query': groupIds}}
-
-    # we may not ram.cache methods in same file with same name...
-    query = query_itemswithadviceproposedtofinancialmanager
-
-
-class BlockedItemsAdapter(CompoundCriterionBaseAdapter):
-
-    def blockeditems_cachekey(method, self):
-        '''cachekey method for every CompoundCriterion adapters.'''
-        return str(self.request._debug)
-
-    @property
-    @ram.cache(blockeditems_cachekey)
-    def query_blockeditems(self):
-        '''Queries all items for which there is an advice in state 'proposed_to_financial_manager'.'''
-        reference = DateTime() - 60
-
-        return {'portal_type': {'query': self.cfg.getItemTypeName()},
-                # before reference
-                'modified': {'query': reference, 'range': 'max'},
-                'review_state': {'query': ['itemcreated',
-                                           'proposed_to_budgetimpact_reviewer',
-                                           'proposed_to_extraordinarybudget',
-                                           'proposed_to_servicehead',
-                                           'proposed_to_officemanager',
-                                           'proposed_to_divisionhead',
-                                           'proposed_to_director']}}
-
-    # we may not ram.cache methods in same file with same name...
-    query = query_blockeditems
 
 
 class MMItemPrettyLinkAdapter(ItemPrettyLinkAdapter):
