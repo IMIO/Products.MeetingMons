@@ -7,7 +7,8 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.1.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Clean up adapters and removed useless fields : defaultMeetingItemDecision and defaultMeetingItemDetailledDescription, .
+  [odelaere]
 
 
 4.1.2 (2020-12-23)
