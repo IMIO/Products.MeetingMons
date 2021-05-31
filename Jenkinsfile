@@ -1,7 +1,7 @@
-pmPipeline {
-  profileName = 'mons'
-  testSuiteName = 'testmons'
-  unitTestParameter = '--test=!robot'
-  upstream = 'IMIO-github-Jenkinsfile/Products.MeetingCommunes/4.1.x'
-  buildoutBranch = '4.1.x'
-}
+//pmDockerPipeline {
+//  profileName = 'mons'
+//  testSuiteName = 'testmons'
+//  unitTestParameter = ''
+//  upstream = 'IMIO-github-Jenkinsfile/Products.MeetingCommunes/master'
+//  testRestapi = true
+//}
