@@ -266,7 +266,7 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
         return None
 
     def print_item_state(self):
-        return self.translate(self.real_context.queryState())
+        return self.translate(self.real_context.query_state())
 
     def print_creator_name(self):
         return (self.real_context.portal_membership.getMemberInfo(str(self.real_context.Creator())) \
@@ -275,7 +275,7 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
 
     def print_validator_name(self):
         res = ''
-        if self.real_context.queryState() in ('validated',) or self.real_context.hasMeeting():
+        if self.real_context.query_state() in ('validated',) or self.real_context.hasMeeting():
             event = getLastEvent(self.real_context, 'validate')
             if event:
                 validator_id = str(event['actor'])
@@ -299,7 +299,7 @@ class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView)
             return ''
         # ie: Pierre Helson, Bourgmestre, Président
         # focus is present, excuse or absent
-        assembly = self.context.getAssembly().replace('<p>', '').replace('</p>', '').split('<br />')
+        assembly = self.context.get_assembly().replace('<p>', '').replace('</p>', '').split('<br />')
         return formatedAssembly(assembly, focus)
 
     def _is_in_value_dict(self, item, value_map={}):
@@ -310,7 +310,7 @@ class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView)
 
     def _filter_item_uids(self, itemUids, ignore_review_states=[], privacy='*', included_values={}, excluded_values={}):
         """
-        We just filter ignore_review_states here and privacy in order call getItems(uids), passing the correct uids and removing empty uids.
+        We just filter ignore_review_states here and privacy in order call get_items(uids), passing the correct uids and removing empty uids.
         :param privacy: can be '*' or 'public' or 'secret' or 'public_heading' or 'secret_heading'
         """
         for elt in itemUids:
@@ -322,7 +322,7 @@ class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView)
 
         for itemUid in itemUids:
             obj = uid_catalog(UID=itemUid)[0].getObject()
-            if obj.queryState() in ignore_review_states:
+            if obj.query_state() in ignore_review_states:
                 continue
             elif not (privacy == '*' or obj.getPrivacy() == privacy):
                 continue
@@ -382,7 +382,7 @@ class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView)
         if not filteredItemUids:
             return []
         else:
-            items = self.real_context.getItems(uids=filteredItemUids, listTypes=listTypes, ordered=True)
+            items = self.real_context.get_items(uids=filteredItemUids, listTypes=listTypes, ordered=True)
             if renumber:
                 items = self._renumber_item(items, firstNumber)
 

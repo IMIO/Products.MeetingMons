@@ -25,8 +25,6 @@
 from DateTime import DateTime
 from Products.CMFCore.permissions import AccessContentsInformation
 from Products.CMFCore.permissions import View
-from Products.PloneMeeting.tests.PloneMeetingTestCase import pm_logger
-from Products.PloneMeeting.model.adaptations import performWorkflowAdaptations
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 
 

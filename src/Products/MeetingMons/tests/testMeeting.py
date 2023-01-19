@@ -23,7 +23,7 @@
 #
 
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.MeetingCommunes.tests.testMeeting import testMeeting as mctm
+from Products.MeetingCommunes.tests.testMeeting import testMeetingType as mctm
 
 
 class testMeeting(MeetingMonsTestCase, mctm):

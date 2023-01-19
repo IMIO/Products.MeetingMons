@@ -92,8 +92,8 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.do(item2, 'present')
         self.addAnnex(item2)
         # So now we should have 3 normal item (2 recurring + 1) and one late item in the meeting
-        self.failUnless(len(meeting.getItems()) == 4)
-        self.failUnless(len(meeting.getItems(listTypes='late')) == 1)
+        self.failUnless(len(meeting.get_items()) == 4)
+        self.failUnless(len(meeting.get_items(listTypes='late')) == 1)
         self.changeUser('pmManager')
         item1.setDecision(self.decisionText)
 
@@ -183,8 +183,8 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.do(item2, 'present')
         self.addAnnex(item2)
         # So now I should have 1 normal item left and one late item in the meeting
-        self.failIf(len(meeting.getItems()) != 2)
-        self.failUnless(len(meeting.getItems(listTypes=['late'])) == 1)
+        self.failIf(len(meeting.get_items()) != 2)
+        self.failUnless(len(meeting.get_items(listTypes=['late'])) == 1)
         # pmReviewer1 can not add an annex on item1 as it is frozen
         self.changeUser('pmReviewer1')
         self.assertRaises(Unauthorized, self.addAnnex, item1)
@@ -213,9 +213,9 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.failIf(len(self.transitions(meeting)) != 2)
         # When a meeting is closed, items without a decision are automatically 'accepted'
         self.do(meeting, 'close')
-        self.assertEquals(item2.queryState(), 'accepted')
+        self.assertEquals(item2.query_state(), 'accepted')
         # An already decided item keep his given decision
-        self.assertEquals(item1.queryState(), 'delayed')
+        self.assertEquals(item1.query_state(), 'delayed')
         # XXX added tests regarding ticket #5887
         # test back transitions
         self.changeUser('admin')

@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 
+from Products.MeetingMons.config import MONS_ITEM_WF_VALIDATION_LEVELS
 from Products.PloneMeeting.config import MEETINGREVIEWERS
 from Products.PloneMeeting.profiles.testing import import_data as pm_import_data
 from Products.MeetingCommunes.profiles.testing import import_data as mc_import_data
@@ -90,13 +91,16 @@ setattr(vendors, "signatures", "")
 # Meeting configurations -------------------------------------------------------
 # college
 collegeMeeting = deepcopy(mc_import_data.collegeMeeting)
-collegeMeeting.meetingManagers = [
-    "pmManager",
-]
-collegeMeeting.shortName = "College"
-collegeMeeting.maxShownListings = "100"
-collegeMeeting.itemWorkflow = "meetingitemcollegemons_workflow"
-collegeMeeting.meetingWorkflow = "meetingcollegemons_workflow"
+collegeMeeting.workflowAdaptations = ['no_publication', 'pre_accepted', 'accepted_but_modified', 'delayed', 'refused']
+collegeMeeting.itemWFValidationLevels = deepcopy(MONS_ITEM_WF_VALIDATION_LEVELS)
+collegeMeeting.transitionsForPresentingAnItem = (
+    "proposeToServiceHead",
+    "proposeToOfficeManager",
+    "proposeToDivisionHead",
+    "propose",
+    "validate",
+    "present",
+)
 collegeMeeting.itemConditionsInterface = (
     "Products.MeetingMons.interfaces.IMeetingItemCollegeMonsWorkflowConditions"
 )
@@ -140,7 +144,6 @@ collegeMeeting.itemDecidedStates = [
     "accepted_but_modified",
     "pre_accepted",
 ]
-collegeMeeting.workflowAdaptations = []
 collegeMeeting.insertingMethodsOnAddItem = (
     {"insertingMethod": "on_proposing_groups", "reverse": "0"},
 )
@@ -155,13 +158,8 @@ collegeMeeting.selectableCopyGroups = [
 
 # Conseil communal
 councilMeeting = deepcopy(mc_import_data.councilMeeting)
-councilMeeting.meetingManagers = [
-    "pmManager",
-]
-councilMeeting.certifiedSignatures = []
-councilMeeting.shortName = "Council"
-councilMeeting.itemWorkflow = "meetingitemcollegemons_workflow"
-councilMeeting.meetingWorkflow = "meetingcollegemons_workflow"
+councilMeeting.workflowAdaptations = ['delayed', 'no_publication']
+councilMeeting.itemWFValidationLevels = deepcopy(MONS_ITEM_WF_VALIDATION_LEVELS)
 councilMeeting.itemConditionsInterface = (
     "Products.MeetingMons.interfaces.IMeetingItemCollegeMonsWorkflowConditions"
 )
@@ -175,6 +173,7 @@ councilMeeting.meetingActionsInterface = (
     "Products.MeetingMons.interfaces.IMeetingCollegeMonsWorkflowActions"
 )
 councilMeeting.transitionsToConfirm = []
+councilMeeting.itemCopyGroupsStates = []
 councilMeeting.transitionsForPresentingAnItem = (
     "proposeToServiceHead",
     "proposeToOfficeManager",
@@ -183,37 +182,6 @@ councilMeeting.transitionsForPresentingAnItem = (
     "validate",
     "present",
 )
-councilMeeting.itemCopyGroupsStates = ['accepted']
-councilMeeting.onMeetingTransitionItemTransitionToTrigger = (
-    {"meeting_transition": "freeze", "item_transition": "itemfreeze"},
-    {"meeting_transition": "decide", "item_transition": "itemfreeze"},
-    {"meeting_transition": "publish_decisions", "item_transition": "itemfreeze"},
-    {"meeting_transition": "publish_decisions", "item_transition": "accept"},
-    {"meeting_transition": "close", "item_transition": "itemfreeze"},
-    {"meeting_transition": "close", "item_transition": "accept"},
-    {"meeting_transition": "backToCreated", "item_transition": "backToPresented"},
-)
 
-councilMeeting.meetingTopicStates = ("created", "frozen")
-councilMeeting.decisionTopicStates = ("decided", "closed")
-councilMeeting.itemAdviceStates = ("validated",)
-councilMeeting.itemAdviceStates = [
-    "proposed_to_director",
-]
-councilMeeting.itemAdviceEditStates = ["proposed_to_director", "validated"]
-councilMeeting.itemAdviceViewStates = [
-    "presented",
-]
-councilMeeting.transitionsReinitializingDelays = "backToItemCreated"
-councilMeeting.enforceAdviceMandatoriness = False
-councilMeeting.itemDecidedStates = [
-    "accepted",
-    "refused",
-    "delayed",
-    "accepted_but_modified",
-    "pre_accepted",
-]
-councilMeeting.itemPowerObserversStates = collegeMeeting.itemPowerObserversStates
-councilMeeting.meetingPowerObserversStates = collegeMeeting.meetingPowerObserversStates
 
 data.meetingConfigs = (collegeMeeting, councilMeeting)

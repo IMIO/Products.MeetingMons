@@ -23,6 +23,7 @@
 #
 
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
+from plone.app.textfield import RichTextValue
 
 
 class testCustomToolPloneMeeting(MeetingMonsTestCase):
@@ -34,20 +35,20 @@ class testCustomToolPloneMeeting(MeetingMonsTestCase):
         """
         self.changeUser('pmManager')
         m1 = self._createMeetingWithItems()
-        m1.setAssembly('Pierre Dupont - Bourgmestre,\n'
+        m1.assembly = RichTextValue('Pierre Dupont - Bourgmestre,\n'
                        'Charles Exemple - 1er Echevin,\n'
                        'Echevin Un, Echevin Deux, Echevin Trois - Echevins,\n'
                        'Jacqueline Exemple, Responsable du CPAS')
         attendee = '<p class="mltAssembly">Pierre Dupont - Bourgmestre,<br />' \
                    'Charles Exemple - 1er Echevin,<br />Echevin Un, Echevin Deux, ' \
                    'Echevin Trois - Echevins,<br />Jacqueline Exemple, Responsable du CPAS</p>'
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='')[0],
                           attendee)
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='Absent'),
                           '')
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='Excus'),
                           '')
         m1.setAssembly('Pierre Dupont - Bourgmestre,\n'
@@ -56,16 +57,16 @@ class testCustomToolPloneMeeting(MeetingMonsTestCase):
                        'Jacqueline Exemple, Responsable du CPAS \n'
                        'Excusés: \n '
                        'Monsieur x, Mesdames Y et Z')
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='')[0],
                           attendee)
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='Absent'),
                           '')
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='Excus')[0],
                           'Excusés:')
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='Excus')[1],
                           '<p class="mltAssembly">Monsieur x, Mesdames Y et Z</p>')
         m1.setAssembly('Pierre Dupont - Bourgmestre,\n'
@@ -76,18 +77,18 @@ class testCustomToolPloneMeeting(MeetingMonsTestCase):
                        'Monsieur tartenpion \n'
                        'Excusés: \n '
                        'Monsieur x, Mesdames Y et Z')
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='')[0],
                           attendee)
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='Absent')[0],
                           'Absent:')
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='Absent')[1],
                           '<p class="mltAssembly">Monsieur tartenpion</p>')
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='Excus')[0],
                           'Excusés:')
-        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.getAssembly(),
+        self.assertEquals(self.tool.adapted().getSpecificAssemblyFor(m1.get_assembly(),
                                                                      startTxt='Excus')[1],
                           '<p class="mltAssembly">Monsieur x, Mesdames Y et Z</p>')
