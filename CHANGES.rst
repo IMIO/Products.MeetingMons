@@ -9,7 +9,8 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 
 - Clean up adapters and removed useless fields : defaultMeetingItemDecision and defaultMeetingItemDetailledDescription, .
   [odelaere]
-
+- Adapted code regarding removal of `MeetingConfig.useGroupsAsCategories`.
+  [gbastien]
 
 4.1.2 (2020-12-23)
 ------------------

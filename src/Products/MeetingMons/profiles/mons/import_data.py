@@ -94,7 +94,6 @@ collegeMeeting.workflowAdaptations = []
 collegeMeeting.insertingMethodsOnAddItem = (
     {"insertingMethod": "on_proposing_groups", "reverse": "0"},
 )
-collegeMeeting.useGroupsAsCategories = True
 collegeMeeting.meetingPowerObserversStates = ("frozen", "decided", "closed")
 collegeMeeting.useCopies = True
 
