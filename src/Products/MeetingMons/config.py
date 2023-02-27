@@ -29,18 +29,6 @@ from Products.PloneMeeting import config as PMconfig
 
 PROJECTNAME = "MeetingMons"
 
-MONSMEETINGREVIEWERS = {
-    "meetingitemcollegemons_workflow": OrderedDict(
-        [
-            ("reviewers", ["proposed_to_director"]),
-            ("divisionheads", ["proposed_to_divisionhead"]),
-            ("officemanagers", ["proposed_to_officemanager"]),
-            ("serviceheads", ["proposed_to_servicehead"]),
-        ]
-    ),
-}
-PMconfig.MEETINGREVIEWERS = MONSMEETINGREVIEWERS
-
 PMconfig.EXTRA_GROUP_SUFFIXES = [
     {
         "fct_title": u"divisionheads",

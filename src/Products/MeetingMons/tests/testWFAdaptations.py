@@ -24,7 +24,6 @@
 
 from Products.MeetingCommunes.tests.testWFAdaptations import testWFAdaptations as mctwfa
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
-from Products.PloneMeeting.model.adaptations import RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS
 
 
 class testWFAdaptations(MeetingMonsTestCase, mctwfa):
@@ -50,28 +49,12 @@ class testWFAdaptations(MeetingMonsTestCase, mctwfa):
                 'refused',
                 'delayed',
                 'pre_accepted',
+                'mons_budget_reviewer',
                 "return_to_proposing_group",
                 "return_to_proposing_group_with_last_validation",
                 'hide_decisions_when_under_writing'
             }
         )
-
-    def _return_to_proposing_group_active_state_to_clone(self):
-        '''Helper method to test 'return_to_proposing_group' wfAdaptation regarding the
-           RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE defined value.
-           In our usecase, this is Nonsense as we use RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS.'''
-        return
-
-    def _return_to_proposing_group_active_custom_permissions(self):
-        '''Helper method to test 'return_to_proposing_group' wfAdaptation regarding the
-           RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS defined value.
-           In our use case, just test that permissions of 'returned_to_proposing_group' state
-           are the one defined in RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS.'''
-        itemWF = self.wfTool.getWorkflowsFor(self.meetingConfig.getItemTypeName())[0]
-        returned_to_proposing_group_state_permissions = itemWF.states['returned_to_proposing_group'].permission_roles
-        for permission in returned_to_proposing_group_state_permissions:
-            self.assertEquals(returned_to_proposing_group_state_permissions[permission],
-                              RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS[self.meetingConfig.getItemWorkflow()][permission])
 
 
 def test_suite():

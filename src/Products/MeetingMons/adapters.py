@@ -49,7 +49,7 @@ from Products.PloneMeeting.interfaces import IMeetingCustom
 from Products.PloneMeeting.interfaces import IMeetingItemCustom
 from Products.PloneMeeting.interfaces import IToolPloneMeetingCustom
 from Products.PloneMeeting.model import adaptations
-from Products.PloneMeeting.model.adaptations import WF_APPLIED
+from Products.PloneMeeting.model.adaptations import WF_APPLIED, _addIsolatedState
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
@@ -82,6 +82,7 @@ customWfAdaptations = (
     'refused',
     'delayed',
     'pre_accepted',
+    "mons_budget_reviewer",
     "return_to_proposing_group",
     "return_to_proposing_group_with_last_validation",
     'hide_decisions_when_under_writing'
@@ -97,76 +98,6 @@ adaptations.RETURN_TO_PROPOSING_GROUP_FROM_ITEM_STATES = ('presented', 'itemfroz
 
 adaptations.WF_NOT_CREATOR_EDITS_UNLESS_CLOSED = ('delayed', 'refused', 'accepted',
                                                   'pre_accepted', 'accepted_but_modified')
-
-RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE = {
-    'meetingitemcollegemons_workflow': 'meetingitemcollegemons_workflow.itemcreated'}
-adaptations.RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE = RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE
-
-RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = {'meetingitemcollegemons_workflow':
-    {
-        # view permissions
-        'Access contents information':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'View':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'PloneMeeting: Read decision':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'PloneMeeting: Read optional advisers':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'PloneMeeting: Read decision annex':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'PloneMeeting: Read item observations':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'PloneMeeting: Read budget infos':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'MeetingBudgetImpactReviewer',
-             'Reader',),
-        # edit permissions
-        'Modify portal content':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Write decision':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'Review portal content':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'Add portal content':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Add annex':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Add annexDecision':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Add MeetingFile':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Write optional advisers':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Write budget infos':
-            ('Manager', 'MeetingMember', 'MeetingOfficeManager', 'MeetingManager', 'MeetingBudgetImpactReviewer',),
-        'PloneMeeting: Write marginal notes':
-            ('Manager', 'MeetingManager',),
-        # MeetingManagers edit permissions
-        'Delete objects':
-            ('Manager', 'MeetingManager',),
-        'PloneMeeting: Write item observations':
-            ('Manager', 'MeetingManager',),
-        'PloneMeeting: Write item MeetingManager reserved fields':
-            ('Manager', 'MeetingManager',),
-    }
-}
-
-adaptations.RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS
 
 
 class CustomMeeting(MCMeeting):
@@ -194,6 +125,27 @@ class CustomMeetingItem(MCMeetingItem):
           Keep some new fields when item is cloned (to another mc or from itemtemplate).
         '''
         return ['validateByBudget']
+
+    def assign_roles_to_group_suffixes(self, cfg, item_state):
+        super(CustomMeetingItem).assign_roles_to_group_suffixes(cfg, item_state)
+        if item_state == 'proposed_to_budgetimpact_reviewer':
+            org_uid = self._getGroupManagingItem(item_state, theObject=False)
+            suffix_roles = {
+                'observers': ['Reader'],
+                'creators': ['Reader'],
+                'budgetimpactreviewers': ['Reader', 'Contributor', 'Editor', 'Reviewer'],
+            }
+            self._assign_roles_to_group_suffixes(org_uid, suffix_roles)
+        if item_state == 'proposed_to_extraordinarybudget':
+            org_uid = self._getGroupManagingItem(item_state, theObject=False)
+            suffix_roles = {
+                'observers': ['Reader'],
+                'creators': ['Reader'],
+                'extraordinarybudget': ['Reader', 'Contributor', 'Editor', 'Reviewer'],
+            }
+            self._assign_roles_to_group_suffixes(org_uid, suffix_roles)
+
+    MeetingItem.assign_roles_to_group_suffixes = assign_roles_to_group_suffixes
 
 
 class CustomMeetingConfig(MCMeetingConfig):
@@ -386,7 +338,6 @@ class CustomMeetingConfig(MCMeetingConfig):
             infos[FINANCE_ADVICES_COLLECTION_ID]['active'] = False
 
         return infos
-
 
 class MeetingCollegeMonsWorkflowActions(MeetingCommunesWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
@@ -607,10 +558,6 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
             return msg
 
         res = False
-        if not self.context.getCategory():
-            return No(translate('required_category_ko',
-                                domain="PloneMeeting",
-                                context=self.context.REQUEST))
         if _checkPermission(ReviewPortalContent, self.context):
             res = True
         return res
@@ -658,8 +605,44 @@ class CustomToolPloneMeeting(MCToolPloneMeeting):
     def __init__(self, item):
         self.context = item
 
-    def performCustomWFAdaptations(self, meetingConfig, wfAdaptation, logger, itemWorkflow, meetingWorkflow):
-        """ """
+    def performCustomWFAdaptations(
+            self, meetingConfig, wfAdaptation, logger, itemWorkflow, meetingWorkflow):
+        ''' '''
+        if wfAdaptation == 'mons_budget_reviewer':
+            _addIsolatedState(
+                new_state_id='proposed_to_budget_reviewer',
+                origin_state_id='itemcreated',
+                origin_transition_id='proposeToBudgetImpactReviewer',
+                origin_transition_title=translate("proposeToBudgetImpactReviewer", "plone"),
+                origin_transition_guard_expr_name='mayProposeToBudgetImpactReviewer()',
+                back_transition_guard_expr_name="mayValidateByBudgetImpactReviewer()",
+                back_transition_id='validateByBudgetImpactReviewer',
+                back_transition_title=translate("validateByBudgetImpactReviewer", "plone"),
+                itemWorkflow=itemWorkflow)
+            proposed_to_extraordinarybudget = _addIsolatedState(
+                new_state_id='proposed_to_extraordinarybudget',
+                origin_state_id='proposed_to_budget_reviewer',
+                origin_transition_id='proposeToExtraordinaryBudget',
+                origin_transition_title=translate("proposeToExtraordinaryBudget", "plone"),
+                origin_transition_guard_expr_name='mayProposeToExtraordinaryBudget()',
+                back_transition_guard_expr_name="mayCorrect()",
+                back_transition_id='backToItemBudgetImpactReviewers',
+                back_transition_title=translate("backToItemBudgetImpactReviewers", "plone"),
+                itemWorkflow=itemWorkflow)
+            itemWorkflow.transitions.addTransition("validateByExtraordinaryBudget")
+            transition = itemWorkflow.transitions["validateByExtraordinaryBudget"]
+            transition.setProperties(
+                title="validateByExtraordinaryBudget",
+                new_state_id="itemcreated", trigger_type=1, script_name='',
+                actbox_name="itemcreated", actbox_url='',
+                actbox_icon='%(portal_url)s/{0}.png'.format("itemcreated"),
+                actbox_category='workflow',
+                props={'guard_expr': 'python:here.wfConditions().{0}'.format("mayValidateByExtraordinaryBudget()")})
+
+            proposed_to_extraordinarybudget.transitions = \
+                proposed_to_extraordinarybudget.transitions + ("validateByExtraordinaryBudget",)
+
+            return True
         return False
 
 

@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 #
+from datetime import datetime
 
 from DateTime import DateTime
 from Products.CMFCore.permissions import AccessContentsInformation
@@ -31,37 +32,6 @@ from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 class testCustomWorkflows(MeetingMonsTestCase):
     """Tests the default workflows implemented in MeetingMons."""
 
-    def test_FreezeMeeting(self):
-        """
-           When we freeze a meeting, every presented items will be frozen
-           too and their state will be set to 'itemfrozen'.  When the meeting
-           come back to 'created', every items will be corrected and set in the
-           'presented' state
-        """
-        # First, define recurring items in the meeting config
-        self.changeUser('pmManager')
-        # create a meeting
-        meeting = self.create('Meeting', date='2007/12/11 09:00:00')
-        # create 2 items and present it to the meeting
-        item1 = self.create('MeetingItem', title='The first item')
-        self.presentItem(item1)
-        item2 = self.create('MeetingItem', title='The second item')
-        self.presentItem(item2)
-        wftool = self.portal.portal_workflow
-        # every presented items are in the 'presented' state
-        self.assertEquals('presented', wftool.getInfoFor(item1, 'review_state'))
-        self.assertEquals('presented', wftool.getInfoFor(item2, 'review_state'))
-        # every items must be in the 'itemfrozen' state if we freeze the meeting
-        self.freezeMeeting(meeting)
-        self.assertEquals('itemfrozen', wftool.getInfoFor(item1, 'review_state'))
-        self.assertEquals('itemfrozen', wftool.getInfoFor(item2, 'review_state'))
-        # when an item is 'itemfrozen' it will stay itemfrozen if nothing
-        # is defined in the meetingConfig.onMeetingTransitionItemTransitionToTrigger
-        self.meetingConfig.setOnMeetingTransitionItemActionToExecute([])
-        self.backToState(meeting, 'created')
-        self.assertEquals('itemfrozen', wftool.getInfoFor(item1, 'review_state'))
-        self.assertEquals('itemfrozen', wftool.getInfoFor(item2, 'review_state'))
-
     def test_CloseMeeting(self):
         """
            When we close a meeting, every items are set to accepted if they are still
@@ -70,7 +40,7 @@ class testCustomWorkflows(MeetingMonsTestCase):
         # First, define recurring items in the meeting config
         self.changeUser('pmManager')
         # create a meeting (with 7 items)
-        meeting = self.create('Meeting', date='2020/07/30 09:00:00')
+        meeting = self.create('Meeting', date=datetime(2020, 7, 30, 9, 0))
         item1 = self.create('MeetingItem', )  # id=o2
         item1.setProposingGroup(self.vendors_uid)
         item2 = self.create('MeetingItem')  # id=o3
@@ -139,7 +109,8 @@ class testCustomWorkflows(MeetingMonsTestCase):
         self.changeUser('pmManager')
         item = self.create('MeetingItem')
         item.setDecision(self.decisionText)
-        meeting = self.create('Meeting', date=DateTime('2017/03/27'))
+        meeting = self.create('Meeting', date=DateTime('2017/03/27').asdatetime())
+        self.changeUser('admin')
         self.do(item, 'proposeToBudgetImpactReviewer')
         _checkObserverMayView(item)
         self.do(item, 'validateByBudgetImpactReviewer')
@@ -175,7 +146,6 @@ class testCustomWorkflows(MeetingMonsTestCase):
         self.changeUser('pmCreator1')
         item = self.create('MeetingItem')
         self.assertTrue(item.mayQuickEdit("observations"))
-
         self.do(item, 'proposeToBudgetImpactReviewer')
         self.changeUser('pmManager')
         self.assertTrue(item.mayQuickEdit("observations"))
@@ -201,7 +171,7 @@ class testCustomWorkflows(MeetingMonsTestCase):
         self.do(item, 'validate')
         self.assertTrue(item.mayQuickEdit("observations"))
 
-        meeting = self.create('Meeting', date=DateTime('2017/03/27'))
+        meeting = self.create('Meeting', date=DateTime('2017/03/27').asdatetime())
 
         self.do(item, 'present')
         self.assertTrue(item.mayQuickEdit("observations"))

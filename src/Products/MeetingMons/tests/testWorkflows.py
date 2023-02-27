@@ -29,6 +29,8 @@ from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 from Products.MeetingCommunes.tests.testWorkflows import testWorkflows as mctw
 from Products.PloneMeeting.utils import get_annexes
 
+from DateTime import DateTime
+
 
 class testWorkflows(MeetingMonsTestCase, mctw):
     """Tests the default workflows implemented in MeetingMons."""
@@ -56,7 +58,7 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
         # pmManager creates a meeting
         self.changeUser('pmManager')
-        meeting = self.create('Meeting', date='2007/12/11 09:00:00')
+        meeting = self.create('Meeting', date=DateTime('2007/12/11 09:00:00').asdatetime())
         self.addAnnex(item1, relatedTo='item_decision')
         # pmCreator2 creates and proposes an item
         self.changeUser('pmCreator2')
@@ -148,7 +150,7 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.failIf(self.transitions(item1))  # He may trigger no more action
         # pmManager creates a meeting
         self.changeUser('pmManager')
-        meeting = self.create('Meeting', date='2007/12/11 09:00:00')
+        meeting = self.create('Meeting', date=DateTime('2007/12/11 09:00:00').asdatetime())
         # The meetingManager can add a decision annex
         self.addAnnex(item1, relatedTo='item_decision')
         # pmCreator2 creates and proposes an item
