@@ -4,7 +4,7 @@ Products.MeetingMons Changelog
 Older versions than 3.0 can be found at http://svn.communesplone.org/svn/communesplone/MeetingMons/tags/
 The Products.MeetingMons version must be the same as the Products.PloneMeeting version
 
-4.2.0a1 (unreleased)
+4.2.0a1 (2023-02-28)
 --------------------
 
 - Compatible with PloneMeeting v4.2
