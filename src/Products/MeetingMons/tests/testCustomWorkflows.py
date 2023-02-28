@@ -147,7 +147,6 @@ class testCustomWorkflows(MeetingMonsTestCase):
         item = self.create('MeetingItem')
         self.assertTrue(item.mayQuickEdit("observations"))
         self.do(item, 'proposeToBudgetImpactReviewer')
-        import ipdb; ipdb.set_trace() # TODO: REMOVE ME <-----------------------------------------------------------------------
         self.changeUser('pmManager')
         self.assertTrue(item.mayQuickEdit("observations"))
 
