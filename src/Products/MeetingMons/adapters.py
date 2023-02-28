@@ -58,6 +58,7 @@ from Products.CMFCore.permissions import ReviewPortalContent, ModifyPortalConten
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.utils import getToolByName
 from appy.gen import No
+from collective.contact.plonegroup.utils import get_all_suffixes
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 from plone import api
 from plone.memoize import ram
@@ -125,27 +126,6 @@ class CustomMeetingItem(MCMeetingItem):
           Keep some new fields when item is cloned (to another mc or from itemtemplate).
         '''
         return ['validateByBudget']
-
-    def assign_roles_to_group_suffixes(self, cfg, item_state):
-        super(CustomMeetingItem).assign_roles_to_group_suffixes(cfg, item_state)
-        if item_state == 'proposed_to_budgetimpact_reviewer':
-            org_uid = self._getGroupManagingItem(item_state, theObject=False)
-            suffix_roles = {
-                'observers': ['Reader'],
-                'creators': ['Reader'],
-                'budgetimpactreviewers': ['Reader', 'Contributor', 'Editor', 'Reviewer'],
-            }
-            self._assign_roles_to_group_suffixes(org_uid, suffix_roles)
-        if item_state == 'proposed_to_extraordinarybudget':
-            org_uid = self._getGroupManagingItem(item_state, theObject=False)
-            suffix_roles = {
-                'observers': ['Reader'],
-                'creators': ['Reader'],
-                'extraordinarybudget': ['Reader', 'Contributor', 'Editor', 'Reviewer'],
-            }
-            self._assign_roles_to_group_suffixes(org_uid, suffix_roles)
-
-    MeetingItem.assign_roles_to_group_suffixes = assign_roles_to_group_suffixes
 
 
 class CustomMeetingConfig(MCMeetingConfig):
@@ -338,6 +318,21 @@ class CustomMeetingConfig(MCMeetingConfig):
             infos[FINANCE_ADVICES_COLLECTION_ID]['active'] = False
 
         return infos
+
+    def get_item_custom_suffix_roles(self, item, item_state):
+        '''See doc in interfaces.py.'''
+        suffix_roles = {}
+        if item_state == 'proposed_to_budgetimpact_reviewer':
+            for suffix in get_all_suffixes(item.getProposingGroup()):
+                suffix_roles[suffix] = ['Reader']
+                if suffix == 'budgetimpactreviewers':
+                    suffix_roles[suffix] += ['Reader', 'Contributor', 'Editor', 'Reviewer']
+        elif item_state == 'proposed_to_extraordinarybudget':
+            for suffix in get_all_suffixes(item.getProposingGroup()):
+                suffix_roles[suffix] = ['Reader']
+                if suffix == 'extraordinarybudget':
+                    suffix_roles[suffix] += ['Reader', 'Contributor', 'Editor', 'Reviewer']
+        return True, suffix_roles
 
 class MeetingCollegeMonsWorkflowActions(MeetingCommunesWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
@@ -610,7 +605,7 @@ class CustomToolPloneMeeting(MCToolPloneMeeting):
         ''' '''
         if wfAdaptation == 'mons_budget_reviewer':
             _addIsolatedState(
-                new_state_id='proposed_to_budget_reviewer',
+                new_state_id='proposed_to_budgetimpact_reviewer',
                 origin_state_id='itemcreated',
                 origin_transition_id='proposeToBudgetImpactReviewer',
                 origin_transition_title=translate("proposeToBudgetImpactReviewer", "plone"),
@@ -621,7 +616,7 @@ class CustomToolPloneMeeting(MCToolPloneMeeting):
                 itemWorkflow=itemWorkflow)
             proposed_to_extraordinarybudget = _addIsolatedState(
                 new_state_id='proposed_to_extraordinarybudget',
-                origin_state_id='proposed_to_budget_reviewer',
+                origin_state_id='proposed_to_budgetimpact_reviewer',
                 origin_transition_id='proposeToExtraordinaryBudget',
                 origin_transition_title=translate("proposeToExtraordinaryBudget", "plone"),
                 origin_transition_guard_expr_name='mayProposeToExtraordinaryBudget()',

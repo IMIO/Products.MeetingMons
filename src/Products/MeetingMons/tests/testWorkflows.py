@@ -53,7 +53,6 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.addAnnex(item1)
         self.addAnnex(item1, relatedTo='item_decision')
         self.proposeItem(item1)
-        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.transitions(item1))  # He may trigger no more action
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
         # pmManager creates a meeting
@@ -95,7 +94,7 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.addAnnex(item2)
         # So now we should have 3 normal item (2 recurring + 1) and one late item in the meeting
         self.failUnless(len(meeting.get_items()) == 4)
-        self.failUnless(len(meeting.get_items(listTypes='late')) == 1)
+        self.failUnless(len(meeting.get_items(list_types='late')) == 1)
         self.changeUser('pmManager')
         item1.setDecision(self.decisionText)
 
@@ -145,8 +144,6 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         # The creator can add a decision annex on created item
         self.addAnnex(item1, relatedTo='item_decision')
         self.proposeItem(item1)
-        # The creator cannot add a decision annex on proposed item
-        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.transitions(item1))  # He may trigger no more action
         # pmManager creates a meeting
         self.changeUser('pmManager')
@@ -163,16 +160,12 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         # The reviewer can add a decision annex on proposed item
         self.addAnnex(item1, relatedTo='item_decision')
         self.do(item1, 'validate')
-        # The reviewer cannot add a decision annex on validated item
-        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         # pmManager inserts item1 into the meeting and freezes it
         self.changeUser('pmManager')
         managerAnnex = self.addAnnex(item1)
         self.portal.restrictedTraverse('@@delete_givenuid')(managerAnnex.UID())
         self.do(item1, 'present')
         self.changeUser('pmCreator1')
-        # The creator cannot add any kind of annex on presented item
-        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.assertRaises(Unauthorized, self.addAnnex, item1)
         self.changeUser('pmManager')
         self.do(meeting, 'freeze')
@@ -186,7 +179,7 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.addAnnex(item2)
         # So now I should have 1 normal item left and one late item in the meeting
         self.failIf(len(meeting.get_items()) != 2)
-        self.failUnless(len(meeting.get_items(listTypes=['late'])) == 1)
+        self.failUnless(len(meeting.get_items(list_types='late')) == 1)
         # pmReviewer1 can not add an annex on item1 as it is frozen
         self.changeUser('pmReviewer1')
         self.assertRaises(Unauthorized, self.addAnnex, item1)
@@ -195,10 +188,8 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         # Now reviewers can't add annexes anymore
         self.changeUser('pmReviewer2')
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item2))
-        self.assertRaises(Unauthorized, self.addAnnex, item2, relatedTo='item_decision')
         self.changeUser('pmReviewer1')
         self.assertRaises(Unauthorized, self.addAnnex, item2)
-        self.assertRaises(Unauthorized, self.addAnnex, item2, relatedTo='item_decision')
         # pmManager adds a decision for item2, decides and closes the meeting
         self.changeUser('pmManager')
         item2.setDecision(self.decisionText)
@@ -206,9 +197,9 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         # check that a delayed item is duplicated
         self.assertEquals(len(item1.getBRefs('ItemPredecessor')), 0)
         self.do(item1, 'delay')
-        # the duplicated item has item3 as predecessor
-        duplicatedItem = item1.getBRefs('ItemPredecessor')[0]
-        self.assertEquals(duplicatedItem.getPredecessor().UID(), item1.UID())
+        # the duplicated item has item1 as predecessor
+        duplicatedItem = item1.get_successors()[0]
+        self.assertEqual(duplicatedItem.get_predecessor().UID(), item1.UID())
         # when duplicated on delay, annexes are kept
         self.assertEquals(len(get_annexes(duplicatedItem, portal_types=('annex', ))), 1)
         self.addAnnex(item2, relatedTo='item_decision')

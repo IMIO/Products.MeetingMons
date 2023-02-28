@@ -3,7 +3,6 @@
 from copy import deepcopy
 
 from Products.MeetingMons.config import MONS_ITEM_WF_VALIDATION_LEVELS
-from Products.PloneMeeting.config import MEETINGREVIEWERS
 from Products.PloneMeeting.profiles.testing import import_data as pm_import_data
 from Products.MeetingCommunes.profiles.testing import import_data as mc_import_data
 from Products.PloneMeeting.profiles import UserDescriptor
@@ -55,8 +54,10 @@ developers.observers.append(pmManager)
 developers.advisers.append(pmAdviser1)
 developers.advisers.append(pmManager)
 developers.serviceheads.append(pmServiceHead1)
+developers.serviceheads.append(pmReviewerLevel1)
 developers.serviceheads.append(pmManager)
 developers.officemanagers.append(pmOfficeManager1)
+developers.officemanagers.append(pmReviewerLevel2)
 developers.officemanagers.append(pmManager)
 developers.divisionheads.append(pmDivisionHead1)
 developers.divisionheads.append(pmManager)
@@ -69,14 +70,14 @@ developers.extraordinarybudget.append(pmManager)
 setattr(developers, "signatures", "developers signatures")
 setattr(developers, "echevinServices", "developers")
 
-# put pmReviewerLevel1 in first level of reviewers from what is in MEETINGREVIEWERS
-getattr(developers, MEETINGREVIEWERS["meetingitemcollegemons_workflow"].keys()[-1]).append(
-    pmReviewerLevel1
-)
-# put pmReviewerLevel2 in second level of reviewers from what is in MEETINGREVIEWERS
-getattr(developers, MEETINGREVIEWERS["meetingitemcollegemons_workflow"].keys()[0]).append(
-    pmReviewerLevel2
-)
+
+vendors = data.orgs[1]
+vendors.creators.append(pmCreator2)
+vendors.reviewers.append(pmReviewer2)
+vendors.observers.append(pmReviewer2)
+vendors.advisers.append(pmReviewer2)
+vendors.advisers.append(pmManager)
+setattr(vendors, "signatures", "")
 
 
 vendors = data.orgs[1]
