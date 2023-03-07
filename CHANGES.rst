@@ -7,8 +7,10 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.2.0a2 (unreleased)
 --------------------
 
-- Nothing changed yet.
-
+- Fix last broken tests.
+  [aduchene]
+- Improve migration to v4.2 by adding appropriate WFA's.
+  [aduchene]
 
 4.2.0a1 (2023-02-28)
 --------------------

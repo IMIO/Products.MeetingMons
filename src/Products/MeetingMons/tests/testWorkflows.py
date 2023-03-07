@@ -240,6 +240,9 @@ class testWorkflows(MeetingMonsTestCase, mctw):
             annotations['statusmessages'] = ''
         super(testWorkflows, self).test_pm_RemoveContainer()
 
+    def test_pm_MeetingNotClosableIfItemStillReturnedToProposingGroup(self):
+        pass
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite

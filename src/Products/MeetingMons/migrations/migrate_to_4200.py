@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from DateTime import DateTime
+from Products.MeetingMons.config import MONS_ITEM_WF_VALIDATION_LEVELS
 from plone import api
 from Products.MeetingCommunes.migrations.migrate_to_4200 import Migrate_To_4200 as MCMigrate_To_4200
 import logging
@@ -66,6 +67,24 @@ class Migrate_To_4200(MCMigrate_To_4200):
                     # already migrated
                     break
         logger.info('Done.')
+
+    def _safe_add_WFA(self, wfa, cfg):
+        if wfa in cfg.getWorkflowAdaptations():
+            return
+        cfg.setWorkflowAdaptations((wfa,) + cfg.getWorkflowAdaptations())
+
+
+    def _doConfigureItemWFValidationLevels(self, cfg):
+        """Apply correct itemWFValidationLevels and fix WFAs."""
+        stored_itemWFValidationLevels = getattr(cfg, 'itemWFValidationLevels', [])
+        if not stored_itemWFValidationLevels:
+            cfg.setItemWFValidationLevels(MONS_ITEM_WF_VALIDATION_LEVELS)
+
+        self._safe_add_WFA("accepted_but_modified", cfg)
+        self._safe_add_WFA("refused", cfg)
+        self._safe_add_WFA("delayed", cfg)
+        self._safe_add_WFA("mons_budget_reviewer", cfg)
+
     def run(self,
             profile_name=u'profile-Products.MeetingMons:default',
             extra_omitted=[]):

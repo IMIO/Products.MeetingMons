@@ -31,6 +31,9 @@ class testMeetingItem(MeetingMonsTestCase, mctmi):
         Tests the MeetingItem class methods.
     """
 
+    def _users_to_remove_for_mailling_list(self):
+        return ["pmDirector1","pmDivisionHead1","pmOfficeManager1","pmServiceHead1"]
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite

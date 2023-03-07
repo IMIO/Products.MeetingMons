@@ -56,6 +56,17 @@ class testWFAdaptations(MeetingMonsTestCase, mctwfa):
             }
         )
 
+    def test_pm_Validate_workflowAdaptations_dependencies(self):
+        pass
+
+    def test_pm_Validate_workflowAdaptations_removed_return_to_proposing_group_with_last_validation(self):
+        pass
+
+    def test_pm_WFA_return_to_proposing_group_with_hide_decisions_when_under_writing(self):
+        pass
+
+    def test_pm_MeetingNotClosableIfItemStillReturnedToProposingGroup(self):
+        pass
 
 def test_suite():
     from unittest import TestSuite, makeSuite

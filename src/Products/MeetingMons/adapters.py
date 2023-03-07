@@ -97,10 +97,6 @@ adaptations.noGlobalObsStates = noGlobalObsStates
 
 adaptations.RETURN_TO_PROPOSING_GROUP_FROM_ITEM_STATES = ('presented', 'itemfrozen',)
 
-adaptations.WF_NOT_CREATOR_EDITS_UNLESS_CLOSED = ('delayed', 'refused', 'accepted',
-                                                  'pre_accepted', 'accepted_but_modified')
-
-
 class CustomMeeting(MCMeeting):
     '''Adapter that adapts a meeting implementing IMeeting to the
        interface IMeetingCustom.'''
@@ -603,7 +599,7 @@ class CustomToolPloneMeeting(MCToolPloneMeeting):
     def performCustomWFAdaptations(
             self, meetingConfig, wfAdaptation, logger, itemWorkflow, meetingWorkflow):
         ''' '''
-        if wfAdaptation == 'mons_budget_reviewer':
+        if wfAdaptation == 'mons_budget_reviewer' and "itemcreated" in itemWorkflow.states:
             _addIsolatedState(
                 new_state_id='proposed_to_budgetimpact_reviewer',
                 origin_state_id='itemcreated',
@@ -636,7 +632,6 @@ class CustomToolPloneMeeting(MCToolPloneMeeting):
 
             proposed_to_extraordinarybudget.transitions = \
                 proposed_to_extraordinarybudget.transitions + ("validateByExtraordinaryBudget",)
-
             return True
         return False
 
