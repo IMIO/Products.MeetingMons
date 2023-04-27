@@ -8,8 +8,8 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.2.0b2 (unreleased)
 --------------------
 
-- Nothing changed yet.
-
+- Fixed translation of `Data that will be used on new item` on `meetingitem_view.pt`.
+  [gbastien]
 
 4.2.0b1 (2023-03-31)
 --------------------
@@ -21,7 +21,6 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 - Add a `IMeetingMonsLayer BrowserLayer` so it is possible to override
   PloneMeeting's documentgenerator views.
   [aduchene]
-
 
 4.2.0a1 (2023-02-28)
 --------------------
