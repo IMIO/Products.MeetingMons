@@ -10,6 +10,8 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 
 - Fixed translation of `Data that will be used on new item` on `meetingitem_view.pt`.
   [gbastien]
+- Inherit from MeetingCommunes browser views
+  [aduchene]
 
 4.2.0b1 (2023-03-31)
 --------------------

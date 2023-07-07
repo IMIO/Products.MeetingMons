@@ -8,9 +8,9 @@
 #
 from collections import OrderedDict
 
-from Products.PloneMeeting.browser.views import FolderDocumentGenerationHelperView
-from Products.PloneMeeting.browser.views import ItemDocumentGenerationHelperView
-from Products.PloneMeeting.browser.views import MeetingDocumentGenerationHelperView
+from Products.MeetingCommunes.browser.overrides import FolderDocumentGenerationHelperView
+from Products.MeetingCommunes.browser.overrides import ItemDocumentGenerationHelperView
+from Products.MeetingCommunes.browser.overrides import MeetingDocumentGenerationHelperView
 from imio.history.utils import getLastWFAction as getLastEvent
 from Products.PloneMeeting.utils import get_annexes
 
