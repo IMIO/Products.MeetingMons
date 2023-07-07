@@ -8,9 +8,8 @@
 #
 from collections import OrderedDict
 
-from Products.MeetingCommunes.browser.overrides import FolderDocumentGenerationHelperView
-from Products.MeetingCommunes.browser.overrides import ItemDocumentGenerationHelperView
-from Products.MeetingCommunes.browser.overrides import MeetingDocumentGenerationHelperView
+from Products.MeetingCommunes.browser.overrides import MCItemDocumentGenerationHelperView
+from Products.MeetingCommunes.browser.overrides import MCMeetingDocumentGenerationHelperView
 from imio.history.utils import getLastWFAction as getLastEvent
 from Products.PloneMeeting.utils import get_annexes
 
@@ -58,7 +57,7 @@ def formatedAssembly(assembly, focus):
     return ('\n'.join(res))
 
 
-class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
+class MonsItemDocumentGenerationHelperView(MCItemDocumentGenerationHelperView):
     """Specific printing methods used for item."""
 
     def printAllAnnexes(self, portal_types=['annex']):
@@ -289,7 +288,7 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
         return res
 
 
-class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView):
+class MonsMeetingDocumentGenerationHelperView(MCMeetingDocumentGenerationHelperView):
     """Specific printing methods used for meeting."""
 
     def printFormatedMeetingAssembly(self, focus=''):
@@ -477,23 +476,4 @@ class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView)
                          res[keyid] = []
                     res_key = keyid
             res[res_key].append(('{0}.{1}'.format(category_id, len(res[res_key])+1), item)) # start numbering to 1
-        return res
-
-
-class MCFolderDocumentGenerationHelperView(FolderDocumentGenerationHelperView):
-
-    def get_all_items_dghv_with_finance_advice(self, brains):
-        """
-        :param brains: the brains collection representing @Product.PloneMeeting.MeetingItem
-        :return: an array of dictionary with onnly the items linked to a finance advics which contains 2 keys
-                 itemView : the documentgenerator helper view of a MeetingItem.
-                 advice   : the data from a single advice linked to this MeetingItem as extracted with getAdviceDataFor.
-        """
-        res = []
-
-        tool = api.portal.get_tool('portal_plonemeeting')
-        cfg = tool.getMeetingConfig(self.context)
-        finance_advice_ids = cfg.adapted().getUsedFinanceGroupIds()
-        if finance_advice_ids:
-            res = self.get_all_items_dghv_with_advice(brains, finance_advice_ids)
         return res

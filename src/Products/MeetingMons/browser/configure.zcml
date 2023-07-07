@@ -15,7 +15,7 @@
     <!-- collective.documentgenerator helper view for MeetingItem -->
     <browser:page
         for="Products.PloneMeeting.interfaces.IMeetingItem"
-        class=".overrides.MCItemDocumentGenerationHelperView"
+        class=".overrides.MonsItemDocumentGenerationHelperView"
         permission="zope2.View"
         layer="Products.MeetingMons.interfaces.IMeetingMonsLayer"
         name="document_generation_helper_view"
@@ -24,7 +24,7 @@
     <!-- collective.documentgenerator helper view for Meeting -->
     <browser:page
         for="Products.PloneMeeting.content.meeting.IMeeting"
-        class=".overrides.MCMeetingDocumentGenerationHelperView"
+        class=".overrides.MonsMeetingDocumentGenerationHelperView"
         permission="zope2.View"
         layer="Products.MeetingMons.interfaces.IMeetingMonsLayer"
         name="document_generation_helper_view"
