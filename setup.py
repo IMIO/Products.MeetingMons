@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '4.2.0b4'
+version = '4.2.0b5.dev0'
 
 setup(name='Products.MeetingMons',
       version=version,
