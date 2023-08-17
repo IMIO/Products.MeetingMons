@@ -8,14 +8,15 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.2.0b5 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Fixed `validatedByBudget` feature and permissions.
+  [aduchene]
 
 
 4.2.0b4 (2023-07-12)
 --------------------
 
 - Fixed wrong override declaration.
-  [aduchene].
+  [aduchene]
 
 
 4.2.0b3 (2023-07-07)
