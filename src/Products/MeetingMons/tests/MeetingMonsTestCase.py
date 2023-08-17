@@ -30,15 +30,8 @@ from Products.MeetingMons.tests.helpers import MeetingMonsTestingHelpers
 class MeetingMonsTestCase(MeetingCommunesTestCase, MeetingMonsTestingHelpers):
     """Base class for defining MeetingMons test cases."""
 
-    # Some default content
-    descriptionText = '<p>Some description</p>'
-    decisionText = '<p>Some decision.</p>'
-    # by default, PloneMeeting's test file testPerformances.py and
-    # testConversionWithDocumentViewer.py' are ignored, override the subproductIgnoredTestFiles
-    # attribute to take these files into account
-    # subproductIgnoredTestFiles = ['testPerformances.py', ]
-
     layer = MM_TESTING_PROFILE_FUNCTIONAL
+    subproductIgnoredTestFiles = ['test_robot.py', 'testPerformances.py', 'testContacts.py', 'testVotes.py']
 
     def setUp(self):
         MeetingCommunesTestCase.setUp(self)

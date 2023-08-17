@@ -8,9 +8,8 @@
 #
 from collections import OrderedDict
 
-from Products.PloneMeeting.browser.views import FolderDocumentGenerationHelperView
-from Products.PloneMeeting.browser.views import ItemDocumentGenerationHelperView
-from Products.PloneMeeting.browser.views import MeetingDocumentGenerationHelperView
+from Products.MeetingCommunes.browser.overrides import MCItemDocumentGenerationHelperView
+from Products.MeetingCommunes.browser.overrides import MCMeetingDocumentGenerationHelperView
 from imio.history.utils import getLastWFAction as getLastEvent
 from Products.PloneMeeting.utils import get_annexes
 
@@ -58,7 +57,7 @@ def formatedAssembly(assembly, focus):
     return ('\n'.join(res))
 
 
-class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
+class MonsItemDocumentGenerationHelperView(MCItemDocumentGenerationHelperView):
     """Specific printing methods used for item."""
 
     def printAllAnnexes(self, portal_types=['annex']):
@@ -266,7 +265,7 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
         return None
 
     def print_item_state(self):
-        return self.translate(self.real_context.queryState())
+        return self.translate(self.real_context.query_state())
 
     def print_creator_name(self):
         return (self.real_context.portal_membership.getMemberInfo(str(self.real_context.Creator())) \
@@ -275,7 +274,7 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
 
     def print_validator_name(self):
         res = ''
-        if self.real_context.queryState() in ('validated',) or self.real_context.hasMeeting():
+        if self.real_context.query_state() in ('validated',) or self.real_context.hasMeeting():
             event = getLastEvent(self.real_context, 'validate')
             if event:
                 validator_id = str(event['actor'])
@@ -289,7 +288,7 @@ class MCItemDocumentGenerationHelperView(ItemDocumentGenerationHelperView):
         return res
 
 
-class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView):
+class MonsMeetingDocumentGenerationHelperView(MCMeetingDocumentGenerationHelperView):
     """Specific printing methods used for meeting."""
 
     def printFormatedMeetingAssembly(self, focus=''):
@@ -299,7 +298,7 @@ class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView)
             return ''
         # ie: Pierre Helson, Bourgmestre, Président
         # focus is present, excuse or absent
-        assembly = self.context.getAssembly().replace('<p>', '').replace('</p>', '').split('<br />')
+        assembly = self.context.get_assembly().replace('<p>', '').replace('</p>', '').split('<br />')
         return formatedAssembly(assembly, focus)
 
     def _is_in_value_dict(self, item, value_map={}):
@@ -310,7 +309,7 @@ class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView)
 
     def _filter_item_uids(self, itemUids, ignore_review_states=[], privacy='*', included_values={}, excluded_values={}):
         """
-        We just filter ignore_review_states here and privacy in order call getItems(uids), passing the correct uids and removing empty uids.
+        We just filter ignore_review_states here and privacy in order call get_items(uids), passing the correct uids and removing empty uids.
         :param privacy: can be '*' or 'public' or 'secret' or 'public_heading' or 'secret_heading'
         """
         for elt in itemUids:
@@ -322,7 +321,7 @@ class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView)
 
         for itemUid in itemUids:
             obj = uid_catalog(UID=itemUid)[0].getObject()
-            if obj.queryState() in ignore_review_states:
+            if obj.query_state() in ignore_review_states:
                 continue
             elif not (privacy == '*' or obj.getPrivacy() == privacy):
                 continue
@@ -382,7 +381,7 @@ class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView)
         if not filteredItemUids:
             return []
         else:
-            items = self.real_context.getItems(uids=filteredItemUids, listTypes=listTypes, ordered=True)
+            items = self.real_context.get_items(uids=filteredItemUids, listTypes=listTypes, ordered=True)
             if renumber:
                 items = self._renumber_item(items, firstNumber)
 
@@ -477,23 +476,4 @@ class MCMeetingDocumentGenerationHelperView(MeetingDocumentGenerationHelperView)
                          res[keyid] = []
                     res_key = keyid
             res[res_key].append(('{0}.{1}'.format(category_id, len(res[res_key])+1), item)) # start numbering to 1
-        return res
-
-
-class MCFolderDocumentGenerationHelperView(FolderDocumentGenerationHelperView):
-
-    def get_all_items_dghv_with_finance_advice(self, brains):
-        """
-        :param brains: the brains collection representing @Product.PloneMeeting.MeetingItem
-        :return: an array of dictionary with onnly the items linked to a finance advics which contains 2 keys
-                 itemView : the documentgenerator helper view of a MeetingItem.
-                 advice   : the data from a single advice linked to this MeetingItem as extracted with getAdviceDataFor.
-        """
-        res = []
-
-        tool = api.portal.get_tool('portal_plonemeeting')
-        cfg = tool.getMeetingConfig(self.context)
-        finance_advice_ids = cfg.adapted().getUsedFinanceGroupIds()
-        if finance_advice_ids:
-            res = self.get_all_items_dghv_with_advice(brains, finance_advice_ids)
         return res

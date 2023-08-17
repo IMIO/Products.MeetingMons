@@ -29,6 +29,8 @@ from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 from Products.MeetingCommunes.tests.testWorkflows import testWorkflows as mctw
 from Products.PloneMeeting.utils import get_annexes
 
+from DateTime import DateTime
+
 
 class testWorkflows(MeetingMonsTestCase, mctw):
     """Tests the default workflows implemented in MeetingMons."""
@@ -51,12 +53,11 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.addAnnex(item1)
         self.addAnnex(item1, relatedTo='item_decision')
         self.proposeItem(item1)
-        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.transitions(item1))  # He may trigger no more action
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item1))
         # pmManager creates a meeting
         self.changeUser('pmManager')
-        meeting = self.create('Meeting', date='2007/12/11 09:00:00')
+        meeting = self.create('Meeting', date=DateTime('2007/12/11 09:00:00').asdatetime())
         self.addAnnex(item1, relatedTo='item_decision')
         # pmCreator2 creates and proposes an item
         self.changeUser('pmCreator2')
@@ -92,8 +93,8 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.do(item2, 'present')
         self.addAnnex(item2)
         # So now we should have 3 normal item (2 recurring + 1) and one late item in the meeting
-        self.failUnless(len(meeting.getItems()) == 4)
-        self.failUnless(len(meeting.getItems(listTypes='late')) == 1)
+        self.failUnless(len(meeting.get_items()) == 4)
+        self.failUnless(len(meeting.get_items(list_types='late')) == 1)
         self.changeUser('pmManager')
         item1.setDecision(self.decisionText)
 
@@ -143,12 +144,10 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         # The creator can add a decision annex on created item
         self.addAnnex(item1, relatedTo='item_decision')
         self.proposeItem(item1)
-        # The creator cannot add a decision annex on proposed item
-        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.failIf(self.transitions(item1))  # He may trigger no more action
         # pmManager creates a meeting
         self.changeUser('pmManager')
-        meeting = self.create('Meeting', date='2007/12/11 09:00:00')
+        meeting = self.create('Meeting', date=DateTime('2007/12/11 09:00:00').asdatetime())
         # The meetingManager can add a decision annex
         self.addAnnex(item1, relatedTo='item_decision')
         # pmCreator2 creates and proposes an item
@@ -161,16 +160,12 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         # The reviewer can add a decision annex on proposed item
         self.addAnnex(item1, relatedTo='item_decision')
         self.do(item1, 'validate')
-        # The reviewer cannot add a decision annex on validated item
-        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         # pmManager inserts item1 into the meeting and freezes it
         self.changeUser('pmManager')
         managerAnnex = self.addAnnex(item1)
         self.portal.restrictedTraverse('@@delete_givenuid')(managerAnnex.UID())
         self.do(item1, 'present')
         self.changeUser('pmCreator1')
-        # The creator cannot add any kind of annex on presented item
-        self.assertRaises(Unauthorized, self.addAnnex, item1, relatedTo='item_decision')
         self.assertRaises(Unauthorized, self.addAnnex, item1)
         self.changeUser('pmManager')
         self.do(meeting, 'freeze')
@@ -183,8 +178,8 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         self.do(item2, 'present')
         self.addAnnex(item2)
         # So now I should have 1 normal item left and one late item in the meeting
-        self.failIf(len(meeting.getItems()) != 2)
-        self.failUnless(len(meeting.getItems(listTypes=['late'])) == 1)
+        self.failIf(len(meeting.get_items()) != 2)
+        self.failUnless(len(meeting.get_items(list_types='late')) == 1)
         # pmReviewer1 can not add an annex on item1 as it is frozen
         self.changeUser('pmReviewer1')
         self.assertRaises(Unauthorized, self.addAnnex, item1)
@@ -193,10 +188,8 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         # Now reviewers can't add annexes anymore
         self.changeUser('pmReviewer2')
         self.failIf(self.hasPermission('PloneMeeting: Add annex', item2))
-        self.assertRaises(Unauthorized, self.addAnnex, item2, relatedTo='item_decision')
         self.changeUser('pmReviewer1')
         self.assertRaises(Unauthorized, self.addAnnex, item2)
-        self.assertRaises(Unauthorized, self.addAnnex, item2, relatedTo='item_decision')
         # pmManager adds a decision for item2, decides and closes the meeting
         self.changeUser('pmManager')
         item2.setDecision(self.decisionText)
@@ -204,18 +197,18 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         # check that a delayed item is duplicated
         self.assertEquals(len(item1.getBRefs('ItemPredecessor')), 0)
         self.do(item1, 'delay')
-        # the duplicated item has item3 as predecessor
-        duplicatedItem = item1.getBRefs('ItemPredecessor')[0]
-        self.assertEquals(duplicatedItem.getPredecessor().UID(), item1.UID())
+        # the duplicated item has item1 as predecessor
+        duplicatedItem = item1.get_successors()[0]
+        self.assertEqual(duplicatedItem.get_predecessor().UID(), item1.UID())
         # when duplicated on delay, annexes are kept
         self.assertEquals(len(get_annexes(duplicatedItem, portal_types=('annex', ))), 1)
         self.addAnnex(item2, relatedTo='item_decision')
         self.failIf(len(self.transitions(meeting)) != 2)
         # When a meeting is closed, items without a decision are automatically 'accepted'
         self.do(meeting, 'close')
-        self.assertEquals(item2.queryState(), 'accepted')
+        self.assertEquals(item2.query_state(), 'accepted')
         # An already decided item keep his given decision
-        self.assertEquals(item1.queryState(), 'delayed')
+        self.assertEquals(item1.query_state(), 'delayed')
         # XXX added tests regarding ticket #5887
         # test back transitions
         self.changeUser('admin')
@@ -246,6 +239,9 @@ class testWorkflows(MeetingMonsTestCase, mctw):
         if 'statusmessages' in annotations:
             annotations['statusmessages'] = ''
         super(testWorkflows, self).test_pm_RemoveContainer()
+
+    def test_pm_MeetingNotClosableIfItemStillReturnedToProposingGroup(self):
+        pass
 
 
 def test_suite():

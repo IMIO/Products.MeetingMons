@@ -47,37 +47,19 @@ class MeetingMonsTestingHelpers(MeetingCommunesTestingHelpers):
         "validate",
         "present",
     )
-    TRANSITIONS_FOR_PUBLISHING_MEETING_1 = TRANSITIONS_FOR_PUBLISHING_MEETING_2 = (
-        "freeze",
-    )
-    TRANSITIONS_FOR_FREEZING_MEETING_1 = TRANSITIONS_FOR_FREEZING_MEETING_2 = (
-        "freeze",
-    )
-    TRANSITIONS_FOR_DECIDING_MEETING_1 = (
-        "freeze",
-        "decide",
-    )
-    TRANSITIONS_FOR_DECIDING_MEETING_2 = (
-        "freeze",
-        "decide",
-    )
-    TRANSITIONS_FOR_CLOSING_MEETING_1 = TRANSITIONS_FOR_CLOSING_MEETING_2 = (
-        "freeze",
-        "decide",
-        "close",
-    )
-    TRANSITIONS_FOR_ACCEPTING_ITEMS_1 = (
-        "freeze",
-        "decide",
-    )
-    TRANSITIONS_FOR_ACCEPTING_ITEMS_2 = (
-        "freeze",
-        "decide",
-    )
+    TRANSITIONS_FOR_PUBLISHING_MEETING_1 = TRANSITIONS_FOR_PUBLISHING_MEETING_2 = ('freeze', 'publish',)
+    TRANSITIONS_FOR_FREEZING_MEETING_1 = TRANSITIONS_FOR_FREEZING_MEETING_2 = ('freeze',)
+    TRANSITIONS_FOR_DECIDING_MEETING_1 = TRANSITIONS_FOR_DECIDING_MEETING_2 = ('freeze', 'publish', 'decide')
+    TRANSITIONS_FOR_CLOSING_MEETING_1 = TRANSITIONS_FOR_CLOSING_MEETING_2 = ('freeze',
+                                                                             'publish',
+                                                                             'decide',
+                                                                             'close',)
+    TRANSITIONS_FOR_ACCEPTING_ITEMS_MEETING_1 = ('freeze', 'publish', 'decide')
+    TRANSITIONS_FOR_ACCEPTING_ITEMS_MEETING_2 = ('freeze', 'publish', 'decide')
 
     WF_ITEM_STATE_NAME_MAPPINGS_1 = {
         "itemcreated": "itemcreated",
-        "proposed_first_level": "proposed_to_director",
+        "proposed_first_level": "proposed_to_servicehead",
         "proposed": "proposed_to_director",
         "validated": "validated",
         "presented": "presented",

@@ -33,4 +33,12 @@
    handler="Products.MeetingMons.migrations.migrate_to_4_1.migrate"
    profile="Products.MeetingMons:default" />
 
+  <genericsetup:upgradeStep
+   title="Go to MeetingMons 4.2"
+   description=""
+   source="4.1"
+   destination="4200"
+   handler="Products.MeetingMons.migrations.migrate_to_4200.migrate"
+   profile="Products.MeetingMons:default" />
+
 </configure>

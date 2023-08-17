@@ -44,12 +44,13 @@ from Products.MeetingCommunes.adapters import MeetingCommunesWorkflowConditions
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
 from Products.PloneMeeting.MeetingItem import MeetingItem
 from Products.PloneMeeting.adapters import CompoundCriterionBaseAdapter, ItemPrettyLinkAdapter
+from Products.PloneMeeting.config import PMMessageFactory as _
 from Products.PloneMeeting.interfaces import IMeetingConfigCustom
 from Products.PloneMeeting.interfaces import IMeetingCustom
 from Products.PloneMeeting.interfaces import IMeetingItemCustom
 from Products.PloneMeeting.interfaces import IToolPloneMeetingCustom
 from Products.PloneMeeting.model import adaptations
-from Products.PloneMeeting.model.adaptations import WF_APPLIED
+from Products.PloneMeeting.model.adaptations import WF_APPLIED, _addIsolatedState
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
@@ -58,14 +59,38 @@ from Products.CMFCore.permissions import ReviewPortalContent, ModifyPortalConten
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.utils import getToolByName
 from appy.gen import No
+from collective.contact.plonegroup.utils import get_all_suffixes
 from imio.helpers.xhtml import xhtmlContentIsEmpty
 from plone import api
 from plone.memoize import ram
 from zope.i18n import translate
 from zope.interface import implements
 
-MeetingConfig.wfAdaptations = (
-'return_to_proposing_group', 'hide_decisions_when_under_writing', 'postpone_next_meeting',)
+
+
+customWfAdaptations = (
+    'item_validation_shortcuts',
+    'item_validation_no_validate_shortcuts',
+    'only_creator_may_delete',
+    # first define meeting workflow state removal
+    'no_freeze',
+    'no_publication',
+    'no_decide',
+    # then define added item decided states
+    'accepted_but_modified',
+    'postpone_next_meeting',
+    'mark_not_applicable',
+    'removed',
+    'removed_and_duplicated',
+    'refused',
+    'delayed',
+    'pre_accepted',
+    "mons_budget_reviewer",
+    "return_to_proposing_group",
+    "return_to_proposing_group_with_last_validation",
+    'hide_decisions_when_under_writing'
+)
+MeetingConfig.wfAdaptations = customWfAdaptations
 
 # states taken into account by the 'no_global_observation' wfAdaptation
 noGlobalObsStates = ('itempublished', 'itemfrozen', 'accepted', 'refused',
@@ -73,80 +98,6 @@ noGlobalObsStates = ('itempublished', 'itemfrozen', 'accepted', 'refused',
 adaptations.noGlobalObsStates = noGlobalObsStates
 
 adaptations.RETURN_TO_PROPOSING_GROUP_FROM_ITEM_STATES = ('presented', 'itemfrozen',)
-
-adaptations.WF_NOT_CREATOR_EDITS_UNLESS_CLOSED = ('delayed', 'refused', 'accepted',
-                                                  'pre_accepted', 'accepted_but_modified')
-
-RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE = {
-    'meetingitemcollegemons_workflow': 'meetingitemcollegemons_workflow.itemcreated'}
-adaptations.RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE = RETURN_TO_PROPOSING_GROUP_STATE_TO_CLONE
-
-RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = {'meetingitemcollegemons_workflow':
-    {
-        # view permissions
-        'Access contents information':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'View':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'PloneMeeting: Read decision':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'PloneMeeting: Read optional advisers':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'PloneMeeting: Read decision annex':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'PloneMeeting: Read item observations':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'Reader',),
-        'PloneMeeting: Read budget infos':
-            ('Manager', 'MeetingManager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingObserverLocal', 'MeetingBudgetImpactReviewer',
-             'Reader',),
-        # edit permissions
-        'Modify portal content':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Write decision':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'Review portal content':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'Add portal content':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Add annex':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Add annexDecision':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Add MeetingFile':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Write optional advisers':
-            ('Manager', 'MeetingMember', 'MeetingServiceHead', 'MeetingOfficeManager',
-             'MeetingDivisionHead', 'MeetingReviewer', 'MeetingManager',),
-        'PloneMeeting: Write budget infos':
-            ('Manager', 'MeetingMember', 'MeetingOfficeManager', 'MeetingManager', 'MeetingBudgetImpactReviewer',),
-        'PloneMeeting: Write marginal notes':
-            ('Manager', 'MeetingManager',),
-        # MeetingManagers edit permissions
-        'Delete objects':
-            ('Manager', 'MeetingManager',),
-        'PloneMeeting: Write item observations':
-            ('Manager', 'MeetingManager',),
-        'PloneMeeting: Write item MeetingManager reserved fields':
-            ('Manager', 'MeetingManager',),
-    }
-}
-
-adaptations.RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS = RETURN_TO_PROPOSING_GROUP_CUSTOM_PERMISSIONS
-
 
 class CustomMeeting(MCMeeting):
     '''Adapter that adapts a meeting implementing IMeeting to the
@@ -167,6 +118,14 @@ class CustomMeetingItem(MCMeetingItem):
 
     def __init__(self, item):
         self.context = item
+
+    security.declarePublic('mayEditValidateByBudget')
+
+    def mayEditValidateByBudget(self):
+        tool = getToolByName(self.context, 'portal_plonemeeting')
+        cfg = tool.getMeetingConfig(self.context)
+        return self.context.attribute_is_used('budgetInfos') and \
+        (tool.userIsAmong(['extraordinarybudget', 'budgetimpactreviewers']) or tool.isManager(cfg))
 
     def getExtraFieldsToCopyWhenCloning(self, cloned_to_same_mc, cloned_from_item_template):
         '''
@@ -366,6 +325,20 @@ class CustomMeetingConfig(MCMeetingConfig):
 
         return infos
 
+    def get_item_custom_suffix_roles(self, item, item_state):
+        '''See doc in interfaces.py.'''
+        suffix_roles = {}
+        if item_state == 'proposed_to_budgetimpact_reviewer':
+            for suffix in get_all_suffixes(item.getProposingGroup()):
+                suffix_roles[suffix] = ['Reader']
+                if suffix == 'budgetimpactreviewers':
+                    suffix_roles[suffix] += ['Reader', 'Contributor', 'Editor', 'Reviewer']
+        elif item_state == 'proposed_to_extraordinarybudget':
+            for suffix in get_all_suffixes(item.getProposingGroup()):
+                suffix_roles[suffix] = ['Reader']
+                if suffix == 'extraordinarybudget':
+                    suffix_roles[suffix] += ['Reader', 'Contributor', 'Editor', 'Reviewer']
+        return True, suffix_roles
 
 class MeetingCollegeMonsWorkflowActions(MeetingCommunesWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
@@ -384,8 +357,11 @@ class MeetingCollegeMonsWorkflowActions(MeetingCommunesWorkflowActions):
            if decision field is empty.'''
         tool = getToolByName(self.context, 'portal_plonemeeting')
         cfg = tool.getMeetingConfig(self.context)
+        self.update_meeting_number()
+        # Set the firstItemNumber
+        self.context.update_first_item_number()
         if cfg.getInitItemDecisionIfEmptyOnDecide():
-            for item in self.context.getItems():
+            for item in self.context.get_items():
                 # If deliberation (motivation+decision) is empty,
                 # initialize it the decision field
                 item._initDecisionFieldIfEmpty()
@@ -460,32 +436,16 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
     security = ClassSecurityInfo()
 
     def __init__(self, item):
+        super(MeetingItemCollegeMonsWorkflowConditions, self).__init__(item)
         self.context = item  # Implements IMeetingItem
 
-    security.declarePublic('mayValidate')
-
-    def mayValidate(self):
-        """
-          Either the Director or the MeetingManager can validate
-          The MeetingManager can bypass the validation process and validate an item
-          that is in the state 'itemcreated'
-        """
-        res = False
-        # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data()
-        if msg is not None:
-            return msg
-        user = self.context.portal_membership.getAuthenticatedMember()
-        # first of all, the use must have the 'Review portal content permission'
-        if _checkPermission(ReviewPortalContent, self.context) and \
-                (user.has_role('MeetingReviewer', self.context) or self.context.portal_plonemeeting.isManager(self.context)):
-            res = True
-            # if the current item state is 'itemcreated', only the MeetingManager can validate
-            if self.context.queryState() in ('itemcreated',) and \
-                    not self.context.portal_plonemeeting.isManager(self.context):
-                res = False
-
-        return res
+    security.declarePublic('is_validated_by_budget_reviewer')
+    def is_validated_by_budget_reviewer(self):
+        tool = self.context.portal_plonemeeting
+        meetingConfig = tool.getMeetingConfig(
+            self.context)
+        return not self.context.getBudgetRelated() or self.context.getValidateByBudget() or \
+                                 tool.isManager(meetingConfig)
 
     security.declarePublic('mayWaitAdvices')
 
@@ -498,72 +458,23 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
             res = True
         return res
 
-    security.declarePublic('mayProposeToServiceHead')
+    security.declarePublic('mayProposeToNextValidationLevel')
 
-    def mayProposeToServiceHead(self):
-        """
-          Check that the user has the 'Review portal content'
-        """
-        # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data()
-        if msg is not None:
-            return msg
+    def mayProposeToNextValidationLevel(self, destinationState):
+        if destinationState == "proposed_to_servicehead" and not self.is_validated_by_budget_reviewer():
+            return No(_('required_isValidatedByBudget_ko'))
 
-        res = False
-        # if item have budget info, budget reviewer must validate it
-        isValidateByBudget = not self.context.getBudgetRelated() or self.context.getValidateByBudget() or \
-                             self.context.portal_plonemeeting.isManager(self.context)
-        if _checkPermission(ReviewPortalContent, self.context) and isValidateByBudget:
-            res = True
-        return res
+        return super(MeetingItemCollegeMonsWorkflowConditions, self).mayProposeToNextValidationLevel(destinationState)
 
-    security.declarePublic('mayProposeToOfficeManager')
+    def _mayShortcutToValidationLevel(self, destinationState):
+        if not self.is_validated_by_budget_reviewer():
+            return No(_('required_isValidatedByBudget_ko'))
+        return super(MeetingItemCollegeMonsWorkflowConditions, self)._mayShortcutToValidationLevel(destinationState)
 
-    def mayProposeToOfficeManager(self):
-        """
-          Check that the user has the 'Review portal content'
-        """
-        # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data()
-        if msg is not None:
-            return msg
-
-        res = False
-        if _checkPermission(ReviewPortalContent, self.context):
-            res = True
-        return res
-
-    security.declarePublic('mayProposeToDivisionHead')
-
-    def mayProposeToDivisionHead(self):
-        """
-          Check that the user has the 'Review portal content'
-        """
-        # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data()
-        if msg is not None:
-            return msg
-
-        res = False
-        if _checkPermission(ReviewPortalContent, self.context):
-            res = True
-        return res
-
-    security.declarePublic('mayProposeToDirector')
-
-    def mayProposeToDirector(self):
-        """
-          Check that the user has the 'Review portal content'
-        """
-        # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data()
-        if msg is not None:
-            return msg
-
-        res = False
-        if _checkPermission(ReviewPortalContent, self.context):
-            res = True
-        return res
+    def mayValidate(self):
+        if not self.is_validated_by_budget_reviewer():
+            return No(_('required_isValidatedByBudget_ko'))
+        return super(MeetingItemCollegeMonsWorkflowConditions, self).mayValidate()
 
     security.declarePublic('mayRemove')
 
@@ -575,7 +486,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         res = False
         meeting = self.context.getMeeting()
         if _checkPermission(ReviewPortalContent, self.context) and \
-                meeting and (meeting.queryState() in ['decided', 'closed']):
+                meeting and (meeting.query_state() in ['decided', 'closed']):
             res = True
         return res
 
@@ -586,7 +497,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
           Check that the user has the 'Review portal content'
         """
         # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data()
+        msg = self._check_required_data("validatedByBudgetImpactReviewer")
         if msg is not None:
             return msg
 
@@ -602,15 +513,11 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
           Check that the user has the 'Review portal content'
         """
         # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data()
+        msg = self._check_required_data("proposedToBudgetImpactReviewer")
         if msg is not None:
             return msg
 
         res = False
-        if not self.context.getCategory():
-            return No(translate('required_category_ko',
-                                domain="PloneMeeting",
-                                context=self.context.REQUEST))
         if _checkPermission(ReviewPortalContent, self.context):
             res = True
         return res
@@ -622,7 +529,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
           Check that the user has the 'Review portal content'
         """
         # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data()
+        msg = self._check_required_data("validatedByExtraordinaryBudget")
         if msg is not None:
             return msg
 
@@ -638,7 +545,7 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
           Check that the user has the 'Review portal content'
         """
         # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data()
+        msg = self._check_required_data('proposedByExtraordinaryBudget')
         if msg is not None:
             return msg
 
@@ -658,46 +565,42 @@ class CustomToolPloneMeeting(MCToolPloneMeeting):
     def __init__(self, item):
         self.context = item
 
-    def performCustomWFAdaptations(self, meetingConfig, wfAdaptation, logger, itemWorkflow, meetingWorkflow):
-        """ """
-        if wfAdaptation == 'no_publication':
-            # we override the PloneMeeting's 'no_publication' wfAdaptation
-            # First, update the meeting workflow
-            wf = meetingWorkflow
-            # Delete transitions 'publish' and 'backToPublished'
-            for tr in ('publish', 'backToPublished'):
-                if tr in wf.transitions:
-                    wf.transitions.deleteTransitions([tr])
-            # Update connections between states and transitions
-            wf.states['frozen'].setProperties(
-                title='frozen', description='',
-                transitions=['backToCreated', 'decide'])
-            wf.states['decided'].setProperties(
-                title='decided', description='', transitions=['backToFrozen', 'close'])
-            # Delete state 'published'
-            if 'published' in wf.states:
-                wf.states.deleteStates(['published'])
-            # Then, update the item workflow.
-            wf = itemWorkflow
-            # Delete transitions 'itempublish' and 'backToItemPublished'
-            for tr in ('itempublish', 'backToItemPublished'):
-                if tr in wf.transitions:
-                    wf.transitions.deleteTransitions([tr])
-            # Update connections between states and transitions
-            wf.states['itemfrozen'].setProperties(
-                title='itemfrozen', description='',
-                transitions=['accept', 'accept_but_modify', 'refuse', 'delay', 'pre_accept', 'backToPresented'])
-            for decidedState in ['accepted', 'refused', 'delayed', 'accepted_but_modified']:
-                wf.states[decidedState].setProperties(
-                    title=decidedState, description='',
-                    transitions=['backToItemFrozen', ])
-            wf.states['pre_accepted'].setProperties(
-                title='pre_accepted', description='',
-                transitions=['accept', 'accept_but_modify', 'backToItemFrozen'])
-            # Delete state 'published'
-            if 'itempublished' in wf.states:
-                wf.states.deleteStates(['itempublished'])
-            logger.info(WF_APPLIED % ("no_publication", meetingConfig.getId()))
+    def performCustomWFAdaptations(
+            self, meetingConfig, wfAdaptation, logger, itemWorkflow, meetingWorkflow):
+        ''' '''
+        if wfAdaptation == 'mons_budget_reviewer' and "itemcreated" in itemWorkflow.states:
+            _addIsolatedState(
+                new_state_id='proposed_to_budgetimpact_reviewer',
+                origin_state_id='itemcreated',
+                origin_transition_id='proposeToBudgetImpactReviewer',
+                origin_transition_title=translate("proposeToBudgetImpactReviewer", "plone"),
+                origin_transition_guard_expr_name='mayProposeToBudgetImpactReviewer()',
+                back_transition_guard_expr_name="mayValidateByBudgetImpactReviewer()",
+                back_transition_id='validateByBudgetImpactReviewer',
+                back_transition_title=translate("validateByBudgetImpactReviewer", "plone"),
+                itemWorkflow=itemWorkflow)
+            proposed_to_extraordinarybudget = _addIsolatedState(
+                new_state_id='proposed_to_extraordinarybudget',
+                origin_state_id='proposed_to_budgetimpact_reviewer',
+                origin_transition_id='proposeToExtraordinaryBudget',
+                origin_transition_title=translate("proposeToExtraordinaryBudget", "plone"),
+                origin_transition_guard_expr_name='mayProposeToExtraordinaryBudget()',
+                back_transition_guard_expr_name="mayCorrect()",
+                back_transition_id='backToItemBudgetImpactReviewers',
+                back_transition_title=translate("backToItemBudgetImpactReviewers", "plone"),
+                itemWorkflow=itemWorkflow)
+            itemWorkflow.transitions.addTransition("validateByExtraordinaryBudget")
+            transition = itemWorkflow.transitions["validateByExtraordinaryBudget"]
+            transition.setProperties(
+                title="validateByExtraordinaryBudget",
+                new_state_id="itemcreated", trigger_type=1, script_name='',
+                actbox_name="itemcreated", actbox_url='',
+                actbox_icon='%(portal_url)s/{0}.png'.format("itemcreated"),
+                actbox_category='workflow',
+                props={'guard_expr': 'python:here.wfConditions().{0}'.format("mayValidateByExtraordinaryBudget()")})
+
+            proposed_to_extraordinarybudget.transitions = \
+                proposed_to_extraordinarybudget.transitions + ("validateByExtraordinaryBudget",)
             return True
         return False
 
@@ -729,7 +632,7 @@ class MMItemPrettyLinkAdapter(ItemPrettyLinkAdapter):
         if self.context.isDefinedInTool():
             return icons
 
-        itemState = self.context.queryState()
+        itemState = self.context.query_state()
         # Add our icons for some review states
         if itemState == 'proposed_to_budgetimpact_reviewer':
             icons.append(('proposeToBudgetImpactReviewer.png',
@@ -739,30 +642,6 @@ class MMItemPrettyLinkAdapter(ItemPrettyLinkAdapter):
 
         if itemState == 'proposed_to_extraordinarybudget':
             icons.append(('proposeToExtraordinaryBudget.png',
-                          translate('icon_help_proposed',
-                                    domain="PloneMeeting",
-                                    context=self.request)))
-
-        if itemState == 'proposed_to_servicehead':
-            icons.append(('proposeToServiceHead.png',
-                          translate('icon_help_proposed',
-                                    domain="PloneMeeting",
-                                    context=self.request)))
-
-        if itemState == 'proposed_to_officemanager':
-            icons.append(('proposeToOfficeManager.png',
-                          translate('icon_help_proposed',
-                                    domain="PloneMeeting",
-                                    context=self.request)))
-
-        if itemState == 'proposed_to_divisionhead':
-            icons.append(('proposeToDivisionHead.png',
-                          translate('icon_help_proposed',
-                                    domain="PloneMeeting",
-                                    context=self.request)))
-
-        if itemState == 'proposed_to_director':
-            icons.append(('proposeToDirector.png',
                           translate('icon_help_proposed',
                                     domain="PloneMeeting",
                                     context=self.request)))

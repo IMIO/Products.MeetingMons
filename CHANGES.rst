@@ -1,15 +1,63 @@
 Products.MeetingMons Changelog
-==================================
+==============================
 
 Older versions than 3.0 can be found at http://svn.communesplone.org/svn/communesplone/MeetingMons/tags/
 The Products.MeetingMons version must be the same as the Products.PloneMeeting version
 
-4.1.3 (unreleased)
+
+4.2.0b5 (unreleased)
+--------------------
+
+- Fixed `validatedByBudget` feature and permissions.
+  [aduchene]
+
+
+4.2.0b4 (2023-07-12)
+--------------------
+
+- Fixed wrong override declaration.
+  [aduchene]
+
+
+4.2.0b3 (2023-07-07)
+--------------------
+
+- Fixed bad import and remove useless override.
+  [aduchene]
+
+
+4.2.0b2 (2023-07-07)
+--------------------
+
+- Fixed translation of `Data that will be used on new item` on `meetingitem_view.pt`.
+  [gbastien]
+- Inherit from MeetingCommunes browser views
+  [aduchene]
+
+4.2.0b1 (2023-03-31)
+--------------------
+
+- Fix last broken tests.
+  [aduchene]
+- Improve migration to v4.2 by adding appropriate WFA's.
+  [aduchene]
+- Add a `IMeetingMonsLayer BrowserLayer` so it is possible to override
+  PloneMeeting's documentgenerator views.
+  [aduchene]
+
+4.2.0a1 (2023-02-28)
+--------------------
+
+- Compatible with PloneMeeting v4.2
+  [aduchene]
+
+4.1.3 (2023-02-28)
 ------------------
 
 - Clean up adapters and removed useless fields : defaultMeetingItemDecision and defaultMeetingItemDetailledDescription, .
   [odelaere]
-
+- Adapted code regarding removal of `MeetingConfig.useGroupsAsCategories`.
+  [gbastien]
 
 4.1.2 (2020-12-23)
 ------------------
