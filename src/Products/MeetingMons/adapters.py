@@ -44,6 +44,7 @@ from Products.MeetingCommunes.adapters import MeetingCommunesWorkflowConditions
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
 from Products.PloneMeeting.MeetingItem import MeetingItem
 from Products.PloneMeeting.adapters import CompoundCriterionBaseAdapter, ItemPrettyLinkAdapter
+from Products.PloneMeeting.config import PMMessageFactory as _
 from Products.PloneMeeting.interfaces import IMeetingConfigCustom
 from Products.PloneMeeting.interfaces import IMeetingCustom
 from Products.PloneMeeting.interfaces import IMeetingItemCustom
@@ -64,6 +65,7 @@ from plone import api
 from plone.memoize import ram
 from zope.i18n import translate
 from zope.interface import implements
+
 
 
 customWfAdaptations = (
@@ -116,6 +118,14 @@ class CustomMeetingItem(MCMeetingItem):
 
     def __init__(self, item):
         self.context = item
+
+    security.declarePublic('mayEditValidateByBudget')
+
+    def mayEditValidateByBudget(self):
+        tool = getToolByName(self.context, 'portal_plonemeeting')
+        cfg = tool.getMeetingConfig(self.context)
+        return self.context.attribute_is_used('budgetInfos') and \
+        (tool.userIsAmong(['extraordinarybudget', 'budgetimpactreviewers']) or tool.isManager(cfg))
 
     def getExtraFieldsToCopyWhenCloning(self, cloned_to_same_mc, cloned_from_item_template):
         '''
@@ -429,6 +439,14 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         super(MeetingItemCollegeMonsWorkflowConditions, self).__init__(item)
         self.context = item  # Implements IMeetingItem
 
+    security.declarePublic('is_validated_by_budget_reviewer')
+    def is_validated_by_budget_reviewer(self):
+        tool = self.context.portal_plonemeeting
+        meetingConfig = tool.getMeetingConfig(
+            self.context)
+        return not self.context.getBudgetRelated() or self.context.getValidateByBudget() or \
+                                 tool.isManager(meetingConfig)
+
     security.declarePublic('mayWaitAdvices')
 
     def mayWaitAdvices(self):
@@ -440,72 +458,23 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
             res = True
         return res
 
-    security.declarePublic('mayProposeToServiceHead')
+    security.declarePublic('mayProposeToNextValidationLevel')
 
-    def mayProposeToServiceHead(self):
-        """
-          Check that the user has the 'Review portal content'
-        """
-        # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data('proposedToServiceHead')
-        if msg is not None:
-            return msg
+    def mayProposeToNextValidationLevel(self, destinationState):
+        if destinationState == "proposed_to_servicehead" and not self.is_validated_by_budget_reviewer():
+            return No(_('required_isValidatedByBudget_ko'))
 
-        res = False
-        # if item have budget info, budget reviewer must validate it
-        isValidateByBudget = not self.context.getBudgetRelated() or self.context.getValidateByBudget() or \
-                             self.context.portal_plonemeeting.isManager(self.context)
-        if _checkPermission(ReviewPortalContent, self.context) and isValidateByBudget:
-            res = True
-        return res
+        return super(MeetingItemCollegeMonsWorkflowConditions, self).mayProposeToNextValidationLevel(destinationState)
 
-    security.declarePublic('mayProposeToOfficeManager')
+    def _mayShortcutToValidationLevel(self, destinationState):
+        if not self.is_validated_by_budget_reviewer():
+            return No(_('required_isValidatedByBudget_ko'))
+        return super(MeetingItemCollegeMonsWorkflowConditions, self)._mayShortcutToValidationLevel(destinationState)
 
-    def mayProposeToOfficeManager(self):
-        """
-          Check that the user has the 'Review portal content'
-        """
-        # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data('proposedToOfficeManager')
-        if msg is not None:
-            return msg
-
-        res = False
-        if _checkPermission(ReviewPortalContent, self.context):
-            res = True
-        return res
-
-    security.declarePublic('mayProposeToDivisionHead')
-
-    def mayProposeToDivisionHead(self):
-        """
-          Check that the user has the 'Review portal content'
-        """
-        # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data('proposedToDivisionHead')
-        if msg is not None:
-            return msg
-
-        res = False
-        if _checkPermission(ReviewPortalContent, self.context):
-            res = True
-        return res
-
-    security.declarePublic('mayProposeToDirector')
-
-    def mayProposeToDirector(self):
-        """
-          Check that the user has the 'Review portal content'
-        """
-        # Check if there are category and groupsInCharge, if applicable
-        msg = self._check_required_data('proposedToDirector')
-        if msg is not None:
-            return msg
-
-        res = False
-        if _checkPermission(ReviewPortalContent, self.context):
-            res = True
-        return res
+    def mayValidate(self):
+        if not self.is_validated_by_budget_reviewer():
+            return No(_('required_isValidatedByBudget_ko'))
+        return super(MeetingItemCollegeMonsWorkflowConditions, self).mayValidate()
 
     security.declarePublic('mayRemove')
 
@@ -673,30 +642,6 @@ class MMItemPrettyLinkAdapter(ItemPrettyLinkAdapter):
 
         if itemState == 'proposed_to_extraordinarybudget':
             icons.append(('proposeToExtraordinaryBudget.png',
-                          translate('icon_help_proposed',
-                                    domain="PloneMeeting",
-                                    context=self.request)))
-
-        if itemState == 'proposed_to_servicehead':
-            icons.append(('proposeToServiceHead.png',
-                          translate('icon_help_proposed',
-                                    domain="PloneMeeting",
-                                    context=self.request)))
-
-        if itemState == 'proposed_to_officemanager':
-            icons.append(('proposeToOfficeManager.png',
-                          translate('icon_help_proposed',
-                                    domain="PloneMeeting",
-                                    context=self.request)))
-
-        if itemState == 'proposed_to_divisionhead':
-            icons.append(('proposeToDivisionHead.png',
-                          translate('icon_help_proposed',
-                                    domain="PloneMeeting",
-                                    context=self.request)))
-
-        if itemState == 'proposed_to_director':
-            icons.append(('proposeToDirector.png',
                           translate('icon_help_proposed',
                                     domain="PloneMeeting",
                                     context=self.request)))

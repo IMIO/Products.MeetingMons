@@ -40,8 +40,7 @@ msgstr "Initialiser le champ décision des points lorsque la séance passe 'En r
 msgid "MeetingMons_descr_echevinServices"
 msgstr "Si ce groupe est responsable d'autres groupes, selectionnez les ci-dessous."
 
-#. Default: "Validate By Budget Impact Reviwer"
-#, fuzzy
+#. Default: "Validated By Budget Impact Reviewer"
 msgid "MeetingMons_descr_validateByBudget"
 msgstr "Ce dossier pourra être présenté par l'agent au N+1."
 
@@ -242,3 +241,7 @@ msgstr "Points validés"
 #. Default: "service heads"
 msgid "serviceheads"
 msgstr "N+1"
+
+#. Default: "required_isValidatedByBudget_ko"
+msgid "required_isValidatedByBudget_ko"
+msgstr "Le point doit d'abord être validé par le correspondant financier"

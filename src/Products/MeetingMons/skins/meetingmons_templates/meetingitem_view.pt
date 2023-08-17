@@ -469,6 +469,11 @@
                 tal:attributes="style string:display:${defaultDisplay};">
               <metal:f use-macro="context/@@pm-macros/viewContentField"/>
           </div>
+        <tal:displayBudgetInfos>
+          <!-- XXX Specific for MeetingMons XXX -->
+          <p tal:condition="python: context.getValidateByBudget()">
+              <strong i18n:translate="MeetingMons_label_validateByBudget"></strong>
+          </p>
         </tal:displayBudgetInfos>
       </div>
     </fieldset>

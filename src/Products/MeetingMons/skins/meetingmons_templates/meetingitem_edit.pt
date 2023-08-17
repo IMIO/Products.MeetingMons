@@ -75,6 +75,7 @@
         <metal:field use-macro="python:here.widget('budgetRelated', mode='edit')"/>
         <div id="hideBudgetInfosIfNotBudgetRelated">
             <metal:field use-macro="python:here.widget('budgetInfos', mode='edit')"/>
+            <metal:field use-macro="python:here.widget('validateByBudget', mode='edit')"/>
         </div>
     </fieldset>
 
