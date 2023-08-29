@@ -10,7 +10,8 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 
 - Fixed `validatedByBudget` feature and permissions.
   [aduchene]
-
+- Adapted code as field `MeetingConfig.useCopies` was removed.
+  [gbastien]
 
 4.2.0b4 (2023-07-12)
 --------------------
