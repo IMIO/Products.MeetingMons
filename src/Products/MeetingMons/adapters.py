@@ -1,71 +1,41 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------------------------
-# Copyright (c) 2017 by Imio.be
 #
 # GNU General Public License (GPL)
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-# 02110-1301, USA.
-#
-# ------------------------------------------------------------------------------
 
+from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
+from appy.gen import No
 from collections import OrderedDict
-
-from Products.MeetingMons import logger
+from collective.contact.plonegroup.utils import get_all_suffixes
+from Products.CMFCore.permissions import ReviewPortalContent
+from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.utils import getToolByName
+from Products.MeetingCommunes.adapters import CustomMeeting as MCMeeting
+from Products.MeetingCommunes.adapters import CustomMeetingConfig as MCMeetingConfig
+from Products.MeetingCommunes.adapters import CustomMeetingItem as MCMeetingItem
+from Products.MeetingCommunes.adapters import CustomToolPloneMeeting as MCToolPloneMeeting
+from Products.MeetingCommunes.adapters import MeetingCommunesWorkflowActions
+from Products.MeetingCommunes.adapters import MeetingCommunesWorkflowConditions
+from Products.MeetingCommunes.adapters import MeetingItemCommunesWorkflowActions
+from Products.MeetingCommunes.adapters import MeetingItemCommunesWorkflowConditions
 from Products.MeetingMons.config import FINANCE_ADVICES_COLLECTION_ID
-from Products.MeetingMons.config import FINANCE_GROUP_SUFFIXES
-from Products.MeetingMons.config import FINANCE_WAITING_ADVICES_STATES
 from Products.MeetingMons.interfaces import IMeetingCollegeMonsWorkflowActions
 from Products.MeetingMons.interfaces import IMeetingCollegeMonsWorkflowConditions
 from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowActions
 from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowConditions
-
-from Products.MeetingCommunes.adapters import CustomMeeting as MCMeeting
-from Products.MeetingCommunes.adapters import CustomMeetingItem as MCMeetingItem
-from Products.MeetingCommunes.adapters import CustomMeetingConfig as MCMeetingConfig
-from Products.MeetingCommunes.adapters import CustomToolPloneMeeting as MCToolPloneMeeting
-from Products.MeetingCommunes.adapters import MeetingItemCommunesWorkflowActions
-from Products.MeetingCommunes.adapters import MeetingItemCommunesWorkflowConditions
-from Products.MeetingCommunes.adapters import MeetingCommunesWorkflowActions
-from Products.MeetingCommunes.adapters import MeetingCommunesWorkflowConditions
-
-from Products.PloneMeeting.MeetingConfig import MeetingConfig
-from Products.PloneMeeting.MeetingItem import MeetingItem
-from Products.PloneMeeting.adapters import CompoundCriterionBaseAdapter, ItemPrettyLinkAdapter
+from Products.PloneMeeting.adapters import ItemPrettyLinkAdapter
+from Products.PloneMeeting.config import MEETING_REMOVE_MOG_WFA
 from Products.PloneMeeting.config import PMMessageFactory as _
 from Products.PloneMeeting.interfaces import IMeetingConfigCustom
 from Products.PloneMeeting.interfaces import IMeetingCustom
 from Products.PloneMeeting.interfaces import IMeetingItemCustom
 from Products.PloneMeeting.interfaces import IToolPloneMeetingCustom
+from Products.PloneMeeting.MeetingConfig import MeetingConfig
 from Products.PloneMeeting.model import adaptations
-from Products.PloneMeeting.model.adaptations import WF_APPLIED, _addIsolatedState
-
-from AccessControl import ClassSecurityInfo
-from DateTime import DateTime
-from AccessControl.class_init import InitializeClass
-from Products.CMFCore.permissions import ReviewPortalContent, ModifyPortalContent
-from Products.CMFCore.utils import _checkPermission
-from Products.CMFCore.utils import getToolByName
-from appy.gen import No
-from collective.contact.plonegroup.utils import get_all_suffixes
-from imio.helpers.xhtml import xhtmlContentIsEmpty
-from plone import api
-from plone.memoize import ram
+from Products.PloneMeeting.model.adaptations import _addIsolatedState
 from zope.i18n import translate
 from zope.interface import implements
-
 
 
 customWfAdaptations = (
@@ -85,10 +55,11 @@ customWfAdaptations = (
     'refused',
     'delayed',
     'pre_accepted',
-    "mons_budget_reviewer",
-    "return_to_proposing_group",
-    "return_to_proposing_group_with_last_validation",
-    'hide_decisions_when_under_writing'
+    'mons_budget_reviewer',
+    'return_to_proposing_group',
+    'return_to_proposing_group_with_last_validation',
+    'hide_decisions_when_under_writing',
+    MEETING_REMOVE_MOG_WFA
 )
 MeetingConfig.wfAdaptations = customWfAdaptations
 
@@ -98,6 +69,7 @@ noGlobalObsStates = ('itempublished', 'itemfrozen', 'accepted', 'refused',
 adaptations.noGlobalObsStates = noGlobalObsStates
 
 adaptations.RETURN_TO_PROPOSING_GROUP_FROM_ITEM_STATES = ('presented', 'itemfrozen',)
+
 
 class CustomMeeting(MCMeeting):
     '''Adapter that adapts a meeting implementing IMeeting to the
@@ -125,7 +97,7 @@ class CustomMeetingItem(MCMeetingItem):
         tool = getToolByName(self.context, 'portal_plonemeeting')
         cfg = tool.getMeetingConfig(self.context)
         return self.context.attribute_is_used('budgetInfos') and \
-        (tool.userIsAmong(['extraordinarybudget', 'budgetimpactreviewers']) or tool.isManager(cfg))
+            (tool.userIsAmong(['extraordinarybudget', 'budgetimpactreviewers']) or tool.isManager(cfg))
 
     def getExtraFieldsToCopyWhenCloning(self, cloned_to_same_mc, cloned_from_item_template):
         '''
@@ -340,6 +312,7 @@ class CustomMeetingConfig(MCMeetingConfig):
                     suffix_roles[suffix] += ['Reader', 'Contributor', 'Editor', 'Reviewer']
         return True, suffix_roles
 
+
 class MeetingCollegeMonsWorkflowActions(MeetingCommunesWorkflowActions):
     '''Adapter that adapts a meeting item implementing IMeetingItem to the
        interface IMeetingCollegeMonsWorkflowActions'''
@@ -440,12 +413,13 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         self.context = item  # Implements IMeetingItem
 
     security.declarePublic('is_validated_by_budget_reviewer')
+
     def is_validated_by_budget_reviewer(self):
         tool = self.context.portal_plonemeeting
         meetingConfig = tool.getMeetingConfig(
             self.context)
         return not self.context.getBudgetRelated() or self.context.getValidateByBudget() or \
-                                 tool.isManager(meetingConfig)
+            tool.isManager(meetingConfig)
 
     security.declarePublic('mayWaitAdvices')
 
