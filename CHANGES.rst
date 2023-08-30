@@ -8,7 +8,8 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.2.0b6 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Adapted code as field `MeetingConfig.useCopies` was removed.
+  [gbastien]
 
 
 4.2.0b5 (2023-08-17)
