@@ -51,6 +51,14 @@ class testWFAdaptations(MeetingMonsTestCase, mctwfa):
     def test_pm_MeetingNotClosableIfItemStillReturnedToProposingGroup(self):
         pass
 
+    def _process_transition_for_correcting_item(self, item, all):
+        # all parameter if for custom profiles
+        if all:
+            # do custom WF steps
+            pass
+        self.changeUser('pmCreator1')
+        self.do(item, 'goTo_returned_to_proposing_group_proposed_to_director')
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite
