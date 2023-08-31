@@ -10,6 +10,8 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 
 - Adapted code as field `MeetingConfig.useCopies` was removed.
   [gbastien]
+- Add two missing suffixes to `display-group-users` view.
+  [aduchene]
 
 
 4.2.0b5 (2023-08-17)

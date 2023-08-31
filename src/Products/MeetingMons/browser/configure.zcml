@@ -30,4 +30,14 @@
         name="document_generation_helper_view"
      />
 
+    <configure package="collective.contact.plonegroup.browser">
+        <browser:page
+          for="Products.PloneMeeting.interfaces.IMeetingContent"
+          name="display-group-users"
+          template="templates/display_group_users.pt"
+          layer="Products.MeetingMons.interfaces.IMeetingMonsLayer"
+          class="Products.MeetingMons.browser.views.MonsDisplayGroupUsersView"
+          permission="zope2.View" />
+    </configure>
+
 </configure>

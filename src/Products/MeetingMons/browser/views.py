@@ -20,12 +20,14 @@
 # 02110-1301, USA.
 #
 
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from App.class_init import InitializeClass
 from Products.Five import BrowserView
 from Products.CMFCore.permissions import ReviewPortalContent
 from Products.CMFCore.utils import _checkPermission
 from Products.MeetingMons.config import POSITIVE_FINANCE_ADVICE_SIGNABLE_BY_REVIEWER
+from Products.PloneMeeting.browser.views import PMDisplayGroupUsersView
+from plone import api
 
 
 class AdviceWFConditionsView(BrowserView):
@@ -127,6 +129,17 @@ class AdviceWFConditionsView(BrowserView):
                 if not self.context.query_state() == 'proposed_to_financial_manager':
                     res = False
         return res
+
+
+class MonsDisplayGroupUsersView(PMDisplayGroupUsersView):
+    """
+      View that display the users of a Plone group.
+    """
+    def _get_suffixes(self, group_id):
+        """ """
+        suffixes = super(MonsDisplayGroupUsersView, self)._get_suffixes(group_id)
+        return suffixes + ["budgetimpactreviewers", "extraordinarybudget"]
+
 
 
 InitializeClass(AdviceWFConditionsView)
