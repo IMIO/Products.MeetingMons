@@ -28,7 +28,10 @@
     <tal:field define="fieldName python: 'title'">
       <metal:f use-macro="context/@@pm-macros/editContentField"/>
     </tal:field>
-
+    <!-- XXX Specific for MeetingMons (order of description field) XXX -->
+    <tal:field define="fieldName python: 'description'">
+        <metal:f use-macro="context/@@pm-macros/editContentField"/>
+    </tal:field>
     <tal:comment replace="nothing">Proposing group, category, classifier, toDiscuss</tal:comment>
     <metal:field use-macro="python:here.widget('proposingGroup', mode='edit')"/>
     <metal:field use-macro="python:here.widget('proposingGroupWithGroupInCharge', mode='edit')"/>
@@ -62,9 +65,6 @@
     <metal:field use-macro="python:here.widget('itemTags', mode='edit')"/>
     <metal:field use-macro="python:here.widget('privacy', mode='edit')"/>
 
-    <tal:field define="fieldName python: 'description'">
-      <metal:f use-macro="context/@@pm-macros/editContentField"/>
-    </tal:field>
     <tal:field define="fieldName python: 'detailedDescription';">
       <metal:f use-macro="context/@@pm-macros/editContentField"/>
     </tal:field>
@@ -75,6 +75,7 @@
         <metal:field use-macro="python:here.widget('budgetRelated', mode='edit')"/>
         <div id="hideBudgetInfosIfNotBudgetRelated">
             <metal:field use-macro="python:here.widget('budgetInfos', mode='edit')"/>
+            <!-- XXX Specific for MeetingMons XXX -->
             <metal:field use-macro="python:here.widget('validateByBudget', mode='edit')"/>
         </div>
     </fieldset>

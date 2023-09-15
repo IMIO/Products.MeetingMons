@@ -11,6 +11,12 @@ from collective.contact.plonegroup.utils import get_all_suffixes
 from Products.CMFCore.permissions import ReviewPortalContent
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.utils import getToolByName
+from Products.MeetingMons.config import FINANCE_ADVICES_COLLECTION_ID
+from Products.PloneMeeting.config import MEETING_REMOVE_MOG_WFA
+from Products.MeetingMons.interfaces import IMeetingCollegeMonsWorkflowActions
+from Products.MeetingMons.interfaces import IMeetingCollegeMonsWorkflowConditions
+from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowActions
+from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowConditions
 from Products.MeetingCommunes.adapters import CustomMeeting as MCMeeting
 from Products.MeetingCommunes.adapters import CustomMeetingConfig as MCMeetingConfig
 from Products.MeetingCommunes.adapters import CustomMeetingItem as MCMeetingItem
@@ -26,6 +32,8 @@ from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowActio
 from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowConditions
 from Products.PloneMeeting.adapters import ItemPrettyLinkAdapter
 from Products.PloneMeeting.config import MEETING_REMOVE_MOG_WFA
+from Products.PloneMeeting.MeetingConfig import MeetingConfig
+from Products.PloneMeeting.adapters import ItemPrettyLinkAdapter
 from Products.PloneMeeting.config import PMMessageFactory as _
 from Products.PloneMeeting.interfaces import IMeetingConfigCustom
 from Products.PloneMeeting.interfaces import IMeetingCustom
@@ -34,6 +42,19 @@ from Products.PloneMeeting.interfaces import IToolPloneMeetingCustom
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
 from Products.PloneMeeting.model import adaptations
 from Products.PloneMeeting.model.adaptations import _addIsolatedState
+
+
+from AccessControl import ClassSecurityInfo
+from DateTime import DateTime
+from AccessControl.class_init import InitializeClass
+from Products.CMFCore.permissions import ReviewPortalContent, ModifyPortalContent
+from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.utils import getToolByName
+from appy.gen import No
+from collective.contact.plonegroup.utils import get_all_suffixes
+from imio.helpers.xhtml import xhtmlContentIsEmpty
+from plone import api
+from plone.memoize import ram
 from zope.i18n import translate
 from zope.interface import implements
 
@@ -55,11 +76,11 @@ customWfAdaptations = (
     'refused',
     'delayed',
     'pre_accepted',
-    'mons_budget_reviewer',
-    'return_to_proposing_group',
-    'return_to_proposing_group_with_last_validation',
+    "mons_budget_reviewer",
+    "return_to_proposing_group",
+    "return_to_proposing_group_with_last_validation",
     'hide_decisions_when_under_writing',
-    MEETING_REMOVE_MOG_WFA
+    MEETING_REMOVE_MOG_WFA,
 )
 MeetingConfig.wfAdaptations = customWfAdaptations
 

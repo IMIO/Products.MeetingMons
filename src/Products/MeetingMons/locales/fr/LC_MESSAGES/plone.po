@@ -328,7 +328,7 @@ msgstr "Renvoyer au référent budgétaire"
 
 #. Default: "send back"
 msgid "backToItemCreated"
-msgstr "Renvoyer a l'agent"
+msgstr "Renvoyer à l'agent"
 
 #. Default: "send back"
 msgid "backToProposedToDirector"

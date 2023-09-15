@@ -8,7 +8,12 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.2.0b7 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Add missing icons.
+  [aduchene]
+- Fix bad parameter name.
+  [aduchene]
+- Add missing required WFA.
+  [aduchene]
 
 
 4.2.0b6 (2023-08-31)

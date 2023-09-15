@@ -381,7 +381,7 @@ class MonsMeetingDocumentGenerationHelperView(MCMeetingDocumentGenerationHelperV
         if not filteredItemUids:
             return []
         else:
-            items = self.real_context.get_items(uids=filteredItemUids, listTypes=listTypes, ordered=True)
+            items = self.real_context.get_items(uids=filteredItemUids, list_types=listTypes, ordered=True)
             if renumber:
                 items = self._renumber_item(items, firstNumber)
 

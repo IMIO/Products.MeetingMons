@@ -470,7 +470,7 @@
               <metal:f use-macro="context/@@pm-macros/viewContentField"/>
           </div>
           <!-- XXX Specific for MeetingMons XXX -->
-          <p class="validated_by_budget_ref" tal:condition="python: context.getValidateByBudget()">
+          <p class="validated-by-budget" tal:condition="python: context.getValidateByBudget()">
               <strong i18n:translate="MeetingMons_label_validateByBudget"></strong>
           </p>
         </tal:displayBudgetInfos>
