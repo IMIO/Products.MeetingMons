@@ -5,7 +5,7 @@ Older versions than 3.0 can be found at http://svn.communesplone.org/svn/commune
 The Products.MeetingMons version must be the same as the Products.PloneMeeting version
 
 
-4.2.0b7 (unreleased)
+4.2.0b7 (2023-09-15)
 --------------------
 
 - Add missing icons.
