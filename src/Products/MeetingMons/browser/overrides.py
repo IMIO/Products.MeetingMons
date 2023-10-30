@@ -354,7 +354,7 @@ class MonsMeetingDocumentGenerationHelperView(MCMeetingDocumentGenerationHelperV
         elif item.getField(value_name):
             return item.getField(value_name).get(item)
 
-    def get_grouped_items(self, itemUids, listTypes=['normal'],
+    def get_grouped_items(self, itemUids, list_types=['normal'],
                           group_by=[], included_values={}, excluded_values={},
                           ignore_review_states=[], privacy='*',
                           firstNumber=1, renumber=False):
@@ -381,7 +381,7 @@ class MonsMeetingDocumentGenerationHelperView(MCMeetingDocumentGenerationHelperV
         if not filteredItemUids:
             return []
         else:
-            items = self.real_context.get_items(uids=filteredItemUids, list_types=listTypes, ordered=True)
+            items = self.real_context.get_items(uids=filteredItemUids, list_types=list_types, ordered=True)
             if renumber:
                 items = self._renumber_item(items, firstNumber)
 
