@@ -5,7 +5,7 @@ Older versions than 3.0 can be found at http://svn.communesplone.org/svn/commune
 The Products.MeetingMons version must be the same as the Products.PloneMeeting version
 
 
-4.2.0b8 (unreleased)
+4.2.0b8 (2023-10-30)
 --------------------
 
 - Fixed bad method call.
