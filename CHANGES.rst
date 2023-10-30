@@ -8,7 +8,8 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.2.0b8 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Fixed bad method call.
+  [aduchene]
 
 
 4.2.0b7 (2023-09-15)
