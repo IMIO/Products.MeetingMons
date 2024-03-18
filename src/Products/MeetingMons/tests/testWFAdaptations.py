@@ -3,6 +3,7 @@
 # GNU General Public License (GPL)
 #
 
+from imio.helpers.content import get_vocab_values
 from Products.MeetingCommunes.tests.testWFAdaptations import testWFAdaptations as mctwfa
 from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 from Products.PloneMeeting.config import MEETING_REMOVE_MOG_WFA
@@ -14,29 +15,28 @@ class testWFAdaptations(MeetingMonsTestCase, mctwfa):
     def test_pm_WFA_availableWFAdaptations(self):
         '''Test what are the available wfAdaptations.'''
         # we removed the 'archiving' and 'creator_initiated_decisions' wfAdaptations
-        self.assertSetEqual(
-            set(self.meetingConfig.listWorkflowAdaptations().keys()),
-            {
-                'item_validation_shortcuts',
-                'item_validation_no_validate_shortcuts',
-                'only_creator_may_delete',
-                'no_freeze',
-                'no_publication',
-                'no_decide',
-                'accepted_but_modified',
-                'postpone_next_meeting',
-                'mark_not_applicable',
-                'removed',
-                'removed_and_duplicated',
-                'refused',
-                'delayed',
-                'pre_accepted',
-                'mons_budget_reviewer',
-                'return_to_proposing_group',
-                'return_to_proposing_group_with_last_validation',
-                'hide_decisions_when_under_writing',
-                MEETING_REMOVE_MOG_WFA
-            }
+        self.assertEqual(
+            sorted(get_vocab_values(self.meetingConfig, 'WorkflowAdaptations')),
+            ['accepted_but_modified',
+             'delayed',
+             'hide_decisions_when_under_writing',
+             'item_validation_no_validate_shortcuts',
+             'item_validation_shortcuts',
+             'mark_not_applicable',
+             MEETING_REMOVE_MOG_WFA,
+             # custom WFA
+             'mons_budget_reviewer',
+             'no_decide',
+             'no_freeze',
+             'no_publication',
+             'only_creator_may_delete',
+             'postpone_next_meeting',
+             'pre_accepted',
+             'refused',
+             'removed',
+             'removed_and_duplicated',
+             'return_to_proposing_group',
+             'return_to_proposing_group_with_last_validation']
         )
 
     def test_pm_Validate_workflowAdaptations_dependencies(self):

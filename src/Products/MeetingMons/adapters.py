@@ -11,12 +11,6 @@ from collective.contact.plonegroup.utils import get_all_suffixes
 from Products.CMFCore.permissions import ReviewPortalContent
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.utils import getToolByName
-from Products.MeetingMons.config import FINANCE_ADVICES_COLLECTION_ID
-from Products.PloneMeeting.config import MEETING_REMOVE_MOG_WFA
-from Products.MeetingMons.interfaces import IMeetingCollegeMonsWorkflowActions
-from Products.MeetingMons.interfaces import IMeetingCollegeMonsWorkflowConditions
-from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowActions
-from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowConditions
 from Products.MeetingCommunes.adapters import CustomMeeting as MCMeeting
 from Products.MeetingCommunes.adapters import CustomMeetingConfig as MCMeetingConfig
 from Products.MeetingCommunes.adapters import CustomMeetingItem as MCMeetingItem
@@ -32,8 +26,6 @@ from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowActio
 from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowConditions
 from Products.PloneMeeting.adapters import ItemPrettyLinkAdapter
 from Products.PloneMeeting.config import MEETING_REMOVE_MOG_WFA
-from Products.PloneMeeting.MeetingConfig import MeetingConfig
-from Products.PloneMeeting.adapters import ItemPrettyLinkAdapter
 from Products.PloneMeeting.config import PMMessageFactory as _
 from Products.PloneMeeting.interfaces import IMeetingConfigCustom
 from Products.PloneMeeting.interfaces import IMeetingCustom
@@ -42,19 +34,6 @@ from Products.PloneMeeting.interfaces import IToolPloneMeetingCustom
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
 from Products.PloneMeeting.model import adaptations
 from Products.PloneMeeting.model.adaptations import _addIsolatedState
-
-
-from AccessControl import ClassSecurityInfo
-from DateTime import DateTime
-from AccessControl.class_init import InitializeClass
-from Products.CMFCore.permissions import ReviewPortalContent, ModifyPortalContent
-from Products.CMFCore.utils import _checkPermission
-from Products.CMFCore.utils import getToolByName
-from appy.gen import No
-from collective.contact.plonegroup.utils import get_all_suffixes
-from imio.helpers.xhtml import xhtmlContentIsEmpty
-from plone import api
-from plone.memoize import ram
 from zope.i18n import translate
 from zope.interface import implements
 
@@ -83,11 +62,6 @@ customWfAdaptations = (
     MEETING_REMOVE_MOG_WFA,
 )
 MeetingConfig.wfAdaptations = customWfAdaptations
-
-# states taken into account by the 'no_global_observation' wfAdaptation
-noGlobalObsStates = ('itempublished', 'itemfrozen', 'accepted', 'refused',
-                     'delayed', 'accepted_but_modified', 'pre_accepted')
-adaptations.noGlobalObsStates = noGlobalObsStates
 
 adaptations.RETURN_TO_PROPOSING_GROUP_FROM_ITEM_STATES = ('presented', 'itemfrozen',)
 
@@ -157,7 +131,7 @@ class CustomMeetingConfig(MCMeetingConfig):
                               'o': 'plone.app.querystring.operation.selection.is',
                               'v': ['proposed_to_budgetimpact_reviewer']}
                          ],
-                     'sort_on': u'created',
+                     'sort_on': u'modified',
                      'sort_reversed': True,
                      'showNumberOfItems': False,
                      'tal_condition': 'python: here.portal_plonemeeting.userIsAmong("budgetimpactreviewers")',
@@ -177,7 +151,7 @@ class CustomMeetingConfig(MCMeetingConfig):
                               'o': 'plone.app.querystring.operation.selection.is',
                               'v': ['proposed_to_extraordinarybudget']}
                          ],
-                     'sort_on': u'created',
+                     'sort_on': u'modified',
                      'sort_reversed': True,
                      'showNumberOfItems': False,
                      'tal_condition': 'python:  here.portal_plonemeeting.userIsAmong("extraordinarybudget")',
@@ -197,7 +171,7 @@ class CustomMeetingConfig(MCMeetingConfig):
                               'o': 'plone.app.querystring.operation.selection.is',
                               'v': ['proposed_to_servicehead']}
                          ],
-                     'sort_on': u'created',
+                     'sort_on': u'modified',
                      'sort_reversed': True,
                      'showNumberOfItems': False,
                      'tal_condition': 'python: here.portal_plonemeeting.userIsAmong("serviceheads")',
@@ -217,7 +191,7 @@ class CustomMeetingConfig(MCMeetingConfig):
                               'o': 'plone.app.querystring.operation.selection.is',
                               'v': ['proposed_to_officemanager']}
                          ],
-                     'sort_on': u'created',
+                     'sort_on': u'modified',
                      'sort_reversed': True,
                      'showNumberOfItems': False,
                      'tal_condition': 'python: here.portal_plonemeeting.userIsAmong("officemanagers")',
@@ -237,7 +211,7 @@ class CustomMeetingConfig(MCMeetingConfig):
                               'o': 'plone.app.querystring.operation.selection.is',
                               'v': ['proposed_to_divisionhead']}
                          ],
-                     'sort_on': u'created',
+                     'sort_on': u'modified',
                      'sort_reversed': True,
                      'showNumberOfItems': False,
                      'tal_condition': 'python: here.portal_plonemeeting.userIsAmong("divisionheads")',
@@ -257,7 +231,7 @@ class CustomMeetingConfig(MCMeetingConfig):
                               'o': 'plone.app.querystring.operation.selection.is',
                               'v': ['proposed_to_director']}
                          ],
-                     'sort_on': u'created',
+                     'sort_on': u'modified',
                      'sort_reversed': True,
                      'showNumberOfItems': False,
                      'tal_condition': 'python: here.portal_plonemeeting.userIsAmong("reviewers")',
@@ -277,7 +251,7 @@ class CustomMeetingConfig(MCMeetingConfig):
                               'o': 'plone.app.querystring.operation.selection.is',
                               'v': ['validated']}
                          ],
-                     'sort_on': u'created',
+                     'sort_on': u'modified',
                      'sort_reversed': True,
                      'showNumberOfItems': False,
                      'tal_condition': "",
@@ -300,7 +274,7 @@ class CustomMeetingConfig(MCMeetingConfig):
                                     'delay_real_group_id__unique_id_003',
                                     'delay_real_group_id__unique_id_004']}
                          ],
-                     'sort_on': u'created',
+                     'sort_on': u'modified',
                      'sort_reversed': True,
                      'showNumberOfItems': False,
                      'tal_condition':

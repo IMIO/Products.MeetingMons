@@ -8,7 +8,10 @@ The Products.MeetingMons version must be the same as the Products.PloneMeeting v
 4.2.0b9 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Use `sort_on=modified` for created `DashboardCollections`. Cleanup.
+  [gbastien]
+- Fixed `test_pm_WFA_availableWFAdaptations`.
+  [gbastien]
 
 
 4.2.0b8 (2023-10-30)
