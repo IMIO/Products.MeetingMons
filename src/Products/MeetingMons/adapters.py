@@ -55,6 +55,7 @@ customWfAdaptations = (
     'refused',
     'delayed',
     'pre_accepted',
+    # custom WFA
     "mons_budget_reviewer",
     "return_to_proposing_group",
     "return_to_proposing_group_with_last_validation",
@@ -416,17 +417,6 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         return not self.context.getBudgetRelated() or self.context.getValidateByBudget() or \
             tool.isManager(meetingConfig)
 
-    security.declarePublic('mayWaitAdvices')
-
-    def mayWaitAdvices(self):
-        """
-          Check that the user has the 'Review portal content'
-        """
-        res = False
-        if _checkPermission(ReviewPortalContent, self.context):
-            res = True
-        return res
-
     security.declarePublic('mayProposeToNextValidationLevel')
 
     def mayProposeToNextValidationLevel(self, destinationState):
@@ -444,20 +434,6 @@ class MeetingItemCollegeMonsWorkflowConditions(MeetingItemCommunesWorkflowCondit
         if not self.is_validated_by_budget_reviewer():
             return No(_('required_isValidatedByBudget_ko'))
         return super(MeetingItemCollegeMonsWorkflowConditions, self).mayValidate()
-
-    security.declarePublic('mayRemove')
-
-    def mayRemove(self):
-        """
-          We may remove an item if the linked meeting is in the 'decided'
-          state.  For now, this is the same behaviour as 'mayDecide'
-        """
-        res = False
-        meeting = self.context.getMeeting()
-        if _checkPermission(ReviewPortalContent, self.context) and \
-                meeting and (meeting.query_state() in ['decided', 'closed']):
-            res = True
-        return res
 
     security.declarePublic('mayValidateByBudgetImpactReviewer')
 

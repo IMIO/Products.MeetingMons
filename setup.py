@@ -1,18 +1,21 @@
-from setuptools import setup, find_packages
-import os
+# -*- coding: utf-8 -*-
 
-version = '4.2.0b9.dev0'
+from setuptools import find_packages
+from setuptools import setup
+
+
+version = '4.2.0.dev0'
 
 setup(name='Products.MeetingMons',
       version=version,
       description="Official meetings management for college and council of Mons (PloneMeeting extension profile)",
       long_description=open("README.rst").read() + "\n" + open("CHANGES.rst").read(),
       classifiers=[
-        "Environment :: Web Environment",
-        "Framework :: Plone",
-        "Framework :: Plone :: 4.3",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
+          "Environment :: Web Environment",
+          "Framework :: Plone",
+          "Framework :: Plone :: 4.3",
+          "Programming Language :: Python",
+          "Programming Language :: Python :: 2.7",
       ],
       keywords='',
       author='',
