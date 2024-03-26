@@ -12,6 +12,8 @@ Products.MeetingMons Changelog
   [gbastien]
 - Fixed `test_pm_WFA_availableWFAdaptations`.
   [gbastien]
+- Revert order of fields in `meetingitem_edit.pt`.
+  [aduchene]
 
 
 4.2.0b8 (2023-10-30)
