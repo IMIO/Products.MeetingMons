@@ -2,7 +2,7 @@ Products.MeetingMons Changelog
 ==============================
 
 
-4.2.0 (unreleased)
+4.2.0 (2024-03-26)
 ------------------
 
 - Use `sort_on=modified` for created `DashboardCollections`.
