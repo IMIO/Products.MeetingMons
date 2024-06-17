@@ -20,6 +20,8 @@ class testWFAdaptations(MeetingMonsTestCase, mctwfa):
             ['accepted_but_modified',
              'delayed',
              'hide_decisions_when_under_writing',
+             'hide_decisions_when_under_writing__po__powerobservers',
+             'hide_decisions_when_under_writing__po__restrictedpowerobservers',
              'item_validation_no_validate_shortcuts',
              'item_validation_shortcuts',
              'mark_not_applicable',
