@@ -130,7 +130,6 @@ collegeMeeting.itemAdviceViewStates = [
     "presented",
 ]
 collegeMeeting.transitionsReinitializingDelays = ("backToItemCreated",)
-collegeMeeting.enforceAdviceMandatoriness = False
 collegeMeeting.itemPowerObserversStates = (
     "itemcreated",
     "presented",
