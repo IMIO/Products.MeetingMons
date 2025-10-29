@@ -2,7 +2,7 @@ Products.MeetingMons Changelog
 ==============================
 
 
-4.2.1 (unreleased)
+4.2.1 (2025-10-29)
 ------------------
 
 - Update `meetingitem_view.pt` due to upstream changes.
