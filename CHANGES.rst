@@ -5,7 +5,8 @@ Products.MeetingMons Changelog
 4.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Update `meetingitem_view.pt` due to upstream changes.
+  [aduchene]
 
 
 4.2.0 (2024-03-26)
