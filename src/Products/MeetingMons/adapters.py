@@ -8,6 +8,7 @@ from AccessControl.class_init import InitializeClass
 from appy.gen import No
 from collections import OrderedDict
 from collective.contact.plonegroup.utils import get_all_suffixes
+from copy import deepcopy
 from Products.CMFCore.permissions import ReviewPortalContent
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.utils import getToolByName
@@ -25,7 +26,6 @@ from Products.MeetingMons.interfaces import IMeetingCollegeMonsWorkflowCondition
 from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowActions
 from Products.MeetingMons.interfaces import IMeetingItemCollegeMonsWorkflowConditions
 from Products.PloneMeeting.adapters import ItemPrettyLinkAdapter
-from Products.PloneMeeting.config import MEETING_REMOVE_MOG_WFA
 from Products.PloneMeeting.config import PMMessageFactory as _
 from Products.PloneMeeting.interfaces import IMeetingConfigCustom
 from Products.PloneMeeting.interfaces import IMeetingCustom
@@ -38,31 +38,11 @@ from zope.i18n import translate
 from zope.interface import implements
 
 
-customWfAdaptations = (
-    'item_validation_shortcuts',
-    'item_validation_no_validate_shortcuts',
-    'only_creator_may_delete',
-    # first define meeting workflow state removal
-    'no_freeze',
-    'no_publication',
-    'no_decide',
-    # then define added item decided states
-    'accepted_but_modified',
-    'postpone_next_meeting',
-    'mark_not_applicable',
-    'removed',
-    'removed_and_duplicated',
-    'refused',
-    'delayed',
-    'pre_accepted',
-    # custom WFA
-    "mons_budget_reviewer",
-    "return_to_proposing_group",
-    "return_to_proposing_group_with_last_validation",
-    'hide_decisions_when_under_writing',
-    MEETING_REMOVE_MOG_WFA,
-)
-MeetingConfig.wfAdaptations = customWfAdaptations
+# keep every WFA except waiting_advices
+customWfAdaptations = list(deepcopy(
+    [wfa for wfa in MeetingConfig.wfAdaptations if not wfa.startswith('waiting_advices')]))
+customWfAdaptations.append("mons_budget_reviewer")
+MeetingConfig.wfAdaptations = tuple(customWfAdaptations)
 
 adaptations.RETURN_TO_PROPOSING_GROUP_FROM_ITEM_STATES = ('presented', 'itemfrozen',)
 

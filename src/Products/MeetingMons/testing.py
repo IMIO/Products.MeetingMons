@@ -6,6 +6,7 @@ from Products.MeetingCommunes.testing import MCLayer
 
 import Products.MeetingMons
 
+
 MM_ZCML = zca.ZCMLSandbox(filename="testing.zcml",
                           package=Products.MeetingMons,
                           name='MM_ZCML')

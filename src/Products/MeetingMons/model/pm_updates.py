@@ -1,12 +1,18 @@
-from Products.Archetypes.atapi import BooleanField, TextField, RichWidget
+from Products.Archetypes.atapi import BooleanField
 from Products.Archetypes.atapi import LinesField
 from Products.Archetypes.atapi import MultiSelectionWidget
+from Products.Archetypes.atapi import RichWidget
 from Products.Archetypes.atapi import Schema
+from Products.Archetypes.atapi import TextField
+# Classes have already been registered, but we register them again here
+# because we have potentially applied some schema adaptations (see above).
+# Class registering includes generation of accessors and mutators, for
+# example, so this is why we need to do it again now.
+from Products.PloneMeeting.config import registerClasses
 from Products.PloneMeeting.config import WriteRiskyConfig
-from Products.PloneMeeting.MeetingGroup import MeetingGroup
 from Products.PloneMeeting.MeetingConfig import MeetingConfig
+from Products.PloneMeeting.MeetingGroup import MeetingGroup
 from Products.PloneMeeting.MeetingItem import MeetingItem
-
 
 
 def update_config_schema(baseSchema):
@@ -55,9 +61,4 @@ def update_item_schema(baseSchema):
     return completeItemSchema
 MeetingItem.schema = update_item_schema(MeetingItem.schema)
 
-# Classes have already been registered, but we register them again here
-# because we have potentially applied some schema adaptations (see above).
-# Class registering includes generation of accessors and mutators, for
-# example, so this is why we need to do it again now.
-from Products.PloneMeeting.config import registerClasses
 registerClasses()

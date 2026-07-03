@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from DateTime import DateTime
-from Products.MeetingMons.config import MONS_ITEM_WF_VALIDATION_LEVELS
 from plone import api
 from Products.MeetingCommunes.migrations.migrate_to_4200 import Migrate_To_4200 as MCMigrate_To_4200
+from Products.MeetingMons.config import MONS_ITEM_WF_VALIDATION_LEVELS
+
 import logging
+
 
 logger = logging.getLogger('MeetingMons')
 

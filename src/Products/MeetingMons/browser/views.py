@@ -20,14 +20,15 @@
 # 02110-1301, USA.
 #
 
-from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl import ClassSecurityInfo
+from AccessControl import Unauthorized
 from App.class_init import InitializeClass
-from Products.Five import BrowserView
+from plone import api
 from Products.CMFCore.permissions import ReviewPortalContent
 from Products.CMFCore.utils import _checkPermission
+from Products.Five import BrowserView
 from Products.MeetingMons.config import POSITIVE_FINANCE_ADVICE_SIGNABLE_BY_REVIEWER
 from Products.PloneMeeting.browser.views import PMDisplayGroupUsersView
-from plone import api
 
 
 class AdviceWFConditionsView(BrowserView):

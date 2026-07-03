@@ -9,6 +9,9 @@
 # GNU General Public License (GPL)
 #
 from collections import OrderedDict
+from Products.CMFCore.permissions import setDefaultRoles
+from Products.PloneMeeting import config as PMconfig
+
 
 __author__ = (
     """Gauthier Bastien <g.bastien@imio.be>, Stephan Geulette <s.geulette@imio.be>"""
@@ -24,8 +27,6 @@ __docformat__ = "plaintext"
 # AppConfig.py in your product's root directory. The items in there
 # will be included (by importing) in this file if found.
 
-from Products.CMFCore.permissions import setDefaultRoles
-from Products.PloneMeeting import config as PMconfig
 
 PROJECTNAME = "MeetingMons"
 

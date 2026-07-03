@@ -22,8 +22,8 @@
 # 02110-1301, USA.
 #
 
-from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 from Products.MeetingCommunes.tests.testColumns import testColumns as mctc
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 
 
 class testColumns(MeetingMonsTestCase, mctc):

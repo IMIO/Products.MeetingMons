@@ -22,9 +22,10 @@
 # 02110-1301, USA.
 #
 
-from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 from Products.MeetingCommunes.tests.testSearches import testSearches as mcts
+from Products.MeetingMons.tests.MeetingMonsTestCase import MeetingMonsTestCase
 from Products.PloneMeeting.tests.PloneMeetingTestCase import pm_logger
+
 
 class testSearches(MeetingMonsTestCase, mcts):
     """Test searches."""

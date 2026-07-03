@@ -5,8 +5,11 @@ Products.MeetingMons Changelog
 4.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Synchronized item templates (view/edit).
+  [gbastien]
+- Enable most of WFA except `waiting_advices` related ones so
+  it can be used when necessary.
+  [gbastien]
 
 4.2.1 (2025-10-29)
 ------------------

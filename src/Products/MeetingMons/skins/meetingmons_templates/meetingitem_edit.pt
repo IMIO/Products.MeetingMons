@@ -28,6 +28,7 @@
     <tal:field define="fieldName python: 'title'">
       <metal:f use-macro="context/@@pm-macros/editContentField"/>
     </tal:field>
+
     <tal:comment replace="nothing">Proposing group, category, classifier, toDiscuss</tal:comment>
     <metal:field use-macro="python:here.widget('proposingGroup', mode='edit')"/>
     <metal:field use-macro="python:here.widget('proposingGroupWithGroupInCharge', mode='edit')"/>
@@ -38,8 +39,10 @@
     <metal:field use-macro="python:here.widget('committees', mode='edit')"/>
     <metal:field use-macro="python:here.widget('optionalAdvisers', mode='edit')"/>
     <metal:field use-macro="python:here.widget('copyGroups', mode='edit')"/>
+    <metal:field use-macro="python:here.widget('restrictedCopyGroups', mode='edit')"/>
 
     <metal:field use-macro="python:here.widget('preferredMeeting', mode='edit')"/>
+    <metal:field use-macro="python:here.widget('meetingDeadlineDate', mode='edit')"/>
     <metal:field use-macro="python:here.widget('sendToAuthority', mode='edit')"/>
 
     <tal:comment replace="nothing">Clonable to other cfg when not using extra fields</tal:comment>
@@ -60,12 +63,14 @@
     <metal:field use-macro="python:here.widget('itemKeywords', mode='edit')"/>
     <metal:field use-macro="python:here.widget('itemTags', mode='edit')"/>
     <metal:field use-macro="python:here.widget('privacy', mode='edit')"/>
+
     <tal:field define="fieldName python: 'description'">
-        <metal:f use-macro="context/@@pm-macros/editContentField"/>
+      <metal:f use-macro="context/@@pm-macros/editContentField"/>
     </tal:field>
     <tal:field define="fieldName python: 'detailedDescription';">
       <metal:f use-macro="context/@@pm-macros/editContentField"/>
     </tal:field>
+
     <tal:comment replace="nothing">Budget-related information</tal:comment>
     <fieldset tal:condition="python: 'budgetInfos' in usedAttrs">
       <legend i18n:translate="">Budget</legend>
@@ -76,6 +81,10 @@
             <metal:field use-macro="python:here.widget('validateByBudget', mode='edit')"/>
         </div>
     </fieldset>
+
+    <tal:field define="fieldName python: 'emergencyMotivation'">
+      <metal:f use-macro="context/@@pm-macros/editContentField"/>
+    </tal:field>
     <tal:field define="fieldName python: 'motivation'">
       <metal:f use-macro="context/@@pm-macros/editContentField"/>
     </tal:field>
@@ -93,6 +102,11 @@
     <tal:clonableToOtherMCsWithExtraFields condition="showAdvancedClonableToOtherMCs">
         <metal:f use-macro="context/@@pm-macros/otherMeetingConfigsClonable"/>
     </tal:clonableToOtherMCsWithExtraFields>
+
+    <!-- groupsInChargeNotes field is not integrated in the edit form and only editable thru view/quick edit
+    <tal:field define="fieldName python: 'groupsInChargeNotes'">
+      <metal:f use-macro="context/@@pm-macros/editContentField"/>
+    </tal:field-->
 
     <tal:field define="fieldName python: 'inAndOutMoves'">
       <metal:f use-macro="context/@@pm-macros/editContentField"/>
@@ -127,6 +141,14 @@
     <tal:field define="fieldName python: 'internalNotes'">
       <metal:f use-macro="context/@@pm-macros/editContentField"/>
     </tal:field>
+
+    <!-- follow-up related fields are not integrated in the edit form and only editable thru view/quick edit
+    <tal:field define="fieldName python: 'neededFollowUp'">
+      <metal:f use-macro="context/@@pm-macros/editContentField"/>
+    </tal:field>
+    <tal:field define="fieldName python: 'providedFollowUp'">
+      <metal:f use-macro="context/@@pm-macros/editContentField"/>
+    </tal:field -->
 
     <metal:field use-macro="python:here.widget('templateUsingGroups', mode='edit')"/>
     <metal:field use-macro="python:here.widget('meetingTransitionInsertingMe', mode='edit')"/>

@@ -7,15 +7,13 @@
 # GNU General Public License (GPL)
 #
 from collections import OrderedDict
-
-from Products.MeetingCommunes.browser.overrides import MCItemDocumentGenerationHelperView
-from Products.MeetingCommunes.browser.overrides import MCMeetingDocumentGenerationHelperView
 from imio.history.utils import getLastWFAction as getLastEvent
-from Products.PloneMeeting.utils import get_annexes
-
-from Products.CMFPlone.utils import safe_unicode
 from plone import api
 from plone.api.validation import mutually_exclusive_parameters
+from Products.CMFPlone.utils import safe_unicode
+from Products.MeetingCommunes.browser.overrides import MCItemDocumentGenerationHelperView
+from Products.MeetingCommunes.browser.overrides import MCMeetingDocumentGenerationHelperView
+from Products.PloneMeeting.utils import get_annexes
 
 
 def formatedAssembly(assembly, focus):

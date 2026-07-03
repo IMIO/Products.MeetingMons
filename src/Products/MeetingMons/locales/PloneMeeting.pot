@@ -215,7 +215,6 @@ msgstr ""
 msgid "directors"
 msgstr ""
 
-
 ### searches ###
 
 msgid "searchbudgetimpactreviewersitems"
@@ -242,4 +241,8 @@ msgstr ""
 
 ### prettylink ###
 msgid "icon_help_corrected"
+msgstr ""
+
+#. Default: "Mons: budget reviewer"
+msgid "wa_mons_budget_reviewer"
 msgstr ""

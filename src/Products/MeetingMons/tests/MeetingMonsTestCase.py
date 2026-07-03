@@ -22,7 +22,6 @@
 
 
 from Products.MeetingCommunes.tests.MeetingCommunesTestCase import MeetingCommunesTestCase
-
 from Products.MeetingMons.testing import MM_TESTING_PROFILE_FUNCTIONAL
 from Products.MeetingMons.tests.helpers import MeetingMonsTestingHelpers
 

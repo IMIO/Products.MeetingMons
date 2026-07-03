@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from Products.PloneMeeting.interfaces import \
-    IMeetingItemWorkflowConditions, IMeetingItemWorkflowActions, \
-    IMeetingWorkflowActions, IMeetingWorkflowConditions
 from Products.MeetingCommunes.interfaces import IMeetingCommunesLayer
+from Products.PloneMeeting.interfaces import IMeetingItemWorkflowActions
+from Products.PloneMeeting.interfaces import IMeetingItemWorkflowConditions
+from Products.PloneMeeting.interfaces import IMeetingWorkflowActions
+from Products.PloneMeeting.interfaces import IMeetingWorkflowConditions
 
 
 class IMeetingItemCollegeMonsWorkflowActions(IMeetingItemWorkflowActions):

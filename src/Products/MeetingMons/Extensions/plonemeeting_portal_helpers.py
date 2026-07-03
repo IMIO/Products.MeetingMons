@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import logging
 from collections import OrderedDict
-
-from Products.ZCatalog.ProgressHandler import ZLogHandler
 from collective.contact.plonegroup.config import ORGANIZATIONS_REGISTRY
 from collective.contact.plonegroup.utils import get_own_organization
-from Products.PloneMeeting.utils import org_id_to_uid
 from plone import api
+from Products.PloneMeeting.utils import org_id_to_uid
+from Products.ZCatalog.ProgressHandler import ZLogHandler
+
+import logging
+
 
 logger = logging.getLogger("MeetingMons")
 

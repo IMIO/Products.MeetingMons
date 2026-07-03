@@ -9,18 +9,20 @@
 # GNU General Public License (GPL)
 #
 from imio.helpers.catalog import addOrUpdateIndexes
+from plone import api
+from Products.MeetingMons.config import PROJECTNAME
+from Products.PloneMeeting.exportimport.content import ToolInitializer
+
+import logging
+import os
+
 
 __author__ = """Gauthier Bastien <g.bastien@imio.be>, Stephan Geulette <s.geulette@imio.be>"""
 __docformat__ = 'plaintext'
 
 
-import logging
-import os
 
 logger = logging.getLogger('MeetingMons: setuphandlers')
-from plone import api
-from Products.PloneMeeting.exportimport.content import ToolInitializer
-from Products.MeetingMons.config import PROJECTNAME
 
 
 def isNotMeetingMonsProfile(context):
