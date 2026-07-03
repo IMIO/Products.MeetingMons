@@ -2,7 +2,7 @@ Products.MeetingMons Changelog
 ==============================
 
 
-4.2.2 (unreleased)
+4.2.2 (2026-07-03)
 ------------------
 
 - Synchronized item templates (view/edit).
