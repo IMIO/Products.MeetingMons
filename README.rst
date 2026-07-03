@@ -18,6 +18,6 @@ The authors,
         André NUYENS - 2010-2013 <a.nuyens@imio.be>,
         Antoine DUCHENE - 2020 <adu@imio.be>
 
-4. Changes
+3. Changes
 ==========
 Please look at CHANGES.rst
