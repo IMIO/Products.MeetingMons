@@ -259,7 +259,7 @@ class CustomMeetingConfig(MCMeetingConfig):
                      'sort_reversed': True,
                      'showNumberOfItems': False,
                      'tal_condition':
-                         "python: tool.userIsAmong(['budgetimpacteditors']) or tool.isManager(here)",
+                         "python: tool.userIsAmong(['budgetimpacteditors']) or tool.isManager(cfg)",
                      'roles_bypassing_talcondition': ['Manager', ]
                  }
                  ),

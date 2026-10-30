@@ -5,7 +5,11 @@ Products.MeetingMons Changelog
 4.2.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed tests: use `tool.isManager(cfg)` in `searchitemswithfinanceadvice`
+  `tal_condition`, synchronized `meetingitem_view.pt` with `PloneMeeting`
+  (`no_meeting` WFA) and bypass test
+  `test_pm_Validate_workflowAdaptations_removed_return_to_proposing_group_with_before_last_validation`.
+  [gbastien]
 
 
 4.2.2 (2026-07-03)

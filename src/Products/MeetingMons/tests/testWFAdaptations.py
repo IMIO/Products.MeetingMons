@@ -49,6 +49,9 @@ class testWFAdaptations(MeetingMonsTestCase, mctwfa):
     def test_pm_WFA_return_to_proposing_group_with_last_validation(self):
         pass
 
+    def test_pm_Validate_workflowAdaptations_removed_return_to_proposing_group_with_before_last_validation(self):
+        pass
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite
